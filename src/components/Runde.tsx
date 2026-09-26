@@ -4,6 +4,7 @@ import type { AnalyseAntwort, Nachricht } from '../data/types'
 import { analysiereAsync } from '../logic/analyse'
 import { besteParteien, bewertePartei, rundenpunkte } from '../logic/bewertung'
 import { REVIEW_WARTESCHLANGE, type RundenErgebnis, type Spieler } from '../spiel'
+import { SprechKnopf } from './SprechKnopf'
 import { parteiStil } from './stil'
 
 const WERT_ANTWORT =
@@ -89,7 +90,8 @@ export function Runde({
       </div>
       <h2>Welches Alltagsproblem nervt dich?</h2>
       <p className="hinweis">
-        Beschreibe konkret, was in deinem Alltag schiefläuft. Beispiele: Arzttermine, Miete, Energiepreise.
+        Halte den Knopf gedrückt und erzähl, was in deinem Alltag konkret schiefläuft – oder tippe es ein.
+        Beispiele: Arzttermine, Miete, Energiepreise.
       </p>
 
       <div className="verlauf" aria-live="polite">
@@ -101,6 +103,14 @@ export function Runde({
         ))}
         {denkt && <p className="blase blase-ki denkt">Ich ordne das ein …</p>}
       </div>
+
+      <SprechKnopf
+        gesperrt={denkt}
+        onText={(t) => setEingabe((alt) => (alt.trim() ? `${alt.trim()} ${t}` : t))}
+      />
+      <p className="oder" aria-hidden="true">
+        oder tippen
+      </p>
 
       <form className="eingabe" onSubmit={absenden}>
         <label htmlFor="problem" className="sr-only">

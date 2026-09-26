@@ -19,6 +19,13 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 
 > **Mock-Daten:** Parteien („Partei Alpha" … „Partei Epsilon"), Maßnahmen, Punkte und Links (`example.org`) sind **fiktiv**. Echte Parteien kommen erst mit geprüften, belegten Daten hinzu – so entsteht keine ungeprüfte Bewertung realer Parteien.
 
+## Stand: Meilenstein 2 – Push-to-talk
+
+- Großer Mikrofon-Knopf: gedrückt halten, sprechen, loslassen (Maus, Touch oder Leertaste/Enter)
+- Web Speech API (`de-DE`), Live-Anzeige des erkannten Texts; nach dem Loslassen landet der Text im Eingabefeld und kann vor dem Senden korrigiert werden
+- Wo Chrome lokale Erkennung anbietet (`processLocally`), läuft sie auf dem Gerät; sonst Hinweis, dass der Browser-Dienst (bei Chrome Google-Server) genutzt wird. Audio wird nie gespeichert.
+- Verständliche Fehlermeldungen (kein Mikrofon, keine Freigabe, nichts gehört …); ohne Unterstützung bleibt die Texteingabe
+
 ## Entwicklung
 
 ```bash
@@ -37,6 +44,7 @@ npm run build
 | `src/data/mock.ts` | Mock-Daten (später Supabase) |
 | `src/logic/analyse.ts` | Mock der Edge Function `analyse` (Schlagwörter statt KI) |
 | `src/logic/bewertung.ts` | Punktelogik |
+| `src/logic/sprache.ts` | Hook für die Spracherkennung (Push-to-talk) |
 | `src/components/` | Bildschirme: Start, Setup, Runde, Auflösung, Ende |
 
 ## Bewertungsregeln im Prototyp
