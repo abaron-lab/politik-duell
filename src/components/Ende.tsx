@@ -1,0 +1,96 @@
+import { useState } from 'react'
+import { gesamtpunkte, type RundenErgebnis, type Spieler } from '../spiel'
+import { Belege } from './Aufloesung'
+import { Logo } from './Logo'
+import { parteiStil } from './stil'
+
+export function Ende({
+  spieler,
+  runden,
+  onNeu,
+}: {
+  spieler: [Spieler, Spieler]
+  runden: RundenErgebnis[]
+  onNeu: () => void
+}) {
+  const [pa, pb] = gesamtpunkte(runden)
+  const [geteilt, setGeteilt] = useState<string | null>(null)
+  const sieger = pa === pb ? null : pa > pb ? spieler[0] : spieler[1]
+
+  async function teilen() {
+    const text =
+      `Wer liefert? – ${runden.length} Alltagsprobleme geprüft. ` +
+      `Ergebnis: ${spieler[0].partei.kurzname} ${pa} : ${pb} ${spieler[1].partei.kurzname}. Versprechen kann jeder.`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Wer liefert?', text, url: location.href })
+        return
+      } catch (e) {
+        // Abbruch durch Nutzer:in – nichts weiter tun. Sonst: Zwischenablage.
+        if (e instanceof DOMException && e.name === 'AbortError') return
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(`${text} ${location.href}`)
+      setGeteilt('In die Zwischenablage kopiert.')
+    } catch {
+      setGeteilt(text)
+    }
+  }
+
+  return (
+    <main className="seite ende">
+      <div className="ende-kopf">
+        <Logo groesse={72} />
+        <p className="label">Endstand</p>
+        <p className="endstand">
+          <span style={parteiStil(spieler[0].partei.farbe)}>{spieler[0].partei.kurzname}</span> {pa} : {pb}{' '}
+          <span style={parteiStil(spieler[1].partei.farbe)}>{spieler[1].partei.kurzname}</span>
+        </p>
+        <h2 className="sieger">
+          {sieger ? `${sieger.partei.name} liefert – ${sieger.name} gewinnt!` : 'Unentschieden!'}
+        </h2>
+      </div>
+
+      <section>
+        <h3>Alle Runden</h3>
+        <ol className="zusammenfassung">
+          {runden.map((r) => (
+            <li key={r.nr}>
+              <p className="zf-kopf">
+                <strong>Runde {r.nr}</strong> · {spieler[r.sprecher].name} ·{' '}
+                {r.thema ? r.thema.name : <span className="badge-ungeprueft">ungeprüft – keine Wertung</span>}
+              </p>
+              <p className="zf-problem">„{r.zusammenfassung}“</p>
+              {r.ergebnisse && (
+                <div className="zf-parteien">
+                  {r.ergebnisse.map((e, i) => (
+                    <div key={e.partei.id} className="zf-partei" style={parteiStil(e.partei.farbe)}>
+                      <span>
+                        {e.partei.kurzname}: {e.punkte} P. {r.punkte[i] === 1 && '✓'}
+                      </span>
+                      {e.treffer.length > 0 ? <Belege ergebnis={e} /> : <small className="zf-leer">keine Maßnahme</small>}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {r.beste.length > 0 && (
+                <p className="zf-beste">Beste Lösung insgesamt: {r.beste.map((b) => b.partei.kurzname).join(', ')}</p>
+              )}
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <div className="knopf-reihe">
+        <button className="knopf" onClick={teilen}>
+          Teilen
+        </button>
+        <button className="knopf knopf-zweit" onClick={onNeu}>
+          Neues Spiel
+        </button>
+      </div>
+      {geteilt && <p className="hinweis">{geteilt}</p>}
+    </main>
+  )
+}

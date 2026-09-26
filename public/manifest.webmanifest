@@ -1,0 +1,11 @@
+{
+  "name": "Wer liefert?",
+  "short_name": "Wer liefert?",
+  "description": "Versprechen kann jeder.",
+  "lang": "de",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121417",
+  "theme_color": "#121417",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

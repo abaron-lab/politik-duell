@@ -1,0 +1,583 @@
+/* Eigenes Design: Studiobühne in Anthrazit mit Signal-Orange.
+   Bewusst keine Anlehnung an bekannte Quizshow-Designs. */
+:root {
+  --grund: #121417;
+  --flaeche: #1c2025;
+  --flaeche-2: #262b32;
+  --linie: #343a42;
+  --text: #f3f1ea;
+  --text-leise: #a9adb3;
+  --akzent: #ff7a45;
+  --akzent-2: #ffd166;
+  --gut: #4fd1a5;
+  --warnung: #ffb020;
+  --radius: 14px;
+
+  color-scheme: dark;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--grund);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgb(255 122 69 / 0.18), transparent 60%),
+    var(--grund);
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+}
+
+a {
+  color: var(--akzent-2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+.mock-hinweis {
+  margin: 0 -16px 12px;
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  text-align: center;
+  background: var(--warnung);
+  color: #221a00;
+}
+
+/* ---------- Knöpfe ---------- */
+.knopf {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.75rem 1.4rem;
+  font: inherit;
+  font-weight: 700;
+  color: #1a0d05;
+  background: var(--akzent);
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+.knopf:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.knopf:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.knopf:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.knopf:focus-visible,
+.partei-knopf:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--akzent-2);
+  outline-offset: 2px;
+}
+.knopf-gross {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  font-size: 1.15rem;
+}
+.knopf-zweit {
+  background: var(--flaeche-2);
+  color: var(--text);
+}
+.knopf-reihe {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+.knopf-reihe .knopf {
+  flex: 1;
+}
+
+.label {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-leise);
+}
+.hinweis,
+.meta {
+  color: var(--text-leise);
+  font-size: 0.95rem;
+}
+
+/* ---------- Start ---------- */
+.start {
+  position: relative;
+  min-height: calc(100dvh - 60px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.start-inhalt {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 480px;
+  padding: 24px 0;
+}
+.titel {
+  font-size: clamp(2.6rem, 11vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-top: 0.5rem;
+}
+.slogan {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--akzent);
+}
+.erklaerung {
+  margin: 0;
+}
+.datenschutz {
+  margin-top: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--text-leise);
+}
+.wortwolke {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.wortwolke span {
+  position: absolute;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0.08;
+  animation: schweben linear infinite alternate;
+}
+@keyframes schweben {
+  from {
+    transform: translate(-20px, 10px);
+  }
+  to {
+    transform: translate(30px, -25px);
+  }
+}
+
+/* ---------- Setup ---------- */
+.seite {
+  padding-top: 8px;
+}
+.spieler-wahl {
+  margin: 1rem 0 0;
+  padding: 16px;
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+}
+.spieler-wahl legend {
+  padding: 0 6px;
+  font-weight: 800;
+}
+.spieler-wahl .label:first-of-type {
+  margin-top: 0;
+}
+.partei-raster {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+}
+.partei-knopf {
+  appearance: none;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.65rem 0.5rem;
+  border-radius: 10px;
+  border: 2px solid var(--partei);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.partei-knopf.gewaehlt {
+  background: var(--partei);
+  color: #111;
+}
+.partei-knopf:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+select,
+textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: var(--flaeche-2);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+}
+
+/* ---------- Punktestand ---------- */
+.punktestand {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -16px 8px;
+  padding: 10px 16px;
+  background: rgb(18 20 23 / 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--linie);
+}
+.team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.team-rechts {
+  justify-content: flex-end;
+}
+.team-name {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 3px solid var(--partei);
+}
+.team-punkte {
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.runden-anzeige {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-leise);
+}
+.runden-anzeige strong {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+/* ---------- Runde ---------- */
+.am-zug {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 12px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  background: var(--flaeche);
+  border: 2px solid var(--partei);
+}
+.am-zug-label {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--partei);
+  color: #111;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.rolle-chip {
+  font-size: 0.8rem;
+  color: var(--text-leise);
+}
+.verlauf {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 1rem 0;
+}
+.blase {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 88%;
+}
+.blase-spieler {
+  align-self: flex-end;
+  background: var(--akzent);
+  color: #1a0d05;
+  border-bottom-right-radius: 4px;
+}
+.blase-ki {
+  align-self: flex-start;
+  background: var(--flaeche-2);
+  border-bottom-left-radius: 4px;
+}
+.denkt {
+  color: var(--text-leise);
+  animation: pulsieren 1s ease-in-out infinite alternate;
+}
+@keyframes pulsieren {
+  to {
+    opacity: 0.5;
+  }
+}
+.eingabe {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.eingabe .knopf {
+  align-self: flex-end;
+}
+
+/* ---------- Auflösung ---------- */
+.problem-zitat {
+  margin: 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--akzent);
+  background: var(--flaeche);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1.1rem;
+}
+.trommelwirbel {
+  display: grid;
+  place-items: center;
+  height: 220px;
+}
+.trommelwirbel span {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--akzent);
+  animation: pochen 0.4s ease-in-out infinite alternate;
+}
+@keyframes pochen {
+  to {
+    transform: scale(1.08);
+  }
+}
+.enthuellen {
+  opacity: 0;
+  animation: enthuellen 0.5s ease-out forwards;
+}
+@keyframes enthuellen {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.karten {
+  display: grid;
+  gap: 12px;
+  margin-top: 1.25rem;
+}
+@media (min-width: 640px) {
+  .karten {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.partei-karte {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--flaeche);
+  border: 2px solid var(--linie);
+  border-top: 6px solid var(--partei);
+}
+.partei-karte.gewinnt {
+  border-color: var(--partei);
+  box-shadow: 0 0 0 1px var(--partei), 0 10px 30px -10px var(--partei);
+}
+.partei-karte header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 8px;
+}
+.karte-spieler {
+  grid-column: 1;
+  font-size: 0.75rem;
+  color: var(--text-leise);
+}
+.partei-karte h3 {
+  grid-column: 1;
+  margin: 0;
+}
+.karte-punkte {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-width: 3rem;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: var(--partei);
+  color: #111;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+.massnahme {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--linie);
+}
+.massnahme p {
+  margin: 0 0 4px;
+}
+.massnahme-titel {
+  font-weight: 700;
+}
+.massnahme-werte,
+.massnahme-ursachen,
+.massnahme-rolle {
+  font-size: 0.85rem;
+  color: var(--text-leise);
+}
+.massnahme-begruendung {
+  font-size: 0.95rem;
+}
+.keine-massnahme {
+  color: var(--text-leise);
+  font-style: italic;
+}
+.belege {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+.belege-liste {
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.beste-massnahme {
+  margin: 4px 0 0;
+}
+.rundensieger {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--akzent-2);
+}
+.beste {
+  margin-top: 1rem;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--linie);
+}
+.beste .label {
+  margin-top: 0;
+}
+.beste-zeile {
+  padding-left: 10px;
+  border-left: 4px solid var(--partei);
+  margin-top: 8px;
+}
+.ungeprueft {
+  margin-top: 1.25rem;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--flaeche);
+}
+.badge-ungeprueft {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--warnung);
+  color: #221a00;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+/* ---------- Ende ---------- */
+.ende-kopf {
+  text-align: center;
+  padding: 16px 0 8px;
+}
+.endstand {
+  margin: 0;
+  white-space: nowrap;
+  font-size: clamp(1.6rem, 8vw, 2.4rem);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.endstand span {
+  border-bottom: 4px solid var(--partei);
+}
+.sieger {
+  margin-top: 0.75rem;
+  color: var(--akzent);
+}
+.zusammenfassung {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.zusammenfassung > li {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--flaeche);
+}
+.zusammenfassung p {
+  margin: 0 0 6px;
+}
+.zf-problem {
+  font-style: italic;
+}
+.zf-parteien {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.zf-partei {
+  padding-left: 8px;
+  border-left: 3px solid var(--partei);
+  font-size: 0.9rem;
+}
+.zf-leer {
+  display: block;
+  color: var(--text-leise);
+}
+.zf-beste {
+  margin-top: 6px !important;
+  font-size: 0.85rem;
+  color: var(--text-leise);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
