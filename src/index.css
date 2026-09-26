@@ -658,3 +658,23 @@ textarea {
   flex: 1;
   border-top: 1px solid var(--linie);
 }
+
+.blase-fehler {
+  align-self: stretch;
+  max-width: none;
+  background: transparent;
+  border: 1px solid var(--warnung);
+  color: var(--warnung);
+}
+.einschaetzung {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: var(--text-leise);
+}
+.ladefehler {
+  margin-top: 1.5rem;
+  color: var(--warnung);
+}
+.ladefehler .knopf-gross {
+  margin-top: 0.75rem;
+}

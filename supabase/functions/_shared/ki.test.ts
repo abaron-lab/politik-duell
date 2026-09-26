@@ -1,0 +1,91 @@
+import { describe, expect, it } from 'vitest'
+import { THEMEN, URSACHEN } from '../../../src/data/mock'
+import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, pruefeAnfrage, systemPrompt } from './ki.ts'
+import type { Nachricht } from './typen.ts'
+
+const spieler = (text: string): Nachricht => ({ von: 'spieler', text })
+const ki = (text: string): Nachricht => ({ von: 'ki', text })
+const bereinige = (roh: unknown, verlauf: Nachricht[] = [spieler('Test')]) =>
+  bereinigeAntwort(roh, verlauf, THEMEN, URSACHEN)
+
+describe('systemPrompt', () => {
+  it('enthält den Katalog mit IDs, aber keine Links', () => {
+    const p = systemPrompt(THEMEN, URSACHEN)
+    expect(p).toContain('Thema 2: Miete')
+    expect(p).toContain('Ursache 202')
+    expect(p).not.toMatch(/https?:\/\//)
+  })
+})
+
+describe('nutzerNachrichten', () => {
+  it('verlangt nach zwei Nachfragen eine abschließende Einordnung', () => {
+    const n = nutzerNachrichten([spieler('a'), ki('b'), spieler('c'), ki('d'), spieler('e')], 'mieter')
+    expect(n[0].content).toContain('Mieter:in')
+    expect(n[0].content).toContain('bereits zweimal')
+    expect(n.slice(1).map((x) => x.role)).toEqual(['user', 'assistant', 'user', 'assistant', 'user'])
+  })
+})
+
+describe('bereinigeAntwort', () => {
+  it('übernimmt eine gültige Zuordnung', () => {
+    const a = bereinige({ typ: 'problem', thema_id: 2, ursachen_ids: [202], zusammenfassung: 'Miete steigt stark.' })
+    expect(a).toMatchObject({ typ: 'problem', thema_id: 2, ursachen_ids: [202] })
+  })
+
+  it('verwirft Ursachen, die nicht zum Thema gehören, und nimmt dann alle', () => {
+    const a = bereinige({ typ: 'problem', thema_id: 2, ursachen_ids: [101, 999], zusammenfassung: 'x' })
+    expect(a.ursachen_ids).toEqual([201, 202, 203])
+  })
+
+  it('setzt unbekannte Themen auf ungeprüft', () => {
+    const a = bereinige({ typ: 'problem', thema_id: 77, ursachen_ids: [1], zusammenfassung: 'Bus', einschaetzung: 'Takt' })
+    expect(a).toMatchObject({ thema_id: null, ursachen_ids: [], einschaetzung: 'Takt' })
+  })
+
+  it('entfernt Links aus allen Texten', () => {
+    const a = bereinige({ typ: 'problem', thema_id: null, zusammenfassung: 'Siehe https://x.de hier', einschaetzung: 'www.y.de' })
+    expect(a.zusammenfassung).not.toContain('x.de')
+    expect(a.einschaetzung).toBeNull()
+  })
+
+  it('erzwingt nach zwei Nachfragen keine dritte', () => {
+    const verlauf = [spieler('Weniger X'), ki('?'), spieler('Mehr Y'), ki('?'), spieler('Weniger Z')]
+    const a = bereinige({ typ: 'forderung', nachfrage: 'Noch eine Frage?', zusammenfassung: 'z' }, verlauf)
+    expect(a.typ).toBe('problem')
+    expect(a.nachfrage).toBeNull()
+  })
+
+  it('ergänzt eine fehlende Nachfrage', () => {
+    const a = bereinige({ typ: 'forderung', zusammenfassung: 'x' })
+    expect(a.nachfrage).toBe('Was läuft in deinem Alltag konkret schief?')
+  })
+
+  it('kommt mit Müll zurecht', () => {
+    const a = bereinige('kein json', [spieler('Mein Problem')])
+    expect(a).toMatchObject({ typ: 'problem', thema_id: null, zusammenfassung: 'Mein Problem' })
+  })
+})
+
+describe('pruefeAnfrage', () => {
+  const gueltig = {
+    sitzung: '0b5c1f3e-8d2a-4e7b-9c1d-2a3b4c5d6e7f',
+    verlauf: [spieler('Mein Arzt hat keine Termine')],
+    rolle: 'mieter',
+    parteien: [1, 2],
+  }
+
+  it('akzeptiert eine gültige Anfrage', () => {
+    expect(pruefeAnfrage(gueltig).rolle).toBe('mieter')
+  })
+
+  it.each([
+    ['ohne Sitzung', { ...gueltig, sitzung: 'x' }],
+    ['mit zu langem Text', { ...gueltig, verlauf: [spieler('a'.repeat(501))] }],
+    ['mit KI als letzter Nachricht', { ...gueltig, verlauf: [spieler('a'), ki('b')] }],
+    ['mit unbekannter Rolle', { ...gueltig, rolle: 'koenig' }],
+    ['mit gleicher Partei', { ...gueltig, parteien: [1, 1] }],
+    ['mit zu langem Verlauf', { ...gueltig, verlauf: Array(7).fill(spieler('a')) }],
+  ])('lehnt Anfrage %s ab', (_, anfrage) => {
+    expect(() => pruefeAnfrage(anfrage)).toThrow(EingabeFehler)
+  })
+})

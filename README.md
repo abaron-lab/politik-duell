@@ -23,15 +23,27 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 
 - Großer Mikrofon-Knopf: gedrückt halten, sprechen, loslassen (Maus, Touch oder Leertaste/Enter)
 - Web Speech API (`de-DE`), Live-Anzeige des erkannten Texts; nach dem Loslassen landet der Text im Eingabefeld und kann vor dem Senden korrigiert werden
-- Wo Chrome lokale Erkennung anbietet (`processLocally`), läuft sie auf dem Gerät; sonst Hinweis, dass der Browser-Dienst (bei Chrome Google-Server) genutzt wird. Audio wird nie gespeichert.
+- Hinweis unter dem Knopf, dass der Browser-Dienst (bei Chrome Google-Server) die Erkennung übernimmt. Audio wird nie gespeichert. (Die lokale Erkennung per `SpeechRecognition.available()` ist bewusst nicht eingebaut: Der Aufruf hing bzw. stürzte in Tests mit Chromium ab.)
 - Verständliche Fehlermeldungen (kein Mikrofon, keine Freigabe, nichts gehört …); ohne Unterstützung bleibt die Texteingabe
+
+## Stand: Meilenstein 3 – Supabase und KI
+
+- Datenbankschema mit Row Level Security (`supabase/migrations/`): App liest nur Stammdaten und freigegebene Probleme, geschrieben wird ausschließlich über die Edge Function
+- Seed-Daten aus den fiktiven Beispieldaten (`npm run seed` → `supabase/seed.sql`)
+- Edge Function `analyse` (`supabase/functions/analyse/`): Mistral ordnet die Äußerung ein (striktes JSON), die Antwort wird streng geprüft (nur IDs aus dem Katalog, keine Links, höchstens zwei Nachfragen)
+- Punkte berechnet dieselbe Logik in App und Funktion (`supabase/functions/_shared/bewertung.ts`) – die KI vergibt keine Punkte
+- Abgeschlossene Runden werden anonym gespeichert (nur neutrale Kurzfassung); unbekannte Themen landen in `review_warteschlange` mit vorläufiger Einschätzung
+- Rate-Limit pro zufälliger Sitzungs-ID
+- Ohne Supabase-Verbindung: „Mit Beispieldaten spielen“ bzw. `VITE_DATENQUELLE=mock`
+
+**Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
 
 ## Entwicklung
 
 ```bash
 npm install
 npm run dev      # Entwicklungsserver
-npm test         # Tests für Analyse und Bewertung
+npm test         # Tests: Analyse, Bewertung, KI-Prüfung, Datenbank (PGlite)
 npm run lint
 npm run build
 ```
@@ -40,10 +52,13 @@ npm run build
 
 | Pfad | Inhalt |
 | --- | --- |
-| `src/data/types.ts` | Typen entsprechend dem Datenmodell |
-| `src/data/mock.ts` | Mock-Daten (später Supabase) |
-| `src/logic/analyse.ts` | Mock der Edge Function `analyse` (Schlagwörter statt KI) |
-| `src/logic/bewertung.ts` | Punktelogik |
+| `supabase/migrations/` | Datenbankschema, Zugriffsregeln, Rate-Limit |
+| `supabase/seed.sql` | Beispieldaten (erzeugt aus `src/data/mock.ts`) |
+| `supabase/functions/analyse/` | Edge Function: KI-Einordnung und Speichern der Runde |
+| `supabase/functions/_shared/` | Gemeinsamer Code von App und Funktion: Typen, Punktelogik, KI-Prompt und -Prüfung |
+| `src/data/quelle.ts` | Datenquelle der App: Supabase oder Beispieldaten |
+| `src/data/mock.ts` | Fiktive Beispieldaten |
+| `src/logic/analyse.ts` | Offline-Ersatz für die KI (Schlagwörter) |
 | `src/logic/sprache.ts` | Hook für die Spracherkennung (Push-to-talk) |
 | `src/components/` | Bildschirme: Start, Setup, Runde, Auflösung, Ende |
 

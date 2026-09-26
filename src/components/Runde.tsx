@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { MASSNAHMEN, PARTEIEN, ROLLEN, THEMEN, URSACHEN } from '../data/mock'
+import { useDaten } from '../data/kontext'
+import { analysiere, AnalyseFehler, type Daten } from '../data/quelle'
+import { ROLLEN } from '../data/rollen'
 import type { AnalyseAntwort, Nachricht } from '../data/types'
-import { analysiereAsync } from '../logic/analyse'
 import { besteParteien, bewertePartei, rundenpunkte } from '../logic/bewertung'
-import { REVIEW_WARTESCHLANGE, type RundenErgebnis, type Spieler } from '../spiel'
+import type { RundenErgebnis, Spieler } from '../spiel'
 import { SprechKnopf } from './SprechKnopf'
 import { parteiStil } from './stil'
 
@@ -16,26 +17,29 @@ function werteAus(
   nr: number,
   sprecher: 0 | 1,
   spieler: [Spieler, Spieler],
+  { themen, parteien, massnahmen }: Daten,
 ): RundenErgebnis {
   const rolle = spieler[sprecher].rolle
-  const thema = THEMEN.find((t) => t.id === analyse.thema_id) ?? null
+  const thema = themen.find((t) => t.id === analyse.thema_id) ?? null
 
+  // Ohne Thema in der Datenbank: ungeprüft. Die Review-Warteschlange füllt die Edge Function.
   if (!thema) {
-    REVIEW_WARTESCHLANGE.push(analyse.zusammenfassung)
     return {
       nr, sprecher, rolle, thema: null, status: 'ungeprueft',
-      zusammenfassung: analyse.zusammenfassung, ergebnisse: null, punkte: [0, 0], beste: [],
+      zusammenfassung: analyse.zusammenfassung, einschaetzung: analyse.einschaetzung ?? null,
+      ergebnisse: null, punkte: [0, 0], beste: [],
     }
   }
 
-  const ea = bewertePartei(spieler[0].partei, thema.id, analyse.ursachen_ids, rolle, MASSNAHMEN)
-  const eb = bewertePartei(spieler[1].partei, thema.id, analyse.ursachen_ids, rolle, MASSNAHMEN)
+  const ea = bewertePartei(spieler[0].partei, thema.id, analyse.ursachen_ids, rolle, massnahmen)
+  const eb = bewertePartei(spieler[1].partei, thema.id, analyse.ursachen_ids, rolle, massnahmen)
   return {
     nr, sprecher, rolle, thema, status: 'gewertet',
     zusammenfassung: analyse.zusammenfassung,
+    einschaetzung: null,
     ergebnisse: [ea, eb],
     punkte: rundenpunkte(ea.punkte, eb.punkte),
-    beste: besteParteien(PARTEIEN, thema.id, analyse.ursachen_ids, rolle, MASSNAHMEN),
+    beste: besteParteien(parteien, thema.id, analyse.ursachen_ids, rolle, massnahmen),
   }
 }
 
@@ -54,6 +58,8 @@ export function Runde({
   const [hinweis, setHinweis] = useState<string | null>(null)
   const [eingabe, setEingabe] = useState('')
   const [denkt, setDenkt] = useState(false)
+  const [fehler, setFehler] = useState<string | null>(null)
+  const daten = useDaten()
 
   const aktiv = spieler[sprecher]
   const rolle = ROLLEN.find((r) => r.id === aktiv.rolle)?.label
@@ -66,9 +72,24 @@ export function Runde({
     setVerlauf(neu)
     setEingabe('')
     setHinweis(null)
+    setFehler(null)
     setDenkt(true)
-    const analyse = await analysiereAsync(neu, THEMEN, URSACHEN)
-    setDenkt(false)
+    let analyse: AnalyseAntwort
+    try {
+      analyse = await analysiere(daten, {
+        verlauf: neu,
+        rolle: aktiv.rolle,
+        parteien: [spieler[0].partei.id, spieler[1].partei.id],
+      })
+    } catch (err) {
+      // Eingabe zurückgeben, damit sie erneut gesendet werden kann.
+      setVerlauf(verlauf)
+      setEingabe(text)
+      setFehler(err instanceof AnalyseFehler ? err.message : 'Die Einordnung hat gerade nicht geklappt.')
+      return
+    } finally {
+      setDenkt(false)
+    }
 
     if (analyse.typ === 'forderung' && analyse.nachfrage) {
       setVerlauf([...neu, { von: 'ki', text: analyse.nachfrage }])
@@ -77,7 +98,7 @@ export function Runde({
       setVerlauf([])
       setHinweis(WERT_ANTWORT)
     } else {
-      onErgebnis(werteAus(analyse, nr, sprecher, spieler))
+      onErgebnis(werteAus(analyse, nr, sprecher, spieler, daten))
     }
   }
 
@@ -102,6 +123,11 @@ export function Runde({
           </p>
         ))}
         {denkt && <p className="blase blase-ki denkt">Ich ordne das ein …</p>}
+        {fehler && (
+          <p className="blase blase-fehler" role="alert">
+            {fehler}
+          </p>
+        )}
       </div>
 
       <SprechKnopf

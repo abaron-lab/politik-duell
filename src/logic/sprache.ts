@@ -18,7 +18,6 @@ interface Erkennung {
   lang: string
   continuous: boolean
   interimResults: boolean
-  processLocally?: boolean
   onresult: ((e: ErkennungsEreignis) => void) | null
   onerror: ((e: { error: string }) => void) | null
   onend: (() => void) | null
@@ -28,7 +27,6 @@ interface Erkennung {
 }
 interface ErkennungsKlasse {
   new (): Erkennung
-  available?: (opt: { langs: string[]; processLocally: boolean }) => Promise<string>
 }
 
 function erkennungsKlasse(): ErkennungsKlasse | null {
@@ -75,8 +73,6 @@ export function useSpracherkennung(onFertig: (text: string) => void) {
   const [aktiv, setAktiv] = useState(false)
   const [zwischentext, setZwischentext] = useState('')
   const [fehler, setFehler] = useState<string | null>(null)
-  /** true, wenn die Erkennung auf dem Gerät läuft (kein Audio an Server). */
-  const [lokal, setLokal] = useState(false)
 
   const erkennung = useRef<Erkennung | null>(null)
   const text = useRef('')
@@ -85,16 +81,8 @@ export function useSpracherkennung(onFertig: (text: string) => void) {
     fertigRef.current = onFertig
   }, [onFertig])
 
-  // Neuere Chrome-Versionen können lokal auf dem Gerät erkennen.
-  useEffect(() => {
-    let abgebrochen = false
-    Klasse?.available?.({ langs: [SPRACHE], processLocally: true })
-      .then((status) => !abgebrochen && setLokal(status === 'available'))
-      .catch(() => {})
-    return () => {
-      abgebrochen = true
-    }
-  }, [Klasse])
+  // Hinweis: SpeechRecognition.available() (Erkennung auf dem Gerät) wird bewusst
+  // nicht genutzt – der Aufruf hängt bzw. stürzt in manchen Chromium-Builds ab.
 
   useEffect(() => () => erkennung.current?.abort(), [])
 
@@ -104,7 +92,6 @@ export function useSpracherkennung(onFertig: (text: string) => void) {
     rec.lang = SPRACHE
     rec.continuous = true
     rec.interimResults = true
-    if (lokal) rec.processLocally = true
     text.current = ''
     rec.onresult = (e) => {
       text.current = transkript(e.results)
@@ -126,11 +113,11 @@ export function useSpracherkennung(onFertig: (text: string) => void) {
     } catch {
       setFehler(fehlerText('unbekannt'))
     }
-  }, [Klasse, lokal])
+  }, [Klasse])
 
   const stop = useCallback(() => {
     erkennung.current?.stop()
   }, [])
 
-  return { unterstuetzt: Klasse !== null, aktiv, zwischentext, fehler, lokal, start, stop }
+  return { unterstuetzt: Klasse !== null, aktiv, zwischentext, fehler, start, stop }
 }

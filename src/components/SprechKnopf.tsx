@@ -14,7 +14,7 @@ function Mikrofon() {
 
 /** Push-to-talk: Knopf gedrückt halten, sprechen, loslassen. Auch per Leertaste bedienbar. */
 export function SprechKnopf({ gesperrt, onText }: { gesperrt: boolean; onText: (text: string) => void }) {
-  const { unterstuetzt, aktiv, zwischentext, fehler, lokal, start, stop } = useSpracherkennung(onText)
+  const { unterstuetzt, aktiv, zwischentext, fehler, start, stop } = useSpracherkennung(onText)
   const [kurzHinweis, setKurzHinweis] = useState(false)
   const gedruecktSeit = useRef(0)
 
@@ -74,9 +74,7 @@ export function SprechKnopf({ gesperrt, onText }: { gesperrt: boolean; onText: (
           : fehler ?? (kurzHinweis ? 'Halte den Knopf gedrückt, solange du sprichst.' : 'Gedrückt halten und sprechen')}
       </p>
       <p className="sprech-info">
-        {lokal
-          ? 'Die Spracherkennung läuft auf deinem Gerät. Audio wird nicht gespeichert.'
-          : 'Die Spracherkennung übernimmt dein Browser (bei Chrome über Server von Google). Wir speichern kein Audio.'}
+        Die Spracherkennung übernimmt dein Browser (bei Chrome über Server von Google). Wir speichern kein Audio.
       </p>
     </div>
   )
