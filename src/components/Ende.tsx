@@ -21,15 +21,20 @@ export function Ende({
     const text =
       `Wer liefert? – ${runden.length} Alltagsprobleme geprüft. ` +
       `Ergebnis: ${spieler[0].partei.kurzname} ${pa} : ${pb} ${spieler[1].partei.kurzname}. Versprechen kann jeder.`
-    try {
-      if (navigator.share) {
+    if (navigator.share) {
+      try {
         await navigator.share({ title: 'Wer liefert?', text, url: location.href })
         return
+      } catch (e) {
+        // Abbruch durch Nutzer:in – nichts weiter tun. Sonst: Zwischenablage.
+        if (e instanceof DOMException && e.name === 'AbortError') return
       }
+    }
+    try {
       await navigator.clipboard.writeText(`${text} ${location.href}`)
       setGeteilt('In die Zwischenablage kopiert.')
     } catch {
-      // Abbruch durch Nutzer:in oder kein Zugriff auf die Zwischenablage.
+      setGeteilt(text)
     }
   }
 
