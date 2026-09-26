@@ -1,0 +1,118 @@
+# Projekt: „Wer liefert?"
+
+Slogan: *„Versprechen kann jeder."*
+
+Ein Zwei-Spieler-Webspiel: Spieler nennen reale Alltagsprobleme, das Spiel prüft, welche Partei dafür die **wirksamste und umsetzbare** Lösung bietet – mit Beleg-Link nach jeder Runde.
+
+## Grundprinzipien (nicht verhandelbar)
+
+1. **Neutrale Methode, kein vorgegebenes Ergebnis.** Alle Parteien werden nach denselben Kriterien bewertet. Bietet eine Partei nachweislich die beste Lösung, gewinnt sie – egal welche.
+2. **Die KI vergibt keine Punkte.** Sie führt nur das Gespräch und ordnet Probleme Themen/Ursachen zu. Punkte kommen deterministisch aus der kuratierten Datenbank.
+3. **Die KI erfindet niemals Quellen oder Links.** Alle Belege stammen ausschließlich aus der Datenbank.
+4. **Forderung ≠ Problem.** Nennt ein Spieler eine Forderung („weniger X"), fragt die KI nach dem konkreten Alltagsproblem dahinter.
+5. **Datenschutz:** Politische Meinungen sind besondere Daten (Art. 9 DSGVO). Keine Konten, keine IPs, kein Audio speichern – nur anonymen Problemtext.
+
+## Spielablauf
+
+1. Startbildschirm mit Titel, kurzer Erklärung, Datenschutzhinweis. Im Hintergrund: langsam bewegte Wortwolke der zuletzt genannten (freigegebenen) Probleme.
+2. Spieler A und B wählen je eine Partei (nicht dieselbe) und optional eine Rolle (Mieter, Eigentümer, Angestellte, Selbstständig, Rentner, Arbeitslos, Studierend, Vermögend).
+3. Pro Runde (insgesamt 5, abwechselnd): Ein Spieler **hält einen Knopf gedrückt** und spricht sein Problem ein (Text-Eingabe als Alternative).
+4. KI klassifiziert: `problem` | `forderung` | `wert`.
+   - `forderung` → max. 2 Nachfragen („Was läuft in deinem Alltag konkret schief?").
+   - `wert` → respektvoll als persönliche Haltung benennen, Runde ohne Wertung, neues Problem möglich.
+   - `problem` → Zuordnung zu Thema + Ursachen.
+5. Auflösung: Beide gewählten Parteien werden gezeigt mit Maßnahme, Punktzahl, Kurzbegründung und **Beleg-Links** (Wahlprogramm mit Seitenanker + ggf. Studie). Zusätzlich: welche Partei insgesamt die beste Lösung hätte.
+6. Nach 5 Runden: Gesamtsieger, Zusammenfassung aller Runden mit Links, Teilen-Button.
+
+## Bewertungslogik
+
+Pro Maßnahme in der Datenbank:
+- `wirksamkeit` 0–3: Setzt die Maßnahme an den tatsächlichen Ursachen an?
+- `umsetzbarkeit` 0–3: rechtlich, finanziell, zeitlich realistisch?
+- optional `rollen_modifikator`: Auf- oder Abwertung je Rolle (z. B. Mietrecht für Mieter vs. Eigentümer), begründet.
+
+Rundenpunkte = Summe über die zugeordneten Ursachen. Höhere Summe gewinnt die Runde (1 Punkt). Gleichstand: beide je 1 Punkt. Hat eine Partei keine Maßnahme zum Thema: 0.
+
+Ist ein Thema nicht in der DB: KI gibt eine vorläufige Einschätzung, deutlich als **„ungeprüft – keine Wertung"** gekennzeichnet, ohne Punkte und ohne Links. Eintrag landet in einer Review-Warteschlange.
+
+## Tech-Stack
+
+- **Frontend:** React + Vite + TypeScript, mobil-first, als PWA. Hosting: Vercel oder Netlify.
+- **Backend:** Supabase, Region Frankfurt (Postgres, Edge Functions, Realtime).
+- **KI:** API-Aufruf ausschließlich aus einer Edge Function (API-Key nie im Frontend). Günstiges Modell (z. B. Claude Haiku oder Mistral). Antworten als striktes JSON. Rate-Limit pro Sitzung.
+- **Sprache:** Push-to-talk via Web Speech API (Chrome/Safari); Fallback Texteingabe. Später optional Transkriptionsdienst.
+- **Wortwolke:** d3-cloud, sanfte Bewegung, Updates über Supabase Realtime.
+
+## Datenmodell (Entwurf)
+
+```sql
+parteien (id, name, kurzname, farbe, programm_url, programm_stand date)
+
+themen (id, name, beschreibung)
+
+ursachen (id, thema_id, beschreibung, quelle_url)
+
+massnahmen (
+  id, thema_id, partei_id,
+  beschreibung,
+  ursachen_ids int[],
+  wirksamkeit smallint check (0..3),
+  umsetzbarkeit smallint check (0..3),
+  rollen_modifikator jsonb,
+  begruendung text,
+  beleg_programm_url text not null,   -- mit #page=N wo möglich
+  beleg_studie_url text,
+  stand date,
+  geprueft boolean default false
+)
+
+runden (
+  id, created_at, thema_id null, problem_text,
+  partei_a, partei_b, punkte_a, punkte_b,
+  status text,            -- gewertet | ungeprueft | wert
+  freigegeben boolean default false   -- für Wortwolke
+)
+```
+
+Row Level Security: Frontend darf nur lesen (Themen, Maßnahmen, freigegebene Probleme) und über die Edge Function schreiben.
+
+## KI-Schnittstelle
+
+Edge Function `analyse` erhält: Gesprächsverlauf der Runde, Rolle, Liste aller Themen + Ursachen (IDs + Kurztext).
+Antwort (JSON):
+
+```json
+{
+  "typ": "problem | forderung | wert",
+  "nachfrage": "string | null",
+  "thema_id": "number | null",
+  "ursachen_ids": [1, 2],
+  "zusammenfassung": "kurzer neutraler Satz zum Problem"
+}
+```
+
+Systemprompt-Regeln: neutral, respektvoll, keine Belehrung, keine eigenen Bewertungen von Parteien, keine Links, Deutsch, kurze Sätze.
+
+## Moderation
+
+Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Privatpersonen, Hetze) + Admin-Freigabe in einfacher Admin-Ansicht (Supabase Auth, nur Admins).
+
+## Branding
+
+- Name: **„Wer liefert?"**, Slogan: **„Versprechen kann jeder."**
+- Eigenes, originales Logo und Design mit Quizshow-Anmutung (Spannung, Auflösung, Punktestand), aber **nicht** Logo, Farbschema oder Studiodesign von „Wer wird Millionär" nachbilden (markenrechtlich geschützt).
+- Tonalität: neutral, freundlich, leicht spielerisch; keine Seitenhiebe auf einzelne Parteien in Texten, Grafiken oder Animationen.
+
+## Meilensteine
+
+1. **Klickbarer Prototyp:** Parteiwahl, Texteingabe, Mock-Daten für 3 Themen (Arzttermine, Miete, Energiepreise), Punktevergabe + Beleg-Links, Endbildschirm.
+2. Push-to-talk-Knopf.
+3. Supabase-Anbindung: Schema, Seed-Daten, Edge Function mit KI.
+4. Wortwolke mit Realtime + Moderation/Admin-Ansicht.
+5. Datenschutzseite, Impressum, Rate-Limit, Deployment.
+
+## Offene Punkte
+
+- Welche Parteien sind dabei (Vorschlag: CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW)?
+- Wer pflegt und prüft die Bewertungen? Idee: öffentlich im Repo als JSON, Änderungen per Pull Request mit Quellenpflicht.
+- Domain prüfen und sichern (z. B. werliefert.de oder wer-liefert.de).
