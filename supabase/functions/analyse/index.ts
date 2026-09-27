@@ -1,28 +1,21 @@
-// Edge Function `analyse`: ordnet eine Äußerung per KI (Claude) ein und
+// Edge Function `analyse`: ordnet eine Äußerung per KI (Mistral) ein und
 // speichert abgeschlossene Runden anonym. Die KI vergibt keine Punkte und
 // nennt keine Links – Punkte kommen deterministisch aus der Datenbank.
 //
 // Secrets (Supabase → Edge Functions → Secrets):
-//   ANTHROPIC_API_KEY          – Pflicht
-//   ANTHROPIC_MODEL            – optional, Standard: claude-haiku-4-5
+//   MISTRAL_API_KEY            – Pflicht
+//   MISTRAL_MODEL              – optional, Standard: mistral-small-latest
 // Automatisch vorhanden: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
-import Anthropic from 'npm:@anthropic-ai/sdk@0.128'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { bewertePartei } from '../_shared/bewertung.ts'
-import {
-  ANTWORT_SCHEMA,
-  bereinigeAntwort,
-  EingabeFehler,
-  nutzerNachrichten,
-  pruefeAnfrage,
-  systemPrompt,
-} from '../_shared/ki.ts'
+import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, pruefeAnfrage, systemPrompt } from '../_shared/ki.ts'
 import { pruefeText } from '../_shared/moderation.ts'
 import type { AnalyseAntwort, Massnahme, Partei, Rolle, Thema, Ursache } from '../_shared/typen.ts'
 
 const RATE_LIMIT_MAX = 40
 const RATE_LIMIT_FENSTER = '30 minutes'
+const MISTRAL_URL = 'https://api.mistral.ai/v1/chat/completions'
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -37,27 +30,24 @@ const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SE
   auth: { persistSession: false },
 })
 
-let claude: Anthropic | null = null
-
-async function frageKi(system: string, { hinweis, nachrichten }: ReturnType<typeof nutzerNachrichten>): Promise<unknown> {
-  const apiKey = Deno.env.get('ANTHROPIC_API_KEY')
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY fehlt')
-  claude ??= new Anthropic({ apiKey, timeout: 20_000, maxRetries: 1 })
-  const antwort = await claude.messages.create({
-    model: Deno.env.get('ANTHROPIC_MODEL') ?? 'claude-haiku-4-5',
-    max_tokens: 800,
-    temperature: 0.1,
-    system: [
-      // Katalog und Regeln sind je Datenstand gleich → cachebar; der Hinweis wechselt pro Runde.
-      { type: 'text', text: system, cache_control: { type: 'ephemeral' } },
-      { type: 'text', text: hinweis },
-    ],
-    messages: nachrichten,
-    output_config: { format: { type: 'json_schema', schema: ANTWORT_SCHEMA } },
+async function frageMistral(system: string, nachrichten: ReturnType<typeof nutzerNachrichten>): Promise<unknown> {
+  const key = Deno.env.get('MISTRAL_API_KEY')
+  if (!key) throw new Error('MISTRAL_API_KEY fehlt')
+  const res = await fetch(MISTRAL_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: Deno.env.get('MISTRAL_MODEL') ?? 'mistral-small-latest',
+      temperature: 0.1,
+      max_tokens: 400,
+      response_format: { type: 'json_object' },
+      messages: [{ role: 'system', content: system }, ...nachrichten],
+    }),
+    signal: AbortSignal.timeout(20_000),
   })
-  if (antwort.stop_reason === 'refusal') throw new Error('KI hat die Antwort verweigert')
-  const text = antwort.content.find((b) => b.type === 'text')?.text ?? '{}'
-  return JSON.parse(text)
+  if (!res.ok) throw new Error(`Mistral ${res.status}: ${(await res.text()).slice(0, 200)}`)
+  const daten = await res.json()
+  return JSON.parse(daten.choices?.[0]?.message?.content ?? '{}')
 }
 
 Deno.serve(async (req) => {
@@ -84,7 +74,7 @@ Deno.serve(async (req) => {
     const themen = themenRes.data as Thema[]
     const ursachen = ursachenRes.data as Ursache[]
 
-    const roh = await frageKi(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle))
+    const roh = await frageMistral(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle))
     const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen)
 
     // Abgeschlossene Runde anonym speichern (nur die neutrale Zusammenfassung).

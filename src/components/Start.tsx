@@ -37,7 +37,7 @@ export function Start({
         )}
         <p className="datenschutz">
           <strong>Datenschutz:</strong> Keine Konten, keine IP-Adressen, kein Audio. Deine Eingaben ordnet eine KI
-          (Claude von Anthropic) ein. Gespeichert wird nur eine anonyme, neutrale Kurzfassung des Problems; ein Stichwort
+          (Mistral, EU) ein. Gespeichert wird nur eine anonyme, neutrale Kurzfassung des Problems; ein Stichwort
           daraus kann nach Prüfung in der Wortwolke erscheinen.
         </p>
       </div>

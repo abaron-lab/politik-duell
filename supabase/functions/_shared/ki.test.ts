@@ -20,9 +20,9 @@ describe('systemPrompt', () => {
 describe('nutzerNachrichten', () => {
   it('verlangt nach zwei Nachfragen eine abschließende Einordnung', () => {
     const n = nutzerNachrichten([spieler('a'), ki('b'), spieler('c'), ki('d'), spieler('e')], 'mieter')
-    expect(n.hinweis).toContain('Mieter:in')
-    expect(n.hinweis).toContain('bereits zweimal')
-    expect(n.nachrichten.map((x) => x.role)).toEqual(['user', 'assistant', 'user', 'assistant', 'user'])
+    expect(n[0].content).toContain('Mieter:in')
+    expect(n[0].content).toContain('bereits zweimal')
+    expect(n.slice(1).map((x) => x.role)).toEqual(['user', 'assistant', 'user', 'assistant', 'user'])
   })
 })
 

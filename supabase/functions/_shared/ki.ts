@@ -64,10 +64,6 @@ Antworte ausschließlich mit einem JSON-Objekt:
  "ursachen_ids": number[], "zusammenfassung": string, "stichwort": string, "einschaetzung": string | null}`
 }
 
-/**
- * Gesprächsverlauf für die KI. Der Hinweis (Rolle, ggf. keine weitere Nachfrage)
- * gehört in den Systemprompt; die Nachrichten beginnen und enden mit der Person.
- */
 export function nutzerNachrichten(verlauf: Nachricht[], rolle: Rolle | null) {
   const nachfragen = verlauf.filter((n) => n.von === 'ki').length
   const hinweis =
@@ -75,28 +71,14 @@ export function nutzerNachrichten(verlauf: Nachricht[], rolle: Rolle | null) {
     (nachfragen >= MAX_NACHFRAGEN
       ? ' Es wurde bereits zweimal nachgefragt: Ordne jetzt als "problem" oder "wert" ein, nicht als "forderung".'
       : '')
-  const nachrichten = verlauf.map((n) => ({
-    role: n.von === 'spieler' ? ('user' as const) : ('assistant' as const),
-    content: n.text,
-  }))
-  return { hinweis, nachrichten }
+  return [
+    { role: 'system' as const, content: hinweis },
+    ...verlauf.map((n) => ({
+      role: n.von === 'spieler' ? ('user' as const) : ('assistant' as const),
+      content: n.text,
+    })),
+  ]
 }
-
-/** JSON-Schema der KI-Antwort (für strukturierte Ausgabe). Inhalte prüft trotzdem `bereinigeAntwort`. */
-export const ANTWORT_SCHEMA = {
-  type: 'object',
-  properties: {
-    typ: { type: 'string', enum: ['problem', 'forderung', 'wert'] },
-    nachfrage: { anyOf: [{ type: 'string' }, { type: 'null' }] },
-    thema_id: { anyOf: [{ type: 'integer' }, { type: 'null' }] },
-    ursachen_ids: { type: 'array', items: { type: 'integer' } },
-    zusammenfassung: { type: 'string' },
-    stichwort: { type: 'string' },
-    einschaetzung: { anyOf: [{ type: 'string' }, { type: 'null' }] },
-  },
-  required: ['typ', 'nachfrage', 'thema_id', 'ursachen_ids', 'zusammenfassung', 'stichwort', 'einschaetzung'],
-  additionalProperties: false,
-} as const
 
 export class EingabeFehler extends Error {}
 
