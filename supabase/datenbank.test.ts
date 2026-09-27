@@ -13,14 +13,20 @@ beforeAll(async () => {
   await db.exec(`create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
     grant usage on schema public to anon, authenticated, service_role;
     alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
-    alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;`)
+    alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
+    create schema auth;
+    create table auth.users (id uuid primary key);
+    create function auth.uid() returns uuid language sql stable
+      as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
+    grant usage on schema auth to anon, authenticated;`)
   for (const datei of readdirSync(new URL('./migrations', import.meta.url)).sort()) {
     await db.exec(lies(`./migrations/${datei}`))
   }
   await db.exec(lies('./seed.sql'))
 }, 30_000)
 
-async function alsRolle<T>(rolle: string, fn: () => Promise<T>): Promise<T> {
+async function alsRolle<T>(rolle: string, fn: () => Promise<T>, nutzer = ''): Promise<T> {
+  await db.query(`select set_config('request.jwt.claim.sub', $1, false)`, [nutzer])
   await db.exec(`set role ${rolle}`)
   try {
     return await fn()
@@ -28,6 +34,11 @@ async function alsRolle<T>(rolle: string, fn: () => Promise<T>): Promise<T> {
     await db.exec('reset role')
   }
 }
+
+const ADMIN = '00000000-0000-4000-8000-00000000a001'
+const NUTZER = '00000000-0000-4000-8000-00000000b002'
+const alsAdmin = <T>(fn: () => Promise<T>) => alsRolle('authenticated', fn, ADMIN)
+const alsNutzer = <T>(fn: () => Promise<T>) => alsRolle('authenticated', fn, NUTZER)
 
 describe('Datenbank', () => {
   it('enthält die Seed-Daten', async () => {
@@ -81,6 +92,73 @@ describe('Datenbank', () => {
     await expect(
       db.query(`insert into massnahmen (thema_id, partei_id, beschreibung, ursachen_ids, wirksamkeit, umsetzbarkeit,
         begruendung, beleg_programm_url, stand) values (1, 1, 'x', '{101}', 4, 1, 'x', 'https://x', now())`),
+    ).rejects.toThrow()
+  })
+})
+
+describe('Moderation', () => {
+  let offen: number
+
+  beforeAll(async () => {
+    await db.exec(`insert into auth.users values ('${ADMIN}'), ('${NUTZER}'); insert into admins values ('${ADMIN}');`)
+    const r = await db.query<{ id: number }>(
+      `insert into runden (problem_text, stichwort, status, punkte_a) values ('Miete steigt', 'Miete', 'gewertet', 4) returning id`,
+    )
+    offen = r.rows[0].id
+  })
+
+  it('nur Admins sind Admins', async () => {
+    const frage = () => db.query<{ ok: boolean }>('select ist_admin() as ok')
+    expect((await alsAdmin(frage)).rows[0].ok).toBe(true)
+    expect((await alsNutzer(frage)).rows[0].ok).toBe(false)
+    await expect(alsRolle('anon', frage)).rejects.toThrow()
+  })
+
+  it('angemeldete Nicht-Admins sehen nur Freigegebenes und können nichts ändern', async () => {
+    const r = await alsNutzer(() => db.query<{ id: number }>('select id from runden where id = $1', [offen]))
+    expect(r.rows).toHaveLength(0)
+    const u = await alsNutzer(() => db.query('update runden set freigegeben = true where id = $1', [offen]))
+    expect(u.affectedRows).toBe(0)
+    const a = await alsNutzer(() => db.query('select * from admins'))
+    expect(a.rows).toHaveLength(0)
+  })
+
+  it('Admins sehen offene Runden und die Review-Warteschlange', async () => {
+    const r = await alsAdmin(() => db.query('select id from runden where id = $1', [offen]))
+    expect(r.rows).toHaveLength(1)
+    const q = await alsAdmin(() => db.query('select * from review_warteschlange'))
+    expect(q.rows.length).toBeGreaterThan(0)
+  })
+
+  it('Admins geben frei – danach sieht anon das Stichwort', async () => {
+    await alsAdmin(() =>
+      db.query(`update runden set stichwort = 'Mieterhöhung', freigegeben = true, moderiert_am = now() where id = $1`, [offen]),
+    )
+    const r = await alsRolle('anon', () =>
+      db.query<{ stichwort: string }>('select stichwort from runden where id = $1', [offen]),
+    )
+    expect(r.rows).toEqual([{ stichwort: 'Mieterhöhung' }])
+  })
+
+  it('Admins dürfen Punkte und Texte nicht ändern', async () => {
+    await expect(alsAdmin(() => db.query('update runden set punkte_a = 99 where id = $1', [offen]))).rejects.toThrow()
+    await expect(alsAdmin(() => db.query(`update runden set problem_text = 'x' where id = $1`, [offen]))).rejects.toThrow()
+  })
+
+  it('freigegeben und abgelehnt schließen sich aus', async () => {
+    await expect(alsAdmin(() => db.query('update runden set abgelehnt = true where id = $1', [offen]))).rejects.toThrow()
+  })
+
+  it('Admins haken Review-Einträge ab und löschen Runden', async () => {
+    const u = await alsAdmin(() => db.query('update review_warteschlange set erledigt = true'))
+    expect(u.affectedRows).toBeGreaterThan(0)
+    const d = await alsAdmin(() => db.query('delete from runden where id = $1', [offen]))
+    expect(d.affectedRows).toBe(1)
+  })
+
+  it('Stichwörter sind höchstens 40 Zeichen lang', async () => {
+    await expect(
+      db.query(`insert into runden (problem_text, stichwort, status) values ('x', repeat('a', 41), 'wert')`),
     ).rejects.toThrow()
   })
 })

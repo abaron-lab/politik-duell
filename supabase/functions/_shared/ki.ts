@@ -1,3 +1,4 @@
+import { bereinigeStichwort } from './moderation.ts'
 import { ROLLEN_IDS, type AnalyseAnfrage, type AnalyseAntwort, type Nachricht, type Rolle, type Thema, type Ursache } from './typen.ts'
 
 // Prompt-Aufbau und strenge Prüfung der KI-Antwort. Reines TypeScript,
@@ -52,13 +53,15 @@ Zuordnung (nur bei "problem"):
   Ursachen des Problems – ohne Parteien, ohne Lösungsbewertung, ohne Links.
 
 "zusammenfassung": ein kurzer, neutraler Satz zum Problem, ohne Namen oder persönliche Details.
+"stichwort": 1–3 Wörter, die das Problem neutral benennen (z. B. „Facharzttermin“, „Nebenkosten-Nachzahlung“),
+  ohne Namen, Orte, Beleidigungen oder Wertungen.
 
 Katalog:
 ${katalog}
 
 Antworte ausschließlich mit einem JSON-Objekt:
 {"typ": "problem" | "forderung" | "wert", "nachfrage": string | null, "thema_id": number | null,
- "ursachen_ids": number[], "zusammenfassung": string, "einschaetzung": string | null}`
+ "ursachen_ids": number[], "zusammenfassung": string, "stichwort": string, "einschaetzung": string | null}`
 }
 
 export function nutzerNachrichten(verlauf: Nachricht[], rolle: Rolle | null) {
@@ -128,6 +131,7 @@ export function bereinigeAntwort(
   }
 
   const zusammenfassung = ohneLinks(kurz(r.zusammenfassung, 200)) || kurz(letzterText, 120)
+  const stichwort = bereinigeStichwort(r.stichwort, zusammenfassung)
 
   if (typ !== 'problem') {
     return {
@@ -136,6 +140,7 @@ export function bereinigeAntwort(
       thema_id: null,
       ursachen_ids: [],
       zusammenfassung,
+      stichwort,
       einschaetzung: null,
     }
   }
@@ -148,6 +153,7 @@ export function bereinigeAntwort(
       thema_id: null,
       ursachen_ids: [],
       zusammenfassung,
+      stichwort,
       einschaetzung: ohneLinks(kurz(r.einschaetzung, 400)) || null,
     }
   }
@@ -160,6 +166,7 @@ export function bereinigeAntwort(
     thema_id: thema.id,
     ursachen_ids: genannt.length > 0 ? [...new Set(genannt)] : erlaubt,
     zusammenfassung,
+    stichwort,
     einschaetzung: null,
   }
 }

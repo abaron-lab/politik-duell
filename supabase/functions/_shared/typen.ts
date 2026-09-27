@@ -74,6 +74,8 @@ export interface AnalyseAntwort {
    * Einschätzung möglicher Ursachen – „ungeprüft – keine Wertung“, ohne Parteien und Links.
    */
   einschaetzung?: string | null
+  /** 1–3 neutrale Wörter für die Wortwolke (erst nach Admin-Freigabe sichtbar). */
+  stichwort?: string
 }
 
 /** Anfrage der App an die Edge Function `analyse`. */

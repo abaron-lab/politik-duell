@@ -10,6 +10,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { bewertePartei } from '../_shared/bewertung.ts'
 import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, pruefeAnfrage, systemPrompt } from '../_shared/ki.ts'
+import { pruefeText } from '../_shared/moderation.ts'
 import type { AnalyseAntwort, Massnahme, Partei, Rolle, Thema, Ursache } from '../_shared/typen.ts'
 
 const RATE_LIMIT_MAX = 40
@@ -78,7 +79,9 @@ Deno.serve(async (req) => {
 
     // Abgeschlossene Runde anonym speichern (nur die neutrale Zusammenfassung).
     if (antwort.typ !== 'forderung') {
-      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle)
+      // Der Originaltext wird nur geprüft, nicht gespeichert.
+      const original = anfrage.verlauf.filter((n) => n.von === 'spieler').map((n) => n.text)
+      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original)
     }
 
     return json(antwort)
@@ -93,8 +96,17 @@ async function speichereRunde(
   antwort: AnalyseAntwort,
   [parteiA, parteiB]: [number, number],
   rolle: Rolle | null,
+  original: string[],
 ) {
-  const basis = { problem_text: antwort.zusammenfassung, partei_a: parteiA, partei_b: parteiB }
+  const stichwort = antwort.stichwort ?? null
+  const basis = {
+    problem_text: antwort.zusammenfassung,
+    stichwort,
+    // Automatischer Filter: Treffer landen in der Admin-Ansicht unter „Vom Filter gestoppt“.
+    filter_grund: pruefeText(stichwort, antwort.zusammenfassung, ...original),
+    partei_a: parteiA,
+    partei_b: parteiB,
+  }
 
   if (antwort.typ === 'wert') {
     await db.from('runden').insert({ ...basis, status: 'wert' })

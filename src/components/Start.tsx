@@ -1,27 +1,5 @@
-import { BEISPIEL_PROBLEME } from '../data/mock'
 import { Logo } from './Logo'
-
-/** Schlichte Wortwolke als Platzhalter; d3-cloud + Realtime folgen in Meilenstein 4. */
-function Wortwolke() {
-  return (
-    <div className="wortwolke" aria-hidden="true">
-      {BEISPIEL_PROBLEME.map((wort, i) => (
-        <span
-          key={wort}
-          style={{
-            left: `${(i * 37) % 85}%`,
-            top: `${(i * 53) % 90}%`,
-            fontSize: `${0.9 + ((i * 7) % 5) * 0.2}rem`,
-            animationDelay: `${-i * 2.3}s`,
-            animationDuration: `${18 + (i % 4) * 4}s`,
-          }}
-        >
-          {wort}
-        </span>
-      ))}
-    </div>
-  )
-}
+import { Wortwolke } from './Wortwolke'
 
 export function Start({
   bereit,
@@ -59,7 +37,8 @@ export function Start({
         )}
         <p className="datenschutz">
           <strong>Datenschutz:</strong> Keine Konten, keine IP-Adressen, kein Audio. Deine Eingaben ordnet eine KI
-          (Mistral, EU) ein. Gespeichert wird nur eine anonyme, neutrale Kurzfassung des Problems.
+          (Mistral, EU) ein. Gespeichert wird nur eine anonyme, neutrale Kurzfassung des Problems; ein Stichwort
+          daraus kann nach Prüfung in der Wortwolke erscheinen.
         </p>
       </div>
     </main>
