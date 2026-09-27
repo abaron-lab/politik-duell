@@ -46,6 +46,15 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
 
+## Datenkatalog (Vorbereitung für echte Parteien)
+
+- Alle Parteien, Themen, Ursachen und Maßnahmen liegen als JSON in [`daten/`](daten/README.md) – Änderungen per Pull Request mit Quellenpflicht
+- Automatische Prüfung (`npm run daten:pruefen`, auch in GitHub Actions): Pflichtfelder, Wertebereiche, Beleg mit Seitenanker im Programm der richtigen Partei, Quelle für jede Ursache, keine Platzhalter-Links bei echten Daten
+- **Vollständige Abdeckung:** Pro Thema steht bei jeder Partei entweder eine Maßnahme oder ausdrücklich „keine Maßnahme im Programm“ – so lässt sich „nichts im Programm“ von „noch nicht erfasst“ unterscheiden
+- Bei echten Daten zählen nur geprüfte Maßnahmen (`geprueft: true`); ungeprüfte bleiben als Entwurf im Repo und kommen nicht in die Datenbank
+- Einträge, die älter als das aktuelle Programm einer Partei sind, werden zur Neuprüfung gemeldet
+- Bewertungsmaßstab für Wirksamkeit und Umsetzbarkeit (0–3) und Ablauf für neue Themen: [`daten/README.md`](daten/README.md)
+
 ## Entwicklung
 
 ```bash
@@ -54,6 +63,8 @@ npm run dev      # Entwicklungsserver
 npm test         # Tests: Analyse, Bewertung, KI-Prüfung, Datenbank (PGlite)
 npm run lint
 npm run build
+npm run daten:pruefen  # Datenkatalog prüfen (mit -- --links auch alle Links abrufen)
+npm run seed       # supabase/seed.sql aus daten/ erzeugen
 npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 ```
 
@@ -62,12 +73,15 @@ npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 | Pfad | Inhalt |
 | --- | --- |
 | `supabase/migrations/` | Datenbankschema, Zugriffsregeln, Rate-Limit |
-| `supabase/seed.sql` | Beispieldaten (erzeugt aus `src/data/mock.ts`) |
+| `daten/` | Datenkatalog: Parteien, Themen, Ursachen, Maßnahmen (JSON, Anleitung in `daten/README.md`) |
+| `scripts/` | Prüfung des Katalogs, Seed- und Dashboard-Erzeugung |
+| `supabase/seed.sql` | Seed-Daten (erzeugt aus `daten/`) |
 | `supabase/dashboard/` | Erzeugte Dateien zum Einfügen im Dashboard (SQL komplett, Edge Function als eine Datei) |
 | `supabase/functions/analyse/` | Edge Function: KI-Einordnung und Speichern der Runde |
 | `supabase/functions/_shared/` | Gemeinsamer Code von App und Funktion: Typen, Punktelogik, KI-Prompt und -Prüfung, Moderationsfilter |
 | `src/data/quelle.ts` | Datenquelle der App: Supabase oder Beispieldaten |
-| `src/data/mock.ts` | Fiktive Beispieldaten |
+| `src/data/katalog.ts` | Prüfregeln und Aufbau des Datenkatalogs |
+| `src/data/mock.ts` | Eingebaute Daten der App (aus `daten/`, derzeit fiktiv) |
 | `src/logic/analyse.ts` | Offline-Ersatz für die KI (Schlagwörter) |
 | `src/logic/sprache.ts` | Hook für die Spracherkennung (Push-to-talk) |
 | `src/components/` | Bildschirme: Start (mit Wortwolke), Setup, Runde, Auflösung, Ende |

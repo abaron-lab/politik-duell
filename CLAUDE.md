@@ -114,5 +114,5 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 ## Offene Punkte
 
 - Welche Parteien sind dabei (Vorschlag: CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW)?
-- Wer pflegt und prüft die Bewertungen? Idee: öffentlich im Repo als JSON, Änderungen per Pull Request mit Quellenpflicht.
+- Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung, Vier-Augen-Prinzip über `geprueft`, siehe `daten/README.md`) – offen ist, welche Personen das übernehmen.
 - Domain prüfen und sichern (z. B. werliefert.de oder wer-liefert.de).

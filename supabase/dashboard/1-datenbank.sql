@@ -227,7 +227,7 @@ end;
 $$;
 
 -- ===== seed.sql =====
--- AUTOMATISCH ERZEUGT aus src/data/mock.ts (npm run seed) – nicht von Hand bearbeiten.
+-- AUTOMATISCH ERZEUGT aus daten/ (npm run seed) – nicht von Hand bearbeiten.
 -- FIKTIVE Platzhalterdaten: Parteien, Maßnahmen, Punkte und Links sind erfunden.
 
 -- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen werden neu geschrieben.
