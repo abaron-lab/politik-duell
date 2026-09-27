@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { PARTEIEN, ROLLEN } from '../data/mock'
+import { useDaten } from '../data/kontext'
+import { ROLLEN } from '../data/rollen'
 import type { Partei, Rolle } from '../data/types'
 import { parteiStil } from './stil'
 import type { Spieler } from '../spiel'
@@ -20,12 +21,13 @@ function SpielerWahl({
   gesperrt: Partei | null
   onChange: (a: Auswahl) => void
 }) {
+  const { parteien } = useDaten()
   return (
     <fieldset className="spieler-wahl">
       <legend>{titel}</legend>
       <p className="label">Partei</p>
       <div className="partei-raster">
-        {PARTEIEN.map((p) => {
+        {parteien.map((p) => {
           const belegt = gesperrt?.id === p.id
           const gewaehlt = auswahl.partei?.id === p.id
           return (

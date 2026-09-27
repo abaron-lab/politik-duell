@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Supabase CLI (lokaler Zustand nach `supabase link`)
+supabase/.temp
+supabase/.branches

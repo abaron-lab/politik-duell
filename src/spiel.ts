@@ -15,6 +15,8 @@ export interface RundenErgebnis {
   sprecher: 0 | 1
   rolle: Rolle | null
   zusammenfassung: string
+  /** Vorläufige Einschätzung bei ungeprüften Themen (ohne Punkte und Links). */
+  einschaetzung: string | null
   thema: Thema | null
   status: 'gewertet' | 'ungeprueft'
   /** Ergebnisse der beiden gewählten Parteien (nur bei status „gewertet“). */
@@ -29,8 +31,3 @@ export function gesamtpunkte(runden: RundenErgebnis[]): [number, number] {
   return runden.reduce<[number, number]>((s, r) => [s[0] + r.punkte[0], s[1] + r.punkte[1]], [0, 0])
 }
 
-/**
- * Review-Warteschlange für Probleme ohne Thema in der Datenbank.
- * Im Prototyp nur im Speicher; später eine Supabase-Tabelle.
- */
-export const REVIEW_WARTESCHLANGE: string[] = []

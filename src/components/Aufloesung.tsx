@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { ROLLEN, URSACHEN } from '../data/mock'
+import { useDaten } from '../data/kontext'
+import { ROLLEN } from '../data/rollen'
 import type { Massnahme } from '../data/types'
 import type { ParteiErgebnis } from '../logic/bewertung'
 import type { RundenErgebnis, Spieler } from '../spiel'
@@ -51,7 +52,8 @@ function ParteiKarte({
   gewinnt: boolean
   verzoegerung: number
 }) {
-  const ursacheText = (id: number) => URSACHEN.find((u) => u.id === id)?.beschreibung ?? ''
+  const { ursachen } = useDaten()
+  const ursacheText = (id: number) => ursachen.find((u) => u.id === id)?.beschreibung ?? ''
   return (
     <article
       className={`partei-karte enthuellen${gewinnt ? ' gewinnt' : ''}`}
@@ -125,6 +127,11 @@ export function Aufloesung({
             Zu diesem Problem liegen noch keine geprüften Daten vor. Deshalb gibt es keine Punkte und keine Links. Das
             Problem wurde zur Prüfung vorgemerkt.
           </p>
+          {runde.einschaetzung && (
+            <p className="einschaetzung">
+              <strong>Vorläufige Einschätzung (ungeprüft):</strong> {runde.einschaetzung}
+            </p>
+          )}
         </section>
       ) : (
         <>

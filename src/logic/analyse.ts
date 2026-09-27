@@ -1,10 +1,10 @@
+import { MAX_NACHFRAGEN } from '../../supabase/functions/_shared/ki.ts'
 import type { AnalyseAntwort, Nachricht, Thema, Ursache } from '../data/types'
 
 // Mock der Edge Function `analyse`. Liefert dasselbe JSON-Format wie später
 // die KI, arbeitet aber nur mit Schlagwörtern. Vergibt – wie die KI – keine
 // Punkte und keine Links.
 
-export const MAX_NACHFRAGEN = 2
 
 export const NACHFRAGEN = [
   'Was läuft in deinem Alltag konkret schief?',
@@ -37,7 +37,7 @@ export function normalisiere(text: string): string {
     .trim()
 }
 
-const treffer = (text: string, woerter: string[]) => woerter.filter((w) => text.includes(w)).length
+const treffer = (text: string, woerter: string[] = []) => woerter.filter((w) => text.includes(w)).length
 
 function erkenneThema(text: string, themen: Thema[]): Thema | null {
   let bestes: Thema | null = null
@@ -111,6 +111,7 @@ export function analysiere(verlauf: Nachricht[], themen: Thema[], ursachen: Ursa
     thema_id: null,
     ursachen_ids: [],
     zusammenfassung: kuerze(spielerTexte.at(-1) ?? ''),
+    einschaetzung: null,
   }
 }
 

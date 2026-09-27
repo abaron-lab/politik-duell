@@ -1,4 +1,4 @@
-import type { Massnahme, Partei, Rolle, Thema, Ursache } from './types'
+import type { Massnahme, Partei, Thema, Ursache } from './types.ts'
 
 // ---------------------------------------------------------------------------
 // MOCK-DATEN für Meilenstein 1.
@@ -19,17 +19,6 @@ export const PARTEIEN: Partei[] = [
   { id: 3, name: 'Partei Gamma', kurzname: 'Gamma', farbe: '#f2a33a', programm_url: 'https://example.org/mock/gamma/wahlprogramm.pdf', programm_stand: MOCK_STAND },
   { id: 4, name: 'Partei Delta', kurzname: 'Delta', farbe: '#4f8fe8', programm_url: 'https://example.org/mock/delta/wahlprogramm.pdf', programm_stand: MOCK_STAND },
   { id: 5, name: 'Partei Epsilon', kurzname: 'Epsilon', farbe: '#e86a8f', programm_url: 'https://example.org/mock/epsilon/wahlprogramm.pdf', programm_stand: MOCK_STAND },
-]
-
-export const ROLLEN: { id: Rolle; label: string }[] = [
-  { id: 'mieter', label: 'Mieter:in' },
-  { id: 'eigentuemer', label: 'Eigentümer:in' },
-  { id: 'angestellt', label: 'Angestellt' },
-  { id: 'selbststaendig', label: 'Selbstständig' },
-  { id: 'rentner', label: 'Rentner:in' },
-  { id: 'arbeitslos', label: 'Arbeitslos' },
-  { id: 'studierend', label: 'Studierend' },
-  { id: 'vermoegend', label: 'Vermögend' },
 ]
 
 export const THEMEN: Thema[] = [

@@ -1,0 +1,11 @@
+# Supabase-CLI-Konfiguration (Projekt: xfprvshhexhzhfgkfxpi, Region Frankfurt)
+project_id = "wer-liefert"
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[functions.analyse]
+# Die App ruft die Funktion ohne Login auf; geschützt wird sie durch
+# Eingabeprüfung und Rate-Limit pro Sitzung.
+verify_jwt = false
