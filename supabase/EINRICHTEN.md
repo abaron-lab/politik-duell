@@ -28,6 +28,13 @@ Die Dateien in `supabase/dashboard/` sind zum Kopieren gedacht. Auf GitHub gibt 
 Das Secret `MISTRAL_API_KEY` ist schon gespeichert ✔. Optional wechselt das Secret
 `MISTRAL_MODEL` das Modell (Standard: `mistral-small-latest`).
 
+> **Wichtig bei Mistral:** In der Mistral-Konsole unter *Billing* muss **„API pay-as-you-go“
+> aktiviert** sein – auch im Free-Plan. Sonst lehnt Mistral jeden API-Aufruf mit
+> `429 Rate limit exceeded` (code 1300) ab, obwohl der Playground funktioniert. Das enthaltene
+> Monatsguthaben wird trotzdem genutzt; ein niedriges Ausgabenlimit (z. B. 5 €) deckelt die Kosten.
+> Schnelltest ohne App:
+> `curl https://api.mistral.ai/v1/chat/completions -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" -d '{"model":"mistral-small-latest","messages":[{"role":"user","content":"Hallo"}]}'`
+
 ### 3. App im Netz starten (Vercel, kostenlos)
 
 1. Auf [vercel.com](https://vercel.com) mit GitHub anmelden → **Add New… → Project** → Repository `wer-liefert` importieren.
