@@ -6,21 +6,21 @@
   "ursachen": [
     {
       "id": 201,
-      "beschreibung": "Zu wenig neue Wohnungen",
-      "quelle_url": "https://example.org/mock/studie/wohnungsbau",
+      "beschreibung": "Es werden weniger Wohnungen gebaut als gebraucht (Bedarf laut Prognose rund 320.000 pro Jahr)",
+      "quelle_url": "https://www.bbsr.bund.de/BBSR/DE/presse/presseinformationen/2025/wohnungsbedarfsprognose.html",
       "schlagwoerter": ["keine wohnung", "finde keine", "wohnungssuche", "besichtigung", "bewerber", "zu wenig wohnungen", "neubau", "nichts frei"]
     },
     {
       "id": 202,
-      "beschreibung": "Starke Mietsteigerungen",
-      "quelle_url": "https://example.org/mock/studie/mietentwicklung",
+      "beschreibung": "Mieten bei Neuvermietung liegen rund 43 % über Bestandsmieten, in großen Städten besonders hoch",
+      "quelle_url": "https://www.bbsr.bund.de/BBSR/DE/startseite/topmeldungen/entwicklung-wohnungsmieten-2025.html",
       "schlagwoerter": ["mieterhoehung", "erhoeh", "teurer", "zu hoch", "teuer", "leisten", "indexmiete", "neuvermietung"]
     },
     {
       "id": 203,
-      "beschreibung": "Hohe Baukosten und lange Genehmigungen",
-      "quelle_url": "https://example.org/mock/studie/baukosten",
-      "schlagwoerter": ["baukosten", "genehmigung", "bauen", "bauantrag", "vorschrift"]
+      "beschreibung": "Stark gestiegene Baukosten: Wohngebäude wurden 2010 bis 2025 um 89 % teurer, mehr als doppelt so stark wie die Inflation",
+      "quelle_url": "https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Baupreise-Immobilienpreisindex/_inhalt.html",
+      "schlagwoerter": ["baukosten", "baupreise", "bauen", "bauantrag", "vorschrift", "material"]
     }
   ],
   "abdeckung": [

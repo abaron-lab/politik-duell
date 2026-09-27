@@ -54,6 +54,7 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 - Seite „So bewerten wir“ (`#/methode`): Skalen für Wirksamkeit und Umsetzbarkeit, Punkteregeln, was die Punkte bedeuten, Fehler melden – verlinkt in Fußzeile, Auflösung und Endbildschirm
 - Äußerungsrechtlich vorsichtige Formulierungen: 0 Punkte heißt „Im Wahlprogramm (Stand …) keine Maßnahme zu diesen Ursachen gefunden“
 - Parteinamen in KI-Antworten (Kurzfassung, Stichwort, Einschätzung, Nachfrage) werden durch „[Partei]“ ersetzt bzw. entfernt – Aussagen über Parteien kommen nur belegt aus der Datenbank
+- Installierbar als PWA: Service Worker (`vite-plugin-pwa`) speichert nur die App-Dateien, damit sie auch ohne Netz startet; Supabase- und KI-Anfragen laufen immer live und werden nie zwischengespeichert
 - `vercel.json`: Build-Einstellungen und Sicherheits-Header (Content-Security-Policy, HSTS, `Referrer-Policy: no-referrer`, Mikrofon nur für die eigene Seite), lange Cache-Zeiten für Assets
 
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
@@ -62,7 +63,8 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 
 - Alle Parteien, Themen, Ursachen und Maßnahmen liegen als JSON in [`daten/`](daten/README.md) – Änderungen per Pull Request mit Quellenpflicht
 - Automatische Prüfung (`npm run daten:pruefen`, auch in GitHub Actions): Pflichtfelder, Wertebereiche, Beleg mit Seitenanker im Programm der richtigen Partei, Quelle für jede Ursache, keine Platzhalter-Links bei echten Daten
-- **Vollständige Abdeckung:** Pro Thema steht bei jeder Partei entweder eine Maßnahme oder ausdrücklich „keine Maßnahme im Programm“ – so lässt sich „nichts im Programm“ von „noch nicht erfasst“ unterscheiden
+- **Abdeckung:** Pro Thema steht bei einer erfassten Partei entweder eine Maßnahme oder ausdrücklich „keine Maßnahme im Programm“ – so lässt sich „nichts im Programm“ von „noch nicht erfasst“ unterscheiden. Fehlt eine Partei noch, gilt das Thema für sie als „noch nicht erfasst“
+- **Zehn Themen mit belegten Ursachen:** Auswahl nach den meistgenannten Problemen vor den Wahlen 2026 in Sachsen-Anhalt, Mecklenburg-Vorpommern und Berlin; jede Ursache mit unabhängiger Quelle (Destatis, BBSR, Sachverständigenräte, IAB, DIW, BKA u. a.). Die drei Beispielthemen behalten ihre fiktiven Maßnahmen, die sieben neuen haben noch keine – Runden dazu werden nicht gewertet ([Themenauswahl](daten/README.md#themenauswahl))
 - Bei echten Daten kommt ein Thema für eine Partei erst ins Spiel, wenn der ganze Eintrag geprüft ist (`geprueft: true`); ungeprüfte Entwürfe bleiben im Repo und kommen nicht in die Datenbank
 - **Anzeige im Spiel** (Tabelle `abdeckung`): „keine Maßnahme zu diesen Ursachen“, „nichts zum Thema im Programm“ (mit Begründung, was durchsucht wurde) oder „noch nicht erfasst“ – im letzten Fall wird die Runde nicht gewertet, damit fehlende Daten keiner Partei einen Punkt kosten; die beste Lösung aller Parteien vergleicht nur erfasste Parteien
 - Einträge, die älter als das aktuelle Programm einer Partei sind, werden zur Neuprüfung gemeldet

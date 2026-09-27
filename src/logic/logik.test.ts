@@ -40,7 +40,7 @@ describe('analysiere (Mock der Edge Function)', () => {
   })
 
   it('liefert thema_id null für unbekannte Themen', () => {
-    const a = analysiere(spieler('Der Bus kommt bei uns nur zweimal am Tag'), THEMEN, URSACHEN)
+    const a = analysiere(spieler('Das Internet bei uns im Ort ist ständig weg'), THEMEN, URSACHEN)
     expect(a.typ).toBe('problem')
     expect(a.thema_id).toBeNull()
   })

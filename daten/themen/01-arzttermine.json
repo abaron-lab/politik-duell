@@ -6,21 +6,21 @@
   "ursachen": [
     {
       "id": 101,
-      "beschreibung": "Zu wenige Praxen, besonders auf dem Land",
-      "quelle_url": "https://example.org/mock/studie/aerzteversorgung",
-      "schlagwoerter": ["land", "dorf", "keine praxis", "kein hausarzt", "kein arzt", "aerztemangel", "zu wenig aerzte", "nimmt keine", "keine neuen patienten", "weit fahren"]
+      "beschreibung": "Zu wenige Hausarztpraxen, besonders auf dem Land; viele Ärztinnen und Ärzte gehen bald in den Ruhestand",
+      "quelle_url": "https://idw-online.de/de/news769524",
+      "schlagwoerter": ["land", "dorf", "keine praxis", "kein hausarzt", "kein arzt", "aerztemangel", "zu wenig aerzte", "nimmt keine", "keine neuen patienten", "weit fahren", "ruhestand", "rente gegangen", "nachfolger"]
     },
     {
       "id": 102,
-      "beschreibung": "Ineffiziente Terminvergabe",
-      "quelle_url": "https://example.org/mock/studie/terminvergabe",
-      "schlagwoerter": ["termin", "warte", "monate", "wochen", "telefon", "hotline", "erreich", "besetzt"]
+      "beschreibung": "Termine und Wege durch das Gesundheitssystem werden kaum gesteuert; knappes Personal wird nicht gezielt eingesetzt",
+      "quelle_url": "https://www.svr-gesundheit.de/publikationen/gutachten-2024/",
+      "schlagwoerter": ["termin", "warte", "monate", "wochen", "telefon", "hotline", "erreich", "besetzt", "ueberweisung", "notaufnahme"]
     },
     {
       "id": 103,
-      "beschreibung": "Budgetierung begrenzt Behandlungen",
-      "quelle_url": "https://example.org/mock/studie/budgetierung",
-      "schlagwoerter": ["budget", "quartal", "abrechnung", "kasse", "kassenpatient"]
+      "beschreibung": "Unterschiedliche Vergütung: Facharztpraxen vergeben Termine bevorzugt an Privatversicherte",
+      "quelle_url": "https://idw-online.de/de/news750098",
+      "schlagwoerter": ["kassenpatient", "gesetzlich versichert", "privatpatient", "privat versichert", "privatversichert", "budget", "quartal", "abrechnung"]
     }
   ],
   "abdeckung": [

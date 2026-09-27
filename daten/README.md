@@ -12,7 +12,7 @@ Die Reihenfolge ist wichtig für die Neutralität.
 
 1. **Thema und Ursachen festlegen – ohne Blick in die Wahlprogramme.**
    Ursachen beschreiben, *warum* das Alltagsproblem besteht. Jede Ursache braucht eine unabhängige Quelle (z. B. Statistisches Bundesamt, Sachverständigenrat, Bundesbank, wissenschaftliche Studie). Keine Parteiquellen, keine Quellen von Lobbyverbänden als einzige Quelle.
-   Eigener Pull Request, damit die Ursachen feststehen, bevor Maßnahmen dazukommen.
+   Eigener Pull Request, damit die Ursachen feststehen, bevor Maßnahmen dazukommen. Die Themendatei enthält dann noch keine `abdeckung` – das Thema gilt für alle Parteien als „noch nicht erfasst“.
 2. **Maßnahmen aus den Programmen erfassen.**
    Für **jede** Partei entweder Maßnahmen mit Seitenangabe eintragen oder ausdrücklich `keine_massnahme` mit kurzer Begründung („Programm Stand … durchsucht, Kapitel … enthält nichts zu …“). Neue Einträge haben `"geprueft": false`.
 3. **Bewerten** nach dem Maßstab unten, möglichst **ohne Parteinamen** (Maßnahmentext allein beurteilen).
@@ -25,7 +25,32 @@ Ins Spiel kommt ein Thema für eine Partei erst, wenn der **ganze Eintrag** gepr
 | Maßnahmen zum Thema, alle geprüft; eine passt zu den Ursachen | Maßnahme mit Bewertung und Belegen | nach Bewertung |
 | Maßnahmen zum Thema, alle geprüft; keine passt zu den Ursachen | „keine Maßnahme zu diesen Ursachen“ | 0 |
 | `keine_massnahme`, geprüft | „enthält keine Maßnahme zu diesem Thema“ + Begründung | 0 |
-| Eintrag (teilweise) ungeprüft | „noch nicht erfasst“ | Runde wird nicht gewertet |
+| Eintrag (teilweise) ungeprüft oder Partei fehlt in `abdeckung` | „noch nicht erfasst“ | Runde wird nicht gewertet |
+
+## Themenauswahl
+
+Welche Themen in den Katalog kommen, richtet sich danach, was Menschen selbst als wichtigste Probleme nennen – nicht nach den Schwerpunkten einzelner Parteien. Grundlage für die zehn Themen (Stand September 2026) sind die Umfragen vor den Wahlen 2026:
+
+| Wahl | Meistgenannte Probleme | Umfrage |
+| --- | --- | --- |
+| Sachsen-Anhalt (6. 9. 2026) | Wirtschaftslage 22 %, Arbeitslosigkeit 17 %, Bildung/Schule 17 %; laut Infratest dimap vorn: Zuwanderung, Bildung, Wirtschaft | [Politbarometer Extra I, Aug. 2026](https://presseportal.zdf.de/pressemitteilung/zdf-politbarometer-extra-i-sachsen-anhalt-august-2026), [LänderTREND Mai 2026](https://www.infratest-dimap.de/umfragen-analysen/bundeslaender/sachsen-anhalt/laendertrend/2026/mai/) |
+| Mecklenburg-Vorpommern (20. 9. 2026) | vorn: Bildung, Wirtschaft, Zuwanderung; außerdem genannt: Arbeitslosigkeit, Gesundheit/Pflege, Rente, Verkehr, Wohnen, Lebenshaltungskosten¹ | [LänderTREND Sept. 2026](https://www.infratest-dimap.de/umfragen-analysen/bundeslaender/mecklenburg-vorpommern/laendertrend/2026/september/) |
+| Berlin (20. 9. 2026) | Wohnen/Mieten 32 %, kein anderes Thema vergleichbar; im Wahlkampf außerdem Verkehr, Sicherheit, Müll | BerlinTrend Sept. 2026 (rbb/Infratest dimap), zitiert bei [entwicklungsstadt.de](https://www.entwicklungsstadt.de/enteignung-vor-der-berlin-wahl-2026-was-parteien-und-berliner-wollen/); Themen: [t-online](https://www.t-online.de/nachrichten/deutschland/innenpolitik/id_101442118/themen-der-berlin-wahl-2026-wohnen-verkehr-sicherheit-und-muell.html) |
+
+¹ Infratest dimap veröffentlicht für Mecklenburg-Vorpommern nur die Rangfolge der ersten drei. Die übrigen Themen und Prozentwerte (Bildung 25 %, Wirtschaft 16 %, Zuwanderung 16 %, Arbeitslosigkeit 14 %, Gesundheit/Pflege 10 %, Rente 10 %, Verkehr 8 %, Wohnen 7 %, Lebenshaltungskosten 6 %) stammen aus einer Weitergabe der Umfrage durch [@Wahlen_DE](https://x.com/Wahlen_DE/status/2095567466701226140) und sind an der Originalquelle nicht überprüfbar.
+
+Weitere Belege, vor allem für Pflege und Rente, deren Prozentwerte in Mecklenburg-Vorpommern nicht an der Originalquelle prüfbar sind:
+
+| Umfrage | Ergebnis |
+| --- | --- |
+| [Sachsen-Anhalt-Monitor 2025](https://lpb.sachsen-anhalt.de/fileadmin/Bibliothek/Politik_und_Verwaltung/MK/LPB/Uploads/SAM_2025_V0812_1.pdf) (offene Frage nach den wichtigsten Problemen im Land, n = 1.077, S. 46 f.) | Vorn: Infrastruktur und Mobilität (360 Nennungen), Wirtschaft und Finanzen (352), Soziales und Gerechtigkeit (292) – darunter Gesundheitsversorgung, Pflege, Altersarmut und zu niedrige Renten –, Erwerbsarbeit (287), Migration und Integration (266), Bildung (260) |
+| [DAK-Pflegereport, Berlin](https://www.tagesspiegel.de/berlin/hohe-kosten-personalmangel-fehlende-krafte-mehrheit-in-berlin-gibt-pflege-schlechte-noten-15259316.html) (Allensbach) | 61 % halten die Pflegesituation für nicht gut; je 63 % nennen hohe Heimkosten und Personalmangel als größte Probleme |
+| [ARD-DeutschlandTrend Juli 2026](https://www.infratest-dimap.de/umfragen-analysen/bundesweit/ard-deutschlandtrend/2026/juli/) (bundesweit) | Mehr als die Hälfte der Erwerbstätigen fürchtet, im Alter Geldprobleme zu haben |
+| [R+V „Die Ängste der Deutschen 2025“](https://www.ruv.de/newsroom/themenspezial-die-aengste-der-deutschen/pressemitteilungen/2025-09-18-studie-aengste-der-deutschen) (bundesweit) | 39 % fürchten, im Alter auf Pflege angewiesen zu sein (Platz 13) |
+
+Daraus: Arzttermine und Pflege (Gesundheit/Pflege), Miete, Energiepreise (Lebenshaltungskosten), Schule, Arbeitsplätze (Wirtschaft und Arbeitslosigkeit), Zuwanderung und Integration, Rente, Bus und Bahn, Sicherheit.
+
+Noch nicht aufgenommen, Kandidaten für später: soziale Ungerechtigkeit/Armut (MV 8 %), Verwaltung und Bürgeramt-Termine sowie Müll (Berlin, im Wahlkampf genannt), Abwanderung junger Menschen und Kita-Betreuung (Sachsen-Anhalt). Häufige Einträge in der Review-Warteschlange sind ein weiterer Hinweis.
 
 ## Bewertungsmaßstab
 
@@ -133,7 +158,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
 - eindeutige IDs und Namen
 - jede Ursache mit https-Quelle; Maßnahmen verweisen nur auf Ursachen ihres Themas
 - Beleg zeigt ins Programm der richtigen Partei, mit Seitenanker
-- **Abdeckung:** jede Partei genau einmal pro Thema – mit Maßnahmen oder `keine_massnahme`
+- **Abdeckung:** jede Partei höchstens einmal pro Thema – mit Maßnahmen oder `keine_massnahme`; fehlende Parteien werden als „noch nicht erfasst“ gemeldet (Warnung)
 - Einträge sind nicht älter als das aktuelle Programm
 - bei echten Daten: keine Platzhalter-Links (example.org); Warnung für ungeprüfte Einträge (die im Spiel „noch nicht erfasst“ sind)
 - `supabase/seed.sql` passt zum Katalog

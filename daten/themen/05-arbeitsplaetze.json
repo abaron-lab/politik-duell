@@ -1,0 +1,26 @@
+{
+  "id": 5,
+  "name": "Arbeitsplätze",
+  "beschreibung": "Unsichere Jobs, Stellenabbau und schwache Wirtschaft.",
+  "schlagwoerter": ["arbeit", "job", "arbeitsplatz", "arbeitslos", "kuendigung", "stellenabbau", "firma", "betrieb", "wirtschaft", "lohn", "gehalt", "kurzarbeit", "werksschliessung"],
+  "ursachen": [
+    {
+      "id": 501,
+      "beschreibung": "Die Industrie verliert an Wettbewerbsfähigkeit; Strukturwandel und geopolitische Veränderungen gefährden das Exportmodell",
+      "quelle_url": "https://www.sachverstaendigenrat-wirtschaft.de/fileadmin/dateiablage/gutachten/jg202526/JG202526_Kurzfassung.pdf",
+      "schlagwoerter": ["industrie", "energiekosten", "standort", "abwandern", "verlagert", "auftraege", "export", "insolvenz", "pleite"]
+    },
+    {
+      "id": 502,
+      "beschreibung": "Strukturwandel: Die Industrie baut Stellen ab, neue Jobs entstehen vor allem in anderen Branchen",
+      "quelle_url": "https://iab.de/presseinfo/iab-prognose-fuer-2026-2027-erwerbstaetigkeit-schrumpft-trotz-besserer-konjunktur/",
+      "schlagwoerter": ["stellenabbau", "entlassung", "umschulung", "weiterbildung", "neuer job", "keine stelle", "autoindustrie", "zulieferer"]
+    },
+    {
+      "id": 503,
+      "beschreibung": "Löhne in Ostdeutschland liegen weiterhin deutlich unter denen im Westen",
+      "quelle_url": "https://www.destatis.de/DE/Themen/Querschnitt/35-Jahre-Deutsche-Einheit/Vermoegen-Einkommen/Textbausteine/01_verdienstunterschiede.html",
+      "schlagwoerter": ["im osten", "ostdeutsch", "ostdeutschland", "niedriglohn", "wenig verdienen", "schlecht bezahlt", "tarif", "lohnluecke", "weggezogen"]
+    }
+  ]
+}

@@ -225,10 +225,12 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
       katalog.ursachen.push(u)
     }
 
-    // Abdeckung: Jede Partei genau einmal – mit Maßnahmen oder „keine_massnahme“.
+    // Abdeckung: Jede Partei höchstens einmal – mit Maßnahmen oder „keine_massnahme“.
+    // Fehlt eine Partei, gilt das Thema für sie als „noch nicht erfasst“. So kann ein
+    // Thema zuerst nur mit Ursachen angelegt werden (Ablauf in daten/README.md).
     const gesehen = new Set<number>()
     const adressiert = new Set<number>()
-    if (!Array.isArray(t.abdeckung)) f(ort, '„abdeckung“ fehlt (Liste mit einem Eintrag pro Partei)')
+    if (t.abdeckung !== undefined && !Array.isArray(t.abdeckung)) f(ort, '„abdeckung“ muss eine Liste sein (ein Eintrag pro Partei)')
     for (const [i, roh] of (Array.isArray(t.abdeckung) ? t.abdeckung : []).entries()) {
       const aOrt = `${ort} › abdeckung[${i}]`
       if (!istObjekt(roh)) {
@@ -362,11 +364,18 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
       })
     }
 
-    for (const p of katalog.parteien) {
-      if (!gesehen.has(p.id)) f(ort, `Partei „${p.kurzname}“ (${p.id}) fehlt in „abdeckung“ – Maßnahmen oder „keine_massnahme“ eintragen`)
+    const fehlend = katalog.parteien.filter((p) => !gesehen.has(p.id))
+    if (fehlend.length) {
+      warnungen.push(
+        `${ort}: noch nicht erfasst für ${fehlend.map((p) => `„${p.kurzname}“ (${p.id})`).join(', ')} – ` +
+          'Runden mit diesen Parteien werden nicht gewertet, bis Maßnahmen oder „keine_massnahme“ eingetragen sind',
+      )
     }
-    for (const id of eigeneUrsachen) {
-      if (!adressiert.has(id)) warnungen.push(`${ort}: Ursache ${id} wird von keiner Partei adressiert`)
+    // Erst aussagekräftig, wenn alle Parteien erfasst sind.
+    if (!fehlend.length) {
+      for (const id of eigeneUrsachen) {
+        if (!adressiert.has(id)) warnungen.push(`${ort}: Ursache ${id} wird von keiner Partei adressiert`)
+      }
     }
   }
 
