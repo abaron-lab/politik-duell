@@ -54,6 +54,7 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 - Seite „So bewerten wir“ (`#/methode`): Skalen für Wirksamkeit und Umsetzbarkeit, Punkteregeln, was die Punkte bedeuten, Fehler melden – verlinkt in Fußzeile, Auflösung und Endbildschirm
 - Äußerungsrechtlich vorsichtige Formulierungen: 0 Punkte heißt „Im Wahlprogramm (Stand …) keine Maßnahme zu diesen Ursachen gefunden“
 - Parteinamen in KI-Antworten (Kurzfassung, Stichwort, Einschätzung, Nachfrage) werden durch „[Partei]“ ersetzt bzw. entfernt – Aussagen über Parteien kommen nur belegt aus der Datenbank
+- Installierbar als PWA: Service Worker (`vite-plugin-pwa`) speichert nur die App-Dateien, damit sie auch ohne Netz startet; Supabase- und KI-Anfragen laufen immer live und werden nie zwischengespeichert
 - `vercel.json`: Build-Einstellungen und Sicherheits-Header (Content-Security-Policy, HSTS, `Referrer-Policy: no-referrer`, Mikrofon nur für die eigene Seite), lange Cache-Zeiten für Assets
 
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
