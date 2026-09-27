@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Aufloesung } from './components/Aufloesung'
 import { Ende } from './components/Ende'
+import { Fusszeile } from './components/Fusszeile'
 import { MockHinweis } from './components/MockHinweis'
 import { Punktestand } from './components/Punktestand'
 import { Runde } from './components/Runde'
@@ -85,6 +86,7 @@ export default function App() {
           />
         )}
         {phase === 'ende' && spieler && <Ende spieler={spieler} runden={runden} onNeu={neuesSpiel} />}
+        <Fusszeile />
       </div>
     </DatenKontext.Provider>
   )

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { THEMEN, URSACHEN } from '../../../src/data/mock'
-import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, pruefeAnfrage, systemPrompt } from './ki.ts'
+import { PARTEIEN, THEMEN, URSACHEN } from '../../../src/data/mock'
+import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, ohneParteinamen, pruefeAnfrage, systemPrompt } from './ki.ts'
 import type { Nachricht } from './typen.ts'
 
 const spieler = (text: string): Nachricht => ({ von: 'spieler', text })
@@ -87,6 +87,7 @@ describe('pruefeAnfrage', () => {
 
   it.each([
     ['ohne Sitzung', { ...gueltig, sitzung: 'x' }],
+    ['feste Sitzung des globalen Limits', { ...gueltig, sitzung: '00000000-0000-0000-0000-000000000000' }],
     ['mit zu langem Text', { ...gueltig, verlauf: [spieler('a'.repeat(501))] }],
     ['mit KI als letzter Nachricht', { ...gueltig, verlauf: [spieler('a'), ki('b')] }],
     ['mit unbekannter Rolle', { ...gueltig, rolle: 'koenig' }],
@@ -94,5 +95,61 @@ describe('pruefeAnfrage', () => {
     ['mit zu langem Verlauf', { ...gueltig, verlauf: Array(7).fill(spieler('a')) }],
   ])('lehnt Anfrage %s ab', (_, anfrage) => {
     expect(() => pruefeAnfrage(anfrage)).toThrow(EingabeFehler)
+  })
+})
+
+describe('ohneParteinamen', () => {
+  const echt = [
+    { name: 'BÜNDNIS 90/DIE GRÜNEN', kurzname: 'Grüne' },
+    { name: 'Die Linke', kurzname: 'Linke' },
+    { name: 'Christlich Demokratische Union', kurzname: 'CDU/CSU' },
+  ]
+
+  it.each([
+    ['Die Grünen wollen mehr Radwege', '[Partei] wollen mehr Radwege'],
+    ['Die CDU tut nichts gegen Mieten', '[Partei] tut nichts gegen Mieten'],
+    ['Die Linke fordert einen Mietendeckel', '[Partei] fordert einen Mietendeckel'],
+    ['Wie bei der CSU und der spd', 'Wie bei [Partei] und der spd'],
+    ['Ich schreibe mit der linken Hand', 'Ich schreibe mit der linken Hand'],
+    ['Die Wiese ist grün', 'Die Wiese ist grün'],
+    ['Die CDUler im Süden', 'Die CDUler im Süden'],
+  ])('%s → %s', (ein, aus) => {
+    expect(ohneParteinamen(ein, echt)).toBe(aus)
+  })
+
+  it('erkennt vollen Namen vor Kurznamen', () => {
+    expect(ohneParteinamen('Partei Alpha verspricht viel', PARTEIEN)).toBe('[Partei] verspricht viel')
+  })
+})
+
+describe('bereinigeAntwort ohne Parteinamen', () => {
+  it('entfernt Parteinamen aus Zusammenfassung, Einschätzung und Stichwort', () => {
+    const a = bereinigeAntwort(
+      {
+        typ: 'problem',
+        thema_id: null,
+        zusammenfassung: 'Partei Beta kümmert sich nicht um Busse auf dem Land.',
+        einschaetzung: 'Alpha und Gamma haben dazu Ideen.',
+        stichwort: 'Beta Busverkehr',
+      },
+      [spieler('Bus fährt selten')],
+      THEMEN,
+      URSACHEN,
+      PARTEIEN,
+    )
+    expect(a.zusammenfassung).toBe('[Partei] kümmert sich nicht um Busse auf dem Land.')
+    expect(a.einschaetzung).toBe('[Partei] und [Partei] haben dazu Ideen.')
+    expect(a.stichwort).toBe('Busverkehr')
+  })
+
+  it('nimmt die Zusammenfassung, wenn das Stichwort nur ein Parteiname ist', () => {
+    const a = bereinigeAntwort(
+      { typ: 'wert', zusammenfassung: 'Gerechtigkeit ist wichtig', stichwort: 'Epsilon' },
+      [spieler('x')],
+      THEMEN,
+      URSACHEN,
+      PARTEIEN,
+    )
+    expect(a.stichwort).toBe('Gerechtigkeit ist wichtig')
   })
 })

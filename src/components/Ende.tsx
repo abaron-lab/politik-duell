@@ -48,7 +48,7 @@ export function Ende({
           <span style={parteiStil(spieler[1].partei.farbe)}>{spieler[1].partei.kurzname}</span>
         </p>
         <h2 className="sieger">
-          {sieger ? `${sieger.partei.name} liefert – ${sieger.name} gewinnt!` : 'Unentschieden!'}
+          {sieger ? `${sieger.partei.name} liefert in diesem Spiel mehr – ${sieger.name} gewinnt!` : 'Unentschieden!'}
         </h2>
       </div>
 
@@ -69,7 +69,7 @@ export function Ende({
                       <span>
                         {e.partei.kurzname}: {e.punkte} P. {r.punkte[i] === 1 && '✓'}
                       </span>
-                      {e.treffer.length > 0 ? <Belege ergebnis={e} /> : <small className="zf-leer">keine Maßnahme</small>}
+                      {e.treffer.length > 0 ? <Belege ergebnis={e} /> : <small className="zf-leer">nichts im Programm gefunden</small>}
                     </div>
                   ))}
                 </div>
@@ -91,6 +91,10 @@ export function Ende({
         </button>
       </div>
       {geteilt && <p className="hinweis">{geteilt}</p>}
+      <p className="hinweis methode-link">
+        Das Ergebnis gilt nur für die {runden.length} genannten Probleme.{' '}
+        <a href="#/methode">So bewerten wir · Fehler melden</a>
+      </p>
     </main>
   )
 }
