@@ -4,7 +4,9 @@ Hier liegen alle Daten, aus denen „Wer liefert?“ Punkte vergibt: Parteien, T
 
 Änderungen laufen per Pull Request mit Quellenpflicht. Jeder Pull Request wird automatisch geprüft (`npm run daten:pruefen`).
 
-> **Aktuell: fiktive Platzhalterdaten** (`"fiktiv": true` in `parteien.json`). Echte Parteien kommen erst hinzu, wenn Ursachen und Maßnahmen nach dem Ablauf unten erfasst und geprüft sind.
+> **Echte Daten, im Aufbau.** Parteien und Programme siehe unten („Programme“). Maßnahmen sind bisher nur für Miete erfasst und noch nicht geprüft – im Spiel gilt deshalb vorerst alles als „noch nicht erfasst“.
+>
+> Die fiktiven Beispieldaten für „Mit Beispieldaten spielen“ und die Tests liegen getrennt in [`beispiel/`](beispiel/) und werden nicht weiter gepflegt.
 
 ## Ablauf für ein neues Thema
 
@@ -14,9 +16,9 @@ Die Reihenfolge ist wichtig für die Neutralität.
    Ursachen beschreiben, *warum* das Alltagsproblem besteht. Jede Ursache braucht eine unabhängige Quelle (z. B. Statistisches Bundesamt, Sachverständigenrat, Bundesbank, wissenschaftliche Studie). Keine Parteiquellen, keine Quellen von Lobbyverbänden als einzige Quelle.
    Eigener Pull Request, damit die Ursachen feststehen, bevor Maßnahmen dazukommen. Die Themendatei enthält dann noch keine `abdeckung` – das Thema gilt für alle Parteien als „noch nicht erfasst“.
 2. **Maßnahmen aus den Programmen erfassen.**
-   Für **jede** Partei entweder Maßnahmen mit Seitenangabe eintragen oder ausdrücklich `keine_massnahme` mit kurzer Begründung („Programm Stand … durchsucht, Kapitel … enthält nichts zu …“). Neue Einträge haben `"geprueft": false`.
+   Für **jede** Partei entweder Maßnahmen mit **wörtlichem Zitat** (`zitat`) und Seitenanker eintragen oder ausdrücklich `keine_massnahme` mit kurzer Begründung („Programm Stand … durchsucht, Kapitel … enthält nichts zu …“). Neue Einträge haben `"geprueft": false`. Nur Maßnahmen aufnehmen, die an einer der erfassten Ursachen ansetzen – Ursachen werden dafür nicht nachträglich ergänzt.
 3. **Bewerten** nach dem Maßstab unten, möglichst **ohne Parteinamen** (Maßnahmentext allein beurteilen).
-4. **Prüfen:** Eine zweite Person kontrolliert Zitat, Seitenanker und Bewertung und setzt `"geprueft": true`. Bei abweichender Einschätzung Begründung im Pull Request festhalten.
+4. **Prüfen:** Eine zweite Person prüft mit der Prüfliste (siehe „Prüfung“) und setzt `"geprueft": true`. Bei abweichender Einschätzung Begründung im Pull Request festhalten.
 
 Ins Spiel kommt ein Thema für eine Partei erst, wenn der **ganze Eintrag** geprüft ist: alle Maßnahmen der Partei zum Thema bzw. `keine_massnahme`. Bis dahin gilt es als **„noch nicht erfasst“** – die App zeigt das so an und wertet Runden mit dieser Partei zu diesem Thema nicht (fehlende Daten sollen keiner Partei einen Punkt kosten). Ungeprüfte Einträge bleiben als Entwurf im Repo und landen nicht in der Datenbank. Bei fiktiven Daten zählt alles.
 
@@ -26,6 +28,35 @@ Ins Spiel kommt ein Thema für eine Partei erst, wenn der **ganze Eintrag** gepr
 | Maßnahmen zum Thema, alle geprüft; keine passt zu den Ursachen | „keine Maßnahme zu diesen Ursachen“ | 0 |
 | `keine_massnahme`, geprüft | „enthält keine Maßnahme zu diesem Thema“ + Begründung | 0 |
 | Eintrag (teilweise) ungeprüft oder Partei fehlt in `abdeckung` | „noch nicht erfasst“ | Runde wird nicht gewertet |
+
+## Prüfung
+
+Ein Pull Request pro Thema. `npm run pruefliste -- <Themen-ID>` erzeugt `pruefung/<nr>-<thema>.html` (nicht im Repo) – im Browser öffnen, Eingaben bleiben dort gespeichert.
+
+1. **Durchgang A – Bewertung ohne Parteinamen.** Die Maßnahmen stehen gemischt und ohne Partei; Wirksamkeit und Umsetzbarkeit selbst vergeben, dann „Vergleichen“.
+   - gleich → steht fest
+   - 1 Punkt Abstand → die prüfende Person entscheidet, ein Satz Begründung im Pull Request
+   - 2 Punkte oder mehr → Maßstab unklar: erst den Maßstab hier präzisieren, dann weiter
+2. **Durchgang B – Belege.** Je Maßnahme: Link öffnet die richtige Seite · Zitat steht dort wörtlich · Kurzbeschreibung gibt es richtig wieder · passt zu den Ursachen · Begründung neutral. Bei `keine_massnahme`: Stichprobe mit der PDF-Suche.
+3. **Ergebnis** mit „Zusammenfassung kopieren“ als Kommentar in den Pull Request; Einwände als Zeilenkommentar. Sind alle Einträge einer Partei in Ordnung, `geprueft: true` setzen (oder setzen lassen) – erst dann zählt das Thema für diese Partei.
+
+Wer geprüft hat, steht in der Git-Historie. Solange es keine unabhängige zweite Person gibt, prüft der Betreiber; das steht auch auf der Methodenseite.
+
+## Programme
+
+Grundlage sind die Wahlprogramme zur Bundestagswahl 2025. Neuere Grundsatzprogramme gibt es bisher bei keiner der Parteien (Stand September 2026: SPD, FDP und Linke wollen 2027 neue beschließen; CDU 2024, Grüne 2020, AfD 2016). Kommt ein neues Programm hinzu, `programm_url` und `programm_stand` anpassen – die Prüfung meldet dann alle älteren Einträge zur Neuprüfung.
+
+| ID | Partei | Programm | Beschluss |
+| --- | --- | --- | --- |
+| 11 | CDU/CSU | [Politikwechsel für Deutschland](https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf) | 17. 12. 2024 |
+| 12 | SPD | [Mehr für Dich. Besser für Deutschland.](https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf) | 11. 1. 2025 |
+| 13 | Bündnis 90/Die Grünen | [Zusammen wachsen](https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf) (Fassung vom 18. 3. 2025) | 26. 1. 2025 |
+| 14 | FDP | [Alles lässt sich ändern](https://www.fdp.de/sites/default/files/2024-12/fdp-wahlprogramm_2025.pdf) | 9. 2. 2025 |
+| 15 | AfD | [Zeit für Deutschland](https://www.afd.de/wp-content/uploads/2025/02/AfD_Bundestagswahlprogramm2025_web.pdf) | 12. 1. 2025 |
+| 16 | Die Linke | [Alle wollen regieren. Wir wollen verändern.](https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf) | 18. 1. 2025 |
+| 17 | BSW | [Unser Land verdient mehr!](https://bsw-vg.de/wp-content/themes/bsw/assets/downloads/BSW%20Wahlprogramm%202025.pdf) | 12. 1. 2025 |
+
+Seitenanker `#page=N` zählen PDF-Seiten, nicht die gedruckten Seitenzahlen. Die IDs 1–5 waren fiktive Parteien und werden nicht wiederverwendet. Das BSW heißt ab 1. 10. 2026 „Bündnis Soziale Gerechtigkeit und Wirtschaftliche Vernunft“; die Abkürzung bleibt.
 
 ## Themenauswahl
 
@@ -127,6 +158,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
           "umsetzbarkeit": 2,
           "rollen_modifikator": { "angestellt": { "wert": 1, "begruendung": "…" } },
           "begruendung": "Ein bis zwei neutrale Sätze.",
+          "zitat": "Wörtlich aus dem Programm, so wie es auf der Seite steht.",
           "beleg_programm_url": "https://…/wahlprogramm.pdf#page=17",
           "beleg_studie_url": "https://…",
           "stand": "2026-03-01",
@@ -146,7 +178,8 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
 }
 ```
 
-- **IDs** sind im ganzen Katalog eindeutig und ändern sich nie (gespielte Runden verweisen darauf). Konvention für Ursachen: Themen-ID × 100 + laufende Nummer.
+- **IDs** sind im ganzen Katalog eindeutig und ändern sich nie (gespielte Runden verweisen darauf). Konvention für Ursachen: Themen-ID × 100 + laufende Nummer; für Maßnahmen: Themen-ID × 1000 + laufende Nummer (Miete: 2001, 2002 …).
+- `zitat` ist bei echten Daten Pflicht: der Satz aus dem Programm, auf den sich die Maßnahme stützt, wörtlich (Silbentrennungen am Zeilenende zusammengezogen). Es dient der Prüfung und kommt nicht in die Datenbank.
 - `schlagwoerter` braucht nur die Offline-Analyse ohne KI; kleingeschrieben, Umlaute als ae/oe/ue.
 - `beleg_programm_url` muss auf `programm_url` der Partei zeigen, mit Seitenanker `#page=N`.
 - `beleg_studie_url` ist optional.
@@ -157,7 +190,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
 - Pflichtfelder, Wertebereiche, Datumsformat, keine unbekannten Felder (Tippfehler)
 - eindeutige IDs und Namen
 - jede Ursache mit https-Quelle; Maßnahmen verweisen nur auf Ursachen ihres Themas
-- Beleg zeigt ins Programm der richtigen Partei, mit Seitenanker
+- Beleg zeigt ins Programm der richtigen Partei, mit Seitenanker; bei echten Daten ein wörtliches Zitat
 - **Abdeckung:** jede Partei höchstens einmal pro Thema – mit Maßnahmen oder `keine_massnahme`; fehlende Parteien werden als „noch nicht erfasst“ gemeldet (Warnung)
 - Einträge sind nicht älter als das aktuelle Programm
 - bei echten Daten: keine Platzhalter-Links (example.org); Warnung für ungeprüfte Einträge (die im Spiel „noch nicht erfasst“ sind)

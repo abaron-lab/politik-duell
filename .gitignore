@@ -26,3 +26,6 @@ dist-ssr
 # Supabase CLI (lokaler Zustand nach `supabase link`)
 supabase/.temp
 supabase/.branches
+
+# Prüflisten (npm run pruefliste) – werden lokal erzeugt
+pruefung/

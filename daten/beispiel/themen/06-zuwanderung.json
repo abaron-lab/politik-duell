@@ -1,0 +1,32 @@
+{
+  "id": 6,
+  "name": "Zuwanderung und Integration",
+  "beschreibung": "Probleme bei Aufnahme, Integration und Rückführung von Zugewanderten.",
+  "schlagwoerter": ["zuwanderung", "migration", "migranten", "fluechtlinge", "gefluechtete", "asyl", "integration", "auslaender", "abschiebung", "einwanderung", "sprachkurs"],
+  "ursachen": [
+    {
+      "id": 601,
+      "beschreibung": "Unterbringung bleibt für die meisten Kommunen herausfordernd; Ausländerbehörden sind besonders stark belastet",
+      "quelle_url": "https://mediendienst-integration.de/fileadmin/Dateien/EXPERTISE_FLUECHTLINGSAUFNAHME_IN_DEN_KOMMUNEN_MEDIENDIENST_INTEGRATION_NOV_2025_FINAL.pdf",
+      "schlagwoerter": ["unterkunft", "turnhalle", "auslaenderbehoerde", "ueberlastet", "kommune", "gemeinde", "kita platz", "fluechtlingsheim"]
+    },
+    {
+      "id": 602,
+      "beschreibung": "Asyl- und Gerichtsverfahren dauern lange (im Schnitt rund anderthalb Jahre bis zur rechtskräftigen Entscheidung)",
+      "quelle_url": "https://www.bundestag.de/presse/hib/kurzmeldungen-1145824",
+      "schlagwoerter": ["asylverfahren", "verfahren", "dauert", "bearbeitung", "gericht", "entscheidung", "bamf"]
+    },
+    {
+      "id": 603,
+      "beschreibung": "Sprachkurse, Anerkennung von Abschlüssen und Zugang zum Arbeitsmarkt dauern lange",
+      "quelle_url": "https://iab-forum.de/10-jahre-fluchtmigration-2015-was-integration-foerdert-und-was-sie-bremst/",
+      "schlagwoerter": ["sprache", "deutsch lernen", "deutschkurs", "sprachkurs", "anerkennung", "arbeiten duerfen", "arbeitserlaubnis", "buergergeld", "integrationskurs"]
+    },
+    {
+      "id": 604,
+      "beschreibung": "Viele Ausreisepflichtige werden nicht zurückgeführt, etwa wegen fehlender Papiere",
+      "quelle_url": "https://mediendienst-integration.de/fluechtlinge/abschiebungen/warum-werden-ausreisepflichtige-personen-nicht-abgeschoben/",
+      "schlagwoerter": ["abschiebung", "ausreisepflichtig", "duldung", "geduldet", "rueckfuehrung", "papiere", "abgeschoben"]
+    }
+  ]
+}

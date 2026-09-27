@@ -1,0 +1,26 @@
+{
+  "id": 4,
+  "name": "Schule",
+  "beschreibung": "Unterrichtsausfall, fehlende Lehrkräfte und marode Schulgebäude.",
+  "schlagwoerter": ["schule", "lehrer", "lehrerin", "lehrkraft", "unterricht", "klasse", "schueler", "zeugnis", "abschluss", "hausaufgaben", "schulgebaeude", "turnhalle"],
+  "ursachen": [
+    {
+      "id": 401,
+      "beschreibung": "Zu wenige Lehrkräfte: Kurzfristig liegt das Angebot deutlich unter dem Einstellungsbedarf",
+      "quelle_url": "https://www.kmk.org/downloads-dokumente/statistik/schulstatistik/lehrkraefteeinstellungsbedarf-und-angebot.html",
+      "schlagwoerter": ["lehrermangel", "lehrkraeftemangel", "faellt aus", "ausfall", "vertretung", "seiteneinsteiger", "keine lehrer", "lehrer fehl", "unterrichtsausfall", "stunden fallen"]
+    },
+    {
+      "id": 402,
+      "beschreibung": "Großer Sanierungsstau bei Schulgebäuden (rund 68 Mrd. Euro, größter Posten der Kommunen)",
+      "quelle_url": "https://www.bundestag.de/resource/blob/1157306/KfW-Kommunalpanel-2025.pdf",
+      "schlagwoerter": ["marode", "toilette", "klo", "dach", "heizung", "sanierung", "kaputt", "gebaeude", "schimmel"]
+    },
+    {
+      "id": 403,
+      "beschreibung": "Wachsende Lernrückstände: Ein Drittel der Neuntklässler verfehlt den Mindeststandard in Mathematik",
+      "quelle_url": "https://www.iqb.hu-berlin.de/de/schule/sekundarstufe-i/bildungstrend/2024/",
+      "schlagwoerter": ["lernt nichts", "lernrueckstand", "mathe", "lesen", "schlechte noten", "nachhilfe", "foerderung", "niveau"]
+    }
+  ]
+}

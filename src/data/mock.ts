@@ -1,12 +1,12 @@
 import { ladeKatalog, spielbareAbdeckung, spielbareMassnahmen, type Datei } from './katalog.ts'
 
 // ---------------------------------------------------------------------------
-// Eingebaute Daten der App (Offline-Modus, Tests) – geladen aus `daten/`.
+// Eingebaute Beispieldaten der App („Mit Beispieldaten spielen“, Tests) –
+// geladen aus `daten/beispiel/`.
 //
-// Solange `daten/parteien.json` „fiktiv: true“ enthält, sind Parteien,
-// Maßnahmen, Punktzahlen und Links ERFUNDEN. Sie zeigen nur Spielablauf und
-// Punktelogik. Echte Parteien kommen erst mit geprüften Daten hinzu
-// (Quellenpflicht, siehe daten/README.md).
+// Parteien, Maßnahmen, Punktzahlen und Links dort sind ERFUNDEN. Sie zeigen nur
+// Spielablauf und Punktelogik und bleiben als feste Testgrundlage unverändert.
+// Die echten Daten liegen in `daten/` und kommen über Supabase ins Spiel.
 // ---------------------------------------------------------------------------
 
 const alsDateien = (module: Record<string, unknown>): Datei[] =>
@@ -14,8 +14,8 @@ const alsDateien = (module: Record<string, unknown>): Datei[] =>
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([pfad, inhalt]) => ({ pfad: pfad.replace(/^(\.\.\/)+/, ''), inhalt }))
 
-const [parteienDatei] = alsDateien(import.meta.glob('../../daten/parteien.json', { eager: true, import: 'default' }))
-const themenDateien = alsDateien(import.meta.glob('../../daten/themen/*.json', { eager: true, import: 'default' }))
+const [parteienDatei] = alsDateien(import.meta.glob('../../daten/beispiel/parteien.json', { eager: true, import: 'default' }))
+const themenDateien = alsDateien(import.meta.glob('../../daten/beispiel/themen/*.json', { eager: true, import: 'default' }))
 
 export const KATALOG = ladeKatalog(parteienDatei, themenDateien)
 

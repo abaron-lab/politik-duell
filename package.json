@@ -11,7 +11,8 @@
     "test": "vitest run",
     "seed": "node --experimental-strip-types scripts/erzeuge-seed.ts",
     "dashboard": "npm run seed && node --experimental-strip-types scripts/erzeuge-dashboard.ts",
-    "daten:pruefen": "node --experimental-strip-types scripts/pruefe-daten.ts"
+    "daten:pruefen": "node --experimental-strip-types scripts/pruefe-daten.ts",
+    "pruefliste": "node --experimental-strip-types scripts/erzeuge-pruefliste.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

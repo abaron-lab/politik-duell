@@ -32,6 +32,13 @@ export const MOCK_DATEN: Daten = {
   abdeckung: ABDECKUNG,
 }
 
+/**
+ * Fiktive Beispieldaten? Eingebaute Daten immer; aus Supabase, solange dort noch
+ * die fiktiven Parteien (Platzhalter-Links) stehen – etwa bevor der echte Seed läuft.
+ */
+export const sindBeispieldaten = (d: Daten) =>
+  d.quelle === 'mock' || d.parteien.some((p) => /^https:\/\/example\.(org|com|net)\//.test(p.programm_url))
+
 export async function ladeDaten(): Promise<Daten> {
   if (!supabase) return MOCK_DATEN
   const [p, t, u, m, a] = await Promise.all([

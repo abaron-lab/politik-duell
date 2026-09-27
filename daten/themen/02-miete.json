@@ -25,90 +25,350 @@
   ],
   "abdeckung": [
     {
-      "partei_id": 1,
+      "partei_id": 11,
       "massnahmen": [
         {
-          "id": 6,
-          "beschreibung": "Mietpreisbremse verlängern und Ausnahmen streichen",
+          "id": 2001,
+          "beschreibung": "Bauordnungsrecht entschlacken, Gebäudetyp E, befristete Ausnahmen vom Planungsrecht in angespannten Wohnungsmärkten",
+          "ursachen_ids": [201, 203],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Senkt Baukosten und beschleunigt Planung; Bauordnungen sind Ländersache, die Wirkung hängt daher auch von den Ländern ab.",
+          "zitat": "Mit dem Gebäudetyp E – wie „Einfach“ – schaffen wir die Voraussetzungen für kostengünstigeres, aber sicheres Bauen. Mit einer befristeten Sonderregelung für angespannte Wohnungsmärkte erlauben wir bei Wohnungsbauvorhaben Ausnahmen vom geltenden Planungsrecht.",
+          "beleg_programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf#page=73",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2002,
+          "beschreibung": "Mehr Bauland: Brach- und Konversionsflächen sowie bundeseigene Grundstücke für den Wohnungsbau nutzen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Mehr verfügbare Flächen erleichtern Neubau in Wachstumsregionen; Umfang und Tempo hängen von Kommunen und Ländern ab.",
+          "zitat": "Bundeseigene Grundstücke der Bundesanstalt für Immobilienaufgaben sollen für den Wohnungsbau genutzt werden.",
+          "beleg_programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf#page=73",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2003,
+          "beschreibung": "Keine neuen kostentreibenden Standards (Baukostenmoratorium), Genehmigungsverfahren digitalisieren und beschleunigen",
+          "ursachen_ids": [203],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 3,
+          "begruendung": "Verhindert weitere Kostensteigerungen durch Vorschriften und verkürzt Verfahren; bereits gestiegene Material- und Lohnkosten bleiben.",
+          "zitat": "Mit uns gibt es keine neuen Standards, die Baukosten ohne nennenswerten Mehrwert erhöhen. Planungs- und Nebenkosten senken wir durch Digitalisierung und Beschleunigung von Bauleit- und Baugenehmigungsverfahren.",
+          "beleg_programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf#page=73",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2004,
+          "beschreibung": "Höhere befristete Sonderabschreibung und degressive Abschreibung für bezahlbaren Mietwohnungsbau in angespannten Märkten",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Steuerliche Anreize können Neubau anstoßen; kostet Steuereinnahmen, und ob die Wohnungen günstig vermietet werden, ist nicht gesichert.",
+          "zitat": "Dazu konzentrieren wir die Förderung auf den Geschosswohnungsbau in angespannten Wohnungsmärkten.",
+          "beleg_programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf#page=73",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2005,
+          "beschreibung": "Sozialen Wohnungsbau solide fördern und Wohngeld regelmäßig anpassen",
+          "ursachen_ids": [201, 202],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 3,
+          "begruendung": "Hält bestehende Instrumente aufrecht, ohne Umfang oder Ausbau zu beziffern; Wohngeld entlastet, schafft aber keine Wohnungen.",
+          "zitat": "Der soziale Wohnungsbau muss solide gefördert und das Wohngeld regelmäßig angepasst werden.",
+          "beleg_programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf#page=73",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2006,
+          "beschreibung": "Steuerliche Nachteile für Vermieter abschaffen, die weniger als die ortsübliche Vergleichsmiete verlangen",
+          "ursachen_ids": [202],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 3,
+          "begruendung": "Setzt einen kleinen Anreiz für günstige Mieten, vor allem bei privaten Vermietern; die Wirkung auf das Mietniveau ist begrenzt.",
+          "zitat": "Den Werbungskostenabzug passen wir an, damit derjenige, der weniger als die ortsübliche Vergleichsmiete verlangt, künftig keine steuerlichen Nachteile hat.",
+          "beleg_programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf#page=73",
+          "stand": "2026-09-27",
+          "geprueft": false
+        }
+      ]
+    },
+    {
+      "partei_id": 12,
+      "massnahmen": [
+        {
+          "id": 2011,
+          "beschreibung": "Mietpreisbremse unbefristet verlängern, auf Wohnungen bis Baujahr 2019 ausweiten und Umgehung über möblierte oder befristete Angebote verhindern",
+          "ursachen_ids": [202],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Begrenzt die Miete bei Neuvermietung unmittelbar."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Begrenzt mögliche Mieteinnahmen bei Neuvermietung."
+            }
+          },
+          "begruendung": "Dämpft Mieten bei Neuvermietung in angespannten Märkten; schafft keine neuen Wohnungen. Eine unbefristete Geltung ist verfassungsrechtlich weniger abgesichert als die befristete.",
+          "zitat": "Die Mietpreisbremse soll unbefristet und auch für Immobilien, die bis 2019 bezogen wurden, gelten, um langfristig für stabile und bezahlbare Mieten in angespannten Wohnungsmärkten zu sorgen.",
+          "beleg_programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf#page=20",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2012,
+          "beschreibung": "Mieterhöhungen im Bestand in angespannten Märkten auf 6 % in drei Jahren begrenzen, Indexmieten deckeln",
+          "ursachen_ids": [202],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 3,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Begrenzt Mieterhöhungen im laufenden Mietverhältnis."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Begrenzt Mieterhöhungen im Bestand."
+            }
+          },
+          "begruendung": "Schützt bestehende Mietverhältnisse vor starken Erhöhungen; die erfasste Ursache betrifft vor allem Neuvermietungen.",
+          "zitat": "Deswegen wollen wir, dass in Gebieten mit angespanntem Wohnungsmarkt nur eine maximale Mietsteigerung von sechs Prozent in drei Jahren bis zur ortsüblichen Vergleichsmiete gestattet ist.",
+          "beleg_programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf#page=21",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2013,
+          "beschreibung": "Sozialen Wohnungsbau stärken; Wohnungsgesellschaften und Genossenschaften über einen Deutschlandfonds mit Eigenkapital ausstatten",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Mehr Kapital für gemeinwohlorientierte Bauherren kann das Angebot günstiger Wohnungen erhöhen; erfordert erhebliche öffentliche Mittel.",
+          "zitat": "Über den Deutschlandfonds werden wir Wohnungsbaugesellschaften und -genossenschaften mit dem nötigen Eigenkapital versorgen und damit den Wohnungsbau ankurbeln.",
+          "beleg_programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf#page=21",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2014,
+          "beschreibung": "Baukosten senken: Gebäudetyp E weiterentwickeln, serielles und modulares Bauen fördern, Bauverwaltung digitalisieren",
+          "ursachen_ids": [203],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 3,
+          "begruendung": "Setzt an Vorschriften und Verfahrensdauer an; bereits gestiegene Material- und Lohnkosten bleiben.",
+          "zitat": "Vereinfachte Baustandards wie der Gebäudetyp E müssen weiterentwickelt werden.",
+          "beleg_programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf#page=22",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2015,
+          "beschreibung": "Neue bundeseigene Wohnungsgesellschaft gründen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 2,
+          "begruendung": "Schafft zusätzliche Wohnungen, laut Programm vor allem für Beschäftigte des Bundes; die Wirkung auf den allgemeinen Markt ist begrenzt.",
+          "zitat": "Der Bund geht mit einer neuen bundeseigenen Wohnungsgesellschaft voran, um durch eigene Wohnraumförderung den Markt zu entlasten und Wohnraum für Angestellte und Beamte des Bundes zu schaffen.",
+          "beleg_programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf#page=22",
+          "stand": "2026-09-27",
+          "geprueft": false
+        }
+      ]
+    },
+    {
+      "partei_id": 13,
+      "massnahmen": [
+        {
+          "id": 2021,
+          "beschreibung": "Mietpreisbremse verlängern, Ausnahmen abschaffen, auf Wohnungen älter als fünf Jahre anwenden und Schlupflöcher (möbliert, Ferienwohnung) schließen",
           "ursachen_ids": [202],
           "wirksamkeit": 2,
           "umsetzbarkeit": 3,
           "rollen_modifikator": {
             "mieter": {
               "wert": 1,
-              "begruendung": "Begrenzt Mietsteigerungen für Mieter:innen unmittelbar."
+              "begruendung": "Begrenzt die Miete bei Neuvermietung unmittelbar."
             },
             "eigentuemer": {
               "wert": -1,
-              "begruendung": "Begrenzt mögliche Mieteinnahmen."
+              "begruendung": "Begrenzt mögliche Mieteinnahmen bei Neuvermietung."
             }
           },
-          "begruendung": "Dämpft Anstiege schnell, schafft aber keinen neuen Wohnraum.",
-          "beleg_programm_url": "https://example.org/mock/alpha/wahlprogramm.pdf#page=12",
-          "stand": "2026-01-01",
+          "begruendung": "Dämpft Mieten bei Neuvermietung in angespannten Märkten; schafft keine neuen Wohnungen.",
+          "zitat": "Wir werden die Mietpreisbremse verlängern und sie durch die Abschaffung von Ausnahmen verschärfen.",
+          "beleg_programm_url": "https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf#page=69",
+          "stand": "2026-09-27",
           "geprueft": false
-        }
-      ]
-    },
-    {
-      "partei_id": 2,
-      "massnahmen": [
+        },
         {
-          "id": 7,
-          "beschreibung": "Baugenehmigungen digitalisieren und feste Fristen einführen",
+          "id": 2022,
+          "beschreibung": "Mietenstopp in angespannten Wohnungsmärkten ermöglichen und Kappungsgrenzen senken",
+          "ursachen_ids": [202],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 2,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Verhindert Mieterhöhungen im laufenden Mietverhältnis."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Schließt Mieterhöhungen im Bestand zeitweise aus."
+            }
+          },
+          "begruendung": "Schützt bestehende Mietverhältnisse; die erfasste Ursache betrifft vor allem Neuvermietungen. Ein Mietenstopp wirft verfassungsrechtliche Fragen auf.",
+          "zitat": "Wir werden in angespannten Wohnungsmärkten einen Mietenstopp ermöglichen.",
+          "beleg_programm_url": "https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf#page=69",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2023,
+          "beschreibung": "Mehr Wohnraum im Bestand: Aufstockung, Umwandlung von Büros, Dachausbau; Baurecht vereinfachen, Verfahren digitalisieren, Standards zurückführen",
           "ursachen_ids": [201, 203],
           "wirksamkeit": 2,
           "umsetzbarkeit": 2,
-          "begruendung": "Beschleunigt Neubau; Personal in Bauämtern bleibt Engpass.",
-          "beleg_programm_url": "https://example.org/mock/beta/wahlprogramm.pdf#page=41",
-          "beleg_studie_url": "https://example.org/mock/studie/bauamt-digital",
-          "stand": "2026-01-01",
+          "begruendung": "Nutzt vorhandene Gebäude und senkt Kosten durch einfachere Regeln; wie viele Wohnungen so entstehen, ist unsicher.",
+          "zitat": "Dazu werden wir das Baurecht vereinfachen, Verfahren digitalisieren und bundesweit angleichen – davon profitieren alle Formen des Bauens. Übertriebene Anforderungen an bauliche Standards werden wir auf ein sinnvolles Maß zurückführen.",
+          "beleg_programm_url": "https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf#page=71",
+          "stand": "2026-09-27",
           "geprueft": false
-        }
-      ]
-    },
-    {
-      "partei_id": 3,
-      "keine_massnahme": {
-        "begruendung": "Kapitel „Bauen und Wohnen“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).",
-        "stand": "2026-01-01",
-        "geprueft": false
-      }
-    },
-    {
-      "partei_id": 4,
-      "massnahmen": [
+        },
         {
-          "id": 8,
-          "beschreibung": "Kommunalen und genossenschaftlichen Wohnungsbau fördern",
+          "id": 2024,
+          "beschreibung": "Fördermittel für sozialen und gemeinnützigen Wohnungsbau erhöhen, Miet- und Belegungsbindungen unbefristet",
           "ursachen_ids": [201],
-          "wirksamkeit": 3,
-          "umsetzbarkeit": 1,
-          "begruendung": "Schafft dauerhaft günstigen Wohnraum; hoher Finanzbedarf.",
-          "beleg_programm_url": "https://example.org/mock/delta/wahlprogramm.pdf#page=9",
-          "stand": "2026-01-01",
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Schafft dauerhaft preisgebundene Wohnungen; erfordert erhebliche öffentliche Mittel.",
+          "zitat": "Den sozialen und gemeinnützigen Wohnungsbau unterstützen wir, indem im Bund die Fördermittel für sozialen Wohnungsbau erhöht werden.",
+          "beleg_programm_url": "https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf#page=72",
+          "stand": "2026-09-27",
           "geprueft": false
         }
       ]
     },
     {
-      "partei_id": 5,
+      "partei_id": 14,
       "massnahmen": [
         {
-          "id": 9,
-          "beschreibung": "Bauvorschriften vereinfachen und Standards bündeln",
+          "id": 2031,
+          "beschreibung": "Steuerliche Abschreibungen im Wohnungsbau verbessern, Sonderabschreibung fortführen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Steuerliche Anreize können Neubau anstoßen; kostet Steuereinnahmen, und ob die Wohnungen günstig vermietet werden, ist nicht gesichert.",
+          "zitat": "Wir Freie Demokraten werden die steuerlichen Abschreibungen im Wohnungsbau verbessern – das macht Investitionen attraktiver und schafft schneller neuen Wohnraum.",
+          "beleg_programm_url": "https://www.fdp.de/sites/default/files/2024-12/fdp-wahlprogramm_2025.pdf#page=43",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2032,
+          "beschreibung": "Baukostenmoratorium, Bau-Auflagen auf Mindeststandards reduzieren, serielles Bauen mit bundesweiten Standards",
           "ursachen_ids": [203],
           "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Setzt an Vorschriften als Kostentreiber an; Mindeststandards bei Gebäudeenergie sind teils durch EU-Recht vorgegeben.",
+          "zitat": "Wir werden überzogene Bau-Auflagen abbauen und auf sinnvolle Mindeststandards bei Gebäudeenergie, Brand- und Gesundheitsschutz sowie Statik reduzieren.",
+          "beleg_programm_url": "https://www.fdp.de/sites/default/files/2024-12/fdp-wahlprogramm_2025.pdf#page=44",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2033,
+          "beschreibung": "Genehmigungsfiktion für Bauanträge, durchgehend digitale Planung, einfachere Ausweisung neuer Bauflächen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Beschleunigt Verfahren und erweitert das Flächenangebot; Personalmangel in Bauämtern bleibt ein Engpass.",
+          "zitat": "Reagiert die Behörde nicht fristgerecht, gilt der Bauantrag als genehmigt (Genehmigungsfiktion).",
+          "beleg_programm_url": "https://www.fdp.de/sites/default/files/2024-12/fdp-wahlprogramm_2025.pdf#page=44",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2034,
+          "beschreibung": "Mietpreisbremse auslaufen lassen, um Anreize für Neubau zu setzen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 1,
           "umsetzbarkeit": 3,
           "rollen_modifikator": {
+            "mieter": {
+              "wert": -1,
+              "begruendung": "Fällt die Begrenzung weg, können Neuvermietungsmieten in angespannten Märkten stärker steigen."
+            },
             "eigentuemer": {
               "wert": 1,
-              "begruendung": "Senkt Kosten bei Sanierung und Neubau im Eigentum."
+              "begruendung": "Mehr Spielraum bei der Miethöhe."
             }
           },
-          "begruendung": "Senkt Baukosten zügig; Wirkung auf Mieten indirekt.",
-          "beleg_programm_url": "https://example.org/mock/epsilon/wahlprogramm.pdf#page=22",
-          "stand": "2026-01-01",
+          "begruendung": "Soll Investitionen anregen; Neubauten sind von der Mietpreisbremse ohnehin ausgenommen, die Wirkung auf den Neubau ist daher gering.",
+          "zitat": "Die Mietpreisbremse ist nachweislich eine Investitionsbremse. Deshalb lassen wir sie auslaufen.",
+          "beleg_programm_url": "https://www.fdp.de/sites/default/files/2024-12/fdp-wahlprogramm_2025.pdf#page=44",
+          "stand": "2026-09-27",
+          "geprueft": false
+        }
+      ]
+    },
+    {
+      "partei_id": 15,
+      "massnahmen": [
+        {
+          "id": 2041,
+          "beschreibung": "Gebäudeenergiegesetz abschaffen und kostentreibende EU-Bauvorschriften ablehnen",
+          "ursachen_ids": [203],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 1,
+          "begruendung": "Senkt einzelne Anforderungen an Neubauten; das Gesetz setzt zum Teil EU-Recht um, eine Abschaffung wäre daher nur eingeschränkt möglich.",
+          "zitat": "Ideologiegetriebene Kosten wie EEG-Umlage, CO₂-Steuer und das Gebäudeenergiegesetz (GEG) werden wir abschaffen.",
+          "beleg_programm_url": "https://www.afd.de/wp-content/uploads/2025/02/AfD_Bundestagswahlprogramm2025_web.pdf#page=37",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2042,
+          "beschreibung": "Mehr Wohngeld und zusätzliches kommunales Wohngeld statt sozialem Wohnungsbau",
+          "ursachen_ids": [202],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 2,
+          "begruendung": "Entlastet Haushalte mit geringem Einkommen direkt; schafft keine zusätzlichen Wohnungen, der Verzicht auf sozialen Wohnungsbau verringert das Angebot günstiger Wohnungen.",
+          "zitat": "Es ist besser, einkommensschwache Mieter vermehrt mit Wohngeld zu unterstützen, wodurch eine soziale Durchmischung gewährleistet wird.",
+          "beleg_programm_url": "https://www.afd.de/wp-content/uploads/2025/02/AfD_Bundestagswahlprogramm2025_web.pdf#page=38",
+          "stand": "2026-09-27",
+          "geprueft": false
+        },
+        {
+          "id": 2043,
+          "beschreibung": "Mietpreisbremse und Mietendeckel ablehnen, um Investitionshemmnisse abzubauen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 3,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": -1,
+              "begruendung": "Fällt die Begrenzung weg, können Neuvermietungsmieten in angespannten Märkten stärker steigen."
+            },
+            "eigentuemer": {
+              "wert": 1,
+              "begruendung": "Mehr Spielraum bei der Miethöhe."
+            }
+          },
+          "begruendung": "Soll Investitionen anregen; Neubauten sind von der Mietpreisbremse ohnehin ausgenommen, die Wirkung auf den Neubau ist daher gering.",
+          "zitat": "Die AfD steht für ein ausgewogenes Mietrecht und lehnt staatliche Überregulierungen sowie Investitionshemmnisse wie die Mietpreisbremse oder den Mietendeckel ab.",
+          "beleg_programm_url": "https://www.afd.de/wp-content/uploads/2025/02/AfD_Bundestagswahlprogramm2025_web.pdf#page=39",
+          "stand": "2026-09-27",
           "geprueft": false
         }
       ]

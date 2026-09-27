@@ -113,3 +113,13 @@ describe('Bewertung', () => {
     expect(beste.map((b) => b.partei.id)).toEqual([1])
   })
 })
+
+describe('sindBeispieldaten', () => {
+  it('erkennt eingebaute und fiktive Supabase-Daten, nicht aber echte', async () => {
+    const { sindBeispieldaten, MOCK_DATEN } = await import('../data/quelle')
+    expect(sindBeispieldaten(MOCK_DATEN)).toBe(true)
+    expect(sindBeispieldaten({ ...MOCK_DATEN, quelle: 'supabase' })).toBe(true)
+    const echt = { ...MOCK_DATEN, quelle: 'supabase' as const, parteien: [{ ...MOCK_DATEN.parteien[0], programm_url: 'https://www.spd.de/programm.pdf' }] }
+    expect(sindBeispieldaten(echt)).toBe(false)
+  })
+})

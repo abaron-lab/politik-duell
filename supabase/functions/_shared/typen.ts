@@ -56,6 +56,8 @@ export interface Massnahme {
   umsetzbarkeit: 0 | 1 | 2 | 3
   rollen_modifikator?: Partial<Record<Rolle, RollenModifikator>>
   begruendung: string
+  /** Wörtliches Zitat aus dem Programm (nur im Repo, zur Prüfung; nicht in der Datenbank). */
+  zitat?: string
   beleg_programm_url: string
   beleg_studie_url?: string
   stand: string

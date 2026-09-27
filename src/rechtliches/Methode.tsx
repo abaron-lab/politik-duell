@@ -50,10 +50,16 @@ export function Methode() {
 
       <h2>2. Maßnahmen aus den Wahlprogrammen</h2>
       <p>
-        Für jede Partei erfassen wir die Maßnahmen aus ihrem Wahlprogramm, die an diesen Ursachen ansetzen – mit
-        Seitenangabe, Stand des Programms und, wo vorhanden, einer Studie zur Wirkung. Jede Bewertung hat eine kurze
-        Begründung, die in der Auflösung angezeigt wird. Ins Spiel kommt ein Thema für eine Partei erst, wenn eine zweite
-        Person alle Einträge dazu geprüft hat.
+        Für jede Partei erfassen wir die Maßnahmen aus ihrem Wahlprogramm zur Bundestagswahl 2025, die an diesen
+        Ursachen ansetzen – mit wörtlichem Zitat, Seitenangabe, Stand des Programms und, wo vorhanden, einer Studie zur
+        Wirkung. Jede Bewertung hat eine kurze Begründung, die in der Auflösung angezeigt wird. Ins Spiel kommt ein
+        Thema für eine Partei erst, wenn eine zweite Person alle Einträge dazu geprüft hat: Zitat und Seite im
+        Programm, Zuordnung zu den Ursachen und die Bewertung – diese zuerst, ohne zu wissen, von welcher Partei die
+        Maßnahme stammt.
+      </p>
+      <p>
+        Derzeit übernimmt der Betreiber die Prüfung. Wer als unabhängige Prüferin oder unabhängiger Prüfer mitmachen
+        möchte, ist herzlich eingeladen (Kontakt im Impressum).
       </p>
 
       <h2>3. Zwei Kriterien, je 0 bis 3 Punkte</h2>

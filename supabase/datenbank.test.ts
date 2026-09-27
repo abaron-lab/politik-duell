@@ -3,7 +3,8 @@
 import { PGlite } from '@electric-sql/pglite'
 import { readFileSync, readdirSync } from 'node:fs'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { ABDECKUNG, MASSNAHMEN } from '../src/data/mock'
+import { seedSql } from '../scripts/seed-sql'
+import { ABDECKUNG, KATALOG, MASSNAHMEN } from '../src/data/mock'
 
 const lies = (pfad: string) => readFileSync(new URL(pfad, import.meta.url), 'utf8')
 const db = new PGlite()
@@ -22,7 +23,9 @@ beforeAll(async () => {
   for (const datei of readdirSync(new URL('./migrations', import.meta.url)).sort()) {
     await db.exec(lies(`./migrations/${datei}`))
   }
-  await db.exec(lies('./seed.sql'))
+  // Getestet wird mit den festen Beispieldaten; der echte Katalog (seed.sql) enthält
+  // anfangs kaum geprüfte Einträge. Dass seed.sql aktuell ist, prüft scripts/katalog.test.ts.
+  await db.exec(seedSql(KATALOG))
 }, 30_000)
 
 async function alsRolle<T>(rolle: string, fn: () => Promise<T>, nutzer = ''): Promise<T> {
@@ -47,9 +50,9 @@ describe('Datenbank', () => {
   })
 
   it('Seed ist mehrfach ausführbar', async () => {
-    await db.exec(lies('./seed.sql'))
+    await db.exec(seedSql(KATALOG))
     const r = await db.query<{ n: number }>('select count(*)::int as n from parteien')
-    expect(r.rows[0].n).toBe(5)
+    expect(r.rows[0].n).toBe(KATALOG.parteien.length)
   })
 
   it('anon darf Stammdaten lesen', async () => {
@@ -67,6 +70,22 @@ describe('Datenbank', () => {
     await expect(db.query(`update abdeckung set begruendung = 'x' where art = 'massnahmen'`)).rejects.toThrow()
     await expect(db.query(`insert into runden (problem_text, status) values ('x', 'unvollstaendig')`)).resolves.toBeTruthy()
     await expect(db.query(`insert into runden (problem_text, status) values ('x', 'kaputt')`)).rejects.toThrow()
+  })
+
+  it('echter Seed ersetzt die Beispielparteien, gespielte Runden bleiben', async () => {
+    const pruef = new PGlite()
+    await pruef.exec(`create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
+      create schema auth; create table auth.users (id uuid primary key);
+      create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;`)
+    for (const datei of readdirSync(new URL('./migrations', import.meta.url)).sort()) await pruef.exec(lies(`./migrations/${datei}`))
+    await pruef.exec(seedSql(KATALOG))
+    await pruef.exec(`insert into runden (problem_text, status, partei_a, partei_b) values ('alt', 'gewertet', 1, 2)`)
+    await pruef.exec(lies('./seed.sql'))
+    const alt = await pruef.query<{ n: number }>(`select count(*)::int as n from parteien where id in (${KATALOG.parteien.map((p) => p.id).join(',')})`)
+    expect(alt.rows[0].n).toBe(0)
+    const runde = await pruef.query<{ partei_a: number | null }>(`select partei_a from runden where problem_text = 'alt'`)
+    expect(runde.rows).toEqual([{ partei_a: null }])
+    await pruef.close()
   })
 
   it('anon sieht nur freigegebene Runden', async () => {
