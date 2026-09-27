@@ -258,20 +258,41 @@ function pruefeAnfrage(roh) {
     parteien: a.parteien
   };
 }
+var regexText = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function ohneParteinamen(text, parteien) {
+  const namen = /* @__PURE__ */ new Set();
+  for (const p of parteien) {
+    for (const n of [
+      p.name,
+      p.kurzname,
+      ...p.kurzname.split("/")
+    ]) {
+      const t = n.trim();
+      if (t.length >= 2) namen.add(t).add(t.toUpperCase());
+    }
+  }
+  if (namen.size === 0) return text;
+  const alternativen = [
+    ...namen
+  ].sort((a, b) => b.length - a.length).map(regexText).join("|");
+  const muster = new RegExp(`(?:(?<!\\p{L})[Dd](?:ie|er|en|em|es)\\s+)?(?<![\\p{L}\\d])(?:${alternativen})(?:n|en|s)?(?![\\p{L}\\d])`, "gu");
+  return text.replace(muster, "[Partei]");
+}
 var kurz = (s, max) => typeof s === "string" ? s.trim().replace(/\s+/g, " ").slice(0, max) : "";
-function bereinigeAntwort(roh, verlauf, themen, ursachen) {
+function bereinigeAntwort(roh, verlauf, themen, ursachen, parteien = []) {
   const r = roh && typeof roh === "object" ? roh : {};
   const nachfragen = verlauf.filter((n) => n.von === "ki").length;
   const letzterText = verlauf.filter((n) => n.von === "spieler").at(-1)?.text ?? "";
-  const ohneLinks = (s) => s.replace(/(https?:\/\/|www\.)\S+/gi, "").trim();
+  const ohneLinks = (s) => ohneParteinamen(s.replace(/(https?:\/\/|www\.)\S+/gi, ""), parteien).trim();
   let typ = r.typ === "forderung" || r.typ === "wert" ? r.typ : "problem";
   let nachfrage = ohneLinks(kurz(r.nachfrage, 200));
   if (typ === "forderung" && (nachfragen >= MAX_NACHFRAGEN || !nachfrage)) {
     if (nachfragen >= MAX_NACHFRAGEN) typ = "problem";
     else nachfrage = "Was l\xE4uft in deinem Alltag konkret schief?";
   }
-  const zusammenfassung = ohneLinks(kurz(r.zusammenfassung, 200)) || kurz(letzterText, 120);
-  const stichwort = bereinigeStichwort(r.stichwort, zusammenfassung);
+  const zusammenfassung = ohneLinks(kurz(r.zusammenfassung, 200)) || ohneLinks(kurz(letzterText, 120));
+  const stichwortRoh = typeof r.stichwort === "string" ? ohneLinks(r.stichwort).replace(/\[Partei\]/g, "").trim() : "";
+  const stichwort = bereinigeStichwort(stichwortRoh, zusammenfassung.replace(/\[Partei\]/g, ""));
   if (typ !== "problem") {
     return {
       typ,
@@ -429,19 +450,22 @@ Deno.serve(async (req) => {
     if (!await imLimit(GLOBALE_SITZUNG, GLOBAL_MAX, RATE_LIMIT_GLOBAL.fenster)) return json({
       fehler: "Gerade spielen sehr viele Leute. Bitte versuch es etwas sp\xE4ter noch einmal."
     }, 503);
-    const [themenRes, ursachenRes] = await Promise.all([
+    const [themenRes, ursachenRes, parteienRes] = await Promise.all([
       db.from("themen").select("id, name, beschreibung"),
-      db.from("ursachen").select("id, thema_id, beschreibung, quelle_url")
+      db.from("ursachen").select("id, thema_id, beschreibung, quelle_url"),
+      db.from("parteien").select("*")
     ]);
     if (themenRes.error) throw themenRes.error;
     if (ursachenRes.error) throw ursachenRes.error;
+    if (parteienRes.error) throw parteienRes.error;
     const themen = themenRes.data;
     const ursachen = ursachenRes.data;
+    const parteien = parteienRes.data;
     const roh = await frageMistral(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle));
-    const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen);
+    const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen, parteien);
     if (antwort.typ !== "forderung") {
       const original = anfrage.verlauf.filter((n) => n.von === "spieler").map((n) => n.text);
-      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original);
+      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original, parteien);
     }
     return json(antwort);
   } catch (e) {
@@ -454,7 +478,7 @@ Deno.serve(async (req) => {
     }, 502);
   }
 });
-async function speichereRunde(antwort, [parteiA, parteiB], rolle, original) {
+async function speichereRunde(antwort, [parteiA, parteiB], rolle, original, parteien) {
   const stichwort = antwort.stichwort ?? null;
   const basis = {
     problem_text: antwort.zusammenfassung,
@@ -484,17 +508,10 @@ async function speichereRunde(antwort, [parteiA, parteiB], rolle, original) {
     ]);
     return;
   }
-  const [pRes, mRes] = await Promise.all([
-    db.from("parteien").select("*").in("id", [
-      parteiA,
-      parteiB
-    ]),
-    db.from("massnahmen").select("*").eq("thema_id", antwort.thema_id).in("partei_id", [
-      parteiA,
-      parteiB
-    ])
+  const mRes = await db.from("massnahmen").select("*").eq("thema_id", antwort.thema_id).in("partei_id", [
+    parteiA,
+    parteiB
   ]);
-  const parteien = pRes.data ?? [];
   const massnahmen = mRes.data ?? [];
   const a = parteien.find((p) => p.id === parteiA);
   const b = parteien.find((p) => p.id === parteiB);

@@ -890,3 +890,31 @@ textarea {
 .einwilligung + .knopf-gross {
   margin-top: 0;
 }
+.recht h3 {
+  margin-top: 1.25rem;
+  font-size: 1rem;
+}
+.skala {
+  display: grid;
+  gap: 6px;
+  margin: 0.5rem 0 1rem;
+}
+.skala div {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+.skala dt {
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--akzent);
+}
+.skala dd {
+  margin: 0;
+}
+.methode-link {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+}

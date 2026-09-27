@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 import { Logo } from '../components/Logo'
 import { BETREIBER, betreiberVollstaendig, DATENSCHUTZ_STAND } from './betreiber'
+import { Methode } from './Methode'
 
-// Impressum (#/impressum) und Datenschutzerklärung (#/datenschutz).
+// Impressum (#/impressum), Datenschutzerklärung (#/datenschutz) und Methode (#/methode).
 // Die Texte beschreiben, was die App tatsächlich tut – bei Änderungen an
 // Datenflüssen (neue Dienste, neue gespeicherte Felder) hier mit anpassen.
 
-export type RechtsSeite = 'impressum' | 'datenschutz'
+export type RechtsSeite = 'impressum' | 'datenschutz' | 'methode'
 
 function Unvollstaendig() {
   if (betreiberVollstaendig()) return null
@@ -53,7 +54,7 @@ export function Rechtliches({ seite, onZurueck }: { seite: RechtsSeite; onZuruec
         </a>
       </header>
       <Unvollstaendig />
-      {seite === 'impressum' ? <Impressum /> : <Datenschutz />}
+      {seite === 'impressum' ? <Impressum /> : seite === 'methode' ? <Methode /> : <Datenschutz />}
     </main>
   )
 }

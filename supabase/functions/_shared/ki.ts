@@ -1,5 +1,14 @@
 import { bereinigeStichwort } from './moderation.ts'
-import { ROLLEN_IDS, type AnalyseAnfrage, type AnalyseAntwort, type Nachricht, type Rolle, type Thema, type Ursache } from './typen.ts'
+import {
+  ROLLEN_IDS,
+  type AnalyseAnfrage,
+  type AnalyseAntwort,
+  type Nachricht,
+  type Partei,
+  type Rolle,
+  type Thema,
+  type Ursache,
+} from './typen.ts'
 
 // Prompt-Aufbau und strenge Prüfung der KI-Antwort. Reines TypeScript,
 // damit es in der App getestet und in der Edge Function genutzt werden kann.
@@ -110,22 +119,48 @@ export function pruefeAnfrage(roh: unknown): AnalyseAnfrage {
   return { sitzung: a.sitzung, verlauf: a.verlauf, rolle: a.rolle ?? null, parteien: a.parteien }
 }
 
+const regexText = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/**
+ * Ersetzt Parteinamen durch „[Partei]“. Gespeicherte Kurzfassungen, Stichwörter
+ * und Einschätzungen sollen keiner Partei etwas zuschreiben – Aussagen über
+ * Parteien kommen nur belegt aus der Datenbank.
+ * Groß-/Kleinschreibung zählt, damit z. B. „die linke Hand“ unberührt bleibt;
+ * erkannt werden auch GROSS geschriebene Namen, Endungen wie „Grünen“ und ein
+ * vorangestellter Artikel („die Grünen“ → „[Partei]“).
+ */
+export function ohneParteinamen(text: string, parteien: Pick<Partei, 'name' | 'kurzname'>[]): string {
+  const namen = new Set<string>()
+  for (const p of parteien) {
+    for (const n of [p.name, p.kurzname, ...p.kurzname.split('/')]) {
+      const t = n.trim()
+      if (t.length >= 2) namen.add(t).add(t.toUpperCase())
+    }
+  }
+  if (namen.size === 0) return text
+  // Längere Namen zuerst, damit „Partei Alpha“ vor „Alpha“ greift.
+  const alternativen = [...namen].sort((a, b) => b.length - a.length).map(regexText).join('|')
+  const muster = new RegExp(`(?:(?<!\\p{L})[Dd](?:ie|er|en|em|es)\\s+)?(?<![\\p{L}\\d])(?:${alternativen})(?:n|en|s)?(?![\\p{L}\\d])`, 'gu')
+  return text.replace(muster, '[Partei]')
+}
+
 const kurz = (s: unknown, max: number) => (typeof s === 'string' ? s.trim().replace(/\s+/g, ' ').slice(0, max) : '')
 
 /**
  * Macht aus der (nicht vertrauenswürdigen) KI-Antwort eine gültige AnalyseAntwort:
- * nur IDs aus dem Katalog, höchstens zwei Nachfragen, keine Links.
+ * nur IDs aus dem Katalog, höchstens zwei Nachfragen, keine Links, keine Parteinamen.
  */
 export function bereinigeAntwort(
   roh: unknown,
   verlauf: Nachricht[],
   themen: Thema[],
   ursachen: Ursache[],
+  parteien: Pick<Partei, 'name' | 'kurzname'>[] = [],
 ): AnalyseAntwort {
   const r = (roh && typeof roh === 'object' ? roh : {}) as Record<string, unknown>
   const nachfragen = verlauf.filter((n) => n.von === 'ki').length
   const letzterText = verlauf.filter((n) => n.von === 'spieler').at(-1)?.text ?? ''
-  const ohneLinks = (s: string) => s.replace(/(https?:\/\/|www\.)\S+/gi, '').trim()
+  const ohneLinks = (s: string) => ohneParteinamen(s.replace(/(https?:\/\/|www\.)\S+/gi, ''), parteien).trim()
 
   let typ: AnalyseAntwort['typ'] = r.typ === 'forderung' || r.typ === 'wert' ? r.typ : 'problem'
   let nachfrage = ohneLinks(kurz(r.nachfrage, 200))
@@ -134,8 +169,10 @@ export function bereinigeAntwort(
     else nachfrage = 'Was läuft in deinem Alltag konkret schief?'
   }
 
-  const zusammenfassung = ohneLinks(kurz(r.zusammenfassung, 200)) || kurz(letzterText, 120)
-  const stichwort = bereinigeStichwort(r.stichwort, zusammenfassung)
+  const zusammenfassung = ohneLinks(kurz(r.zusammenfassung, 200)) || ohneLinks(kurz(letzterText, 120))
+  // Im Stichwort wird ein Parteiname ganz entfernt; bleibt nichts übrig, greift die Zusammenfassung.
+  const stichwortRoh = typeof r.stichwort === 'string' ? ohneLinks(r.stichwort).replace(/\[Partei\]/g, '').trim() : ''
+  const stichwort = bereinigeStichwort(stichwortRoh, zusammenfassung.replace(/\[Partei\]/g, ''))
 
   if (typ !== 'problem') {
     return {

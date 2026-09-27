@@ -6,6 +6,14 @@ import type { ParteiErgebnis } from '../logic/bewertung'
 import type { RundenErgebnis, Spieler } from '../spiel'
 import { parteiStil } from './stil'
 
+const datum = (iso: string) =>
+  new Date(iso).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })
+
+/** Überprüfbare Aussage statt „Partei hat nichts“: bezogen auf Programm und Stand. */
+function nichtsGefunden(programmStand: string) {
+  return `Im Wahlprogramm (Stand ${datum(programmStand)}) keine Maßnahme zu diesen Ursachen gefunden.`
+}
+
 function seitenText(url: string) {
   const seite = /#page=(\d+)/.exec(url)?.[1]
   return seite ? `Programm, S. ${seite}` : 'Programm'
@@ -67,7 +75,7 @@ function ParteiKarte({
         </span>
       </header>
       {ergebnis.treffer.length === 0 ? (
-        <p className="keine-massnahme">Keine Maßnahme zu diesem Problem im Programm gefunden.</p>
+        <p className="keine-massnahme">{nichtsGefunden(ergebnis.partei.programm_stand)}</p>
       ) : (
         ergebnis.treffer.map((t) => (
           <div key={t.massnahme.id} className="massnahme">
@@ -153,12 +161,12 @@ export function Aufloesung({
                 ? `Punkt für ${spieler[0].name} (${spieler[0].partei.kurzname})!`
                 : runde.punkte[1] === 1
                   ? `Punkt für ${spieler[1].name} (${spieler[1].partei.kurzname})!`
-                  : 'Keine der beiden Parteien liefert hier – kein Punkt.'}
+                  : 'Für keine der beiden Parteien ist dazu eine Maßnahme erfasst – kein Punkt.'}
           </p>
           <section className="beste enthuellen" style={{ animationDelay: '1200ms' }}>
             <p className="label">Beste Lösung aller Parteien</p>
             {runde.beste.length === 0 ? (
-              <p>Keine Partei hat dazu eine Maßnahme in der Datenbank.</p>
+              <p>Für keine Partei ist dazu bisher eine Maßnahme erfasst.</p>
             ) : (
               runde.beste.map((b) => (
                 <div key={b.partei.id} className="beste-zeile" style={parteiStil(b.partei.farbe)}>
@@ -175,6 +183,12 @@ export function Aufloesung({
         </>
       )}
 
+      {enthuellt && runde.ergebnisse && (
+        <p className="hinweis methode-link">
+          Punkte sind eine Einschätzung nach offener Methode, kein Urteil über Parteien.{' '}
+          <a href="#/methode">So bewerten wir · Fehler melden</a>
+        </p>
+      )}
       {enthuellt && (
         <button className="knopf knopf-gross" onClick={onWeiter}>
           {letzte ? 'Zum Endergebnis' : 'Nächste Runde'}

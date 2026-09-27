@@ -51,6 +51,9 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 - Ausdrückliche Einwilligung vor dem Spielstart (Art. 9 DSGVO: Eingaben können politische Meinungen erkennen lassen)
 - Rate-Limit zweistufig: pro Sitzung (40 / 30 min) und global über alle Sitzungen (Standard 600 / h, Secret `RATE_LIMIT_GLOBAL`) als Kostendeckel – ohne IP-Adressen; Anfragen über 8 KB werden abgelehnt
 - Optional nur Aufrufe von der eigenen Website (Secret `ERLAUBTE_URSPRUENGE`, mit `*` für Vercel-Vorschauen)
+- Seite „So bewerten wir“ (`#/methode`): Skalen für Wirksamkeit und Umsetzbarkeit, Punkteregeln, was die Punkte bedeuten, Fehler melden – verlinkt in Fußzeile, Auflösung und Endbildschirm
+- Äußerungsrechtlich vorsichtige Formulierungen: 0 Punkte heißt „Im Wahlprogramm (Stand …) keine Maßnahme zu diesen Ursachen gefunden“
+- Parteinamen in KI-Antworten (Kurzfassung, Stichwort, Einschätzung, Nachfrage) werden durch „[Partei]“ ersetzt bzw. entfernt – Aussagen über Parteien kommen nur belegt aus der Datenbank
 - `vercel.json`: Build-Einstellungen und Sicherheits-Header (Content-Security-Policy, HSTS, `Referrer-Policy: no-referrer`, Mikrofon nur für die eigene Seite), lange Cache-Zeiten für Assets
 
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).

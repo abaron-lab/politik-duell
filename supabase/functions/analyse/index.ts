@@ -91,23 +91,26 @@ Deno.serve(async (req) => {
     if (!(await imLimit(GLOBALE_SITZUNG, GLOBAL_MAX, RATE_LIMIT_GLOBAL.fenster)))
       return json({ fehler: 'Gerade spielen sehr viele Leute. Bitte versuch es etwas später noch einmal.' }, 503)
 
-    const [themenRes, ursachenRes] = await Promise.all([
+    const [themenRes, ursachenRes, parteienRes] = await Promise.all([
       db.from('themen').select('id, name, beschreibung'),
       db.from('ursachen').select('id, thema_id, beschreibung, quelle_url'),
+      db.from('parteien').select('*'),
     ])
     if (themenRes.error) throw themenRes.error
     if (ursachenRes.error) throw ursachenRes.error
+    if (parteienRes.error) throw parteienRes.error
     const themen = themenRes.data as Thema[]
     const ursachen = ursachenRes.data as Ursache[]
+    const parteien = parteienRes.data as Partei[]
 
     const roh = await frageMistral(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle))
-    const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen)
+    const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen, parteien)
 
     // Abgeschlossene Runde anonym speichern (nur die neutrale Zusammenfassung).
     if (antwort.typ !== 'forderung') {
       // Der Originaltext wird nur geprüft, nicht gespeichert.
       const original = anfrage.verlauf.filter((n) => n.von === 'spieler').map((n) => n.text)
-      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original)
+      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original, parteien)
     }
 
     return json(antwort)
@@ -123,6 +126,7 @@ async function speichereRunde(
   [parteiA, parteiB]: [number, number],
   rolle: Rolle | null,
   original: string[],
+  parteien: Partei[],
 ) {
   const stichwort = antwort.stichwort ?? null
   const basis = {
@@ -150,11 +154,7 @@ async function speichereRunde(
     return
   }
 
-  const [pRes, mRes] = await Promise.all([
-    db.from('parteien').select('*').in('id', [parteiA, parteiB]),
-    db.from('massnahmen').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB]),
-  ])
-  const parteien = (pRes.data ?? []) as Partei[]
+  const mRes = await db.from('massnahmen').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB])
   const massnahmen = (mRes.data ?? []) as Massnahme[]
   const a = parteien.find((p) => p.id === parteiA)
   const b = parteien.find((p) => p.id === parteiB)
