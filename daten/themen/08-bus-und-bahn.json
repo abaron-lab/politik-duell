@@ -1,0 +1,26 @@
+{
+  "id": 8,
+  "name": "Bus und Bahn",
+  "beschreibung": "Seltene Verbindungen, Ausfälle und Verspätungen.",
+  "schlagwoerter": ["bus", "bahn", "im zug", "mit dem zug", "regionalzug", "zuege", "oepnv", "nahverkehr", "haltestelle", "verspaetung", "ausfall", "anschluss", "tram", "s-bahn", "deutschlandticket", "pendeln"],
+  "ursachen": [
+    {
+      "id": 801,
+      "beschreibung": "Rund 21 Millionen Menschen fehlt ein gutes Grundangebot an Bus und Bahn, besonders auf dem Land",
+      "quelle_url": "https://www.agora-verkehrswende.de/aktuelles/oev-atlas-zeigt-grosse-unterschiede-beim-bus-und-bahnangebot",
+      "schlagwoerter": ["faehrt nicht", "selten", "kein bus", "dorf", "auf dem land", "laendlich", "takt", "nur zweimal", "auto angewiesen", "abends", "wochenende"]
+    },
+    {
+      "id": 802,
+      "beschreibung": "Überaltertes Schienennetz mit großem Sanierungsstau",
+      "quelle_url": "https://www.bundesrechnungshof.de/SharedDocs/Downloads/DE/Berichte/2025/evaluation-luf-3_volltext.pdf?__blob=publicationFile&v=3",
+      "schlagwoerter": ["verspaetung", "baustelle", "stellwerk", "gleis", "marode", "ersatzverkehr", "schienenersatz", "streckensperrung"]
+    },
+    {
+      "id": 803,
+      "beschreibung": "Zu wenige Fahrerinnen und Fahrer; Verkehrsbetriebe dünnen deshalb teils Fahrpläne aus",
+      "quelle_url": "https://www.iwkoeln.de/studien/jurek-tiedemann-gero-kunath-fachkraeftereport-juni-2025-verkehrsbetriebe-zwischen-personalmangel-und-finanzierungsfragen.html",
+      "schlagwoerter": ["personal", "fahrer", "busfahrer", "lokfuehrer", "personalmangel", "gestrichen", "faellt aus"]
+    }
+  ]
+}

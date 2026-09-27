@@ -6,20 +6,20 @@
   "ursachen": [
     {
       "id": 301,
-      "beschreibung": "Hohe Netzentgelte",
-      "quelle_url": "https://example.org/mock/studie/netzentgelte",
-      "schlagwoerter": ["netz", "grundgebuehr", "grundpreis"]
+      "beschreibung": "Hohe Netzentgelte für den Betrieb und Ausbau der Stromnetze",
+      "quelle_url": "https://www.bundesnetzagentur.de/DE/Vportal/Energie/PreiseAbschlaege/Tarife-table.html",
+      "schlagwoerter": ["netz", "grundgebuehr", "grundpreis", "netzentgelt"]
     },
     {
       "id": 302,
-      "beschreibung": "Steuern und Abgaben auf Energie",
-      "quelle_url": "https://example.org/mock/studie/energiesteuern",
+      "beschreibung": "Steuern, Abgaben und Umlagen machen einen großen Teil des Strompreises aus",
+      "quelle_url": "https://www.bundesnetzagentur.de/DE/Vportal/Energie/PreiseAbschlaege/Tarife-table.html",
       "schlagwoerter": ["steuer", "abgabe", "umlage", "co2"]
     },
     {
       "id": 303,
-      "beschreibung": "Abhängigkeit von fossilen Importen",
-      "quelle_url": "https://example.org/mock/studie/importe",
+      "beschreibung": "Hohe Abhängigkeit von importiertem Gas und Öl mit schwankenden Weltmarktpreisen",
+      "quelle_url": "https://www.umweltbundesamt.de/daten/energie/primaerenergiegewinnung-importe",
       "schlagwoerter": ["gas", "oel", "import", "abhaengig", "heizoel"]
     }
   ],

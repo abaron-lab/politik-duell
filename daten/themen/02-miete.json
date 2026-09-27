@@ -6,21 +6,21 @@
   "ursachen": [
     {
       "id": 201,
-      "beschreibung": "Zu wenig neue Wohnungen",
-      "quelle_url": "https://example.org/mock/studie/wohnungsbau",
+      "beschreibung": "Es werden weniger Wohnungen gebaut als gebraucht (Bedarf laut Prognose rund 320.000 pro Jahr)",
+      "quelle_url": "https://www.bbsr.bund.de/BBSR/DE/presse/presseinformationen/2025/wohnungsbedarfsprognose.html",
       "schlagwoerter": ["keine wohnung", "finde keine", "wohnungssuche", "besichtigung", "bewerber", "zu wenig wohnungen", "neubau", "nichts frei"]
     },
     {
       "id": 202,
-      "beschreibung": "Starke Mietsteigerungen",
-      "quelle_url": "https://example.org/mock/studie/mietentwicklung",
+      "beschreibung": "Mieten bei Neuvermietung steigen, besonders in Großstädten",
+      "quelle_url": "https://www.bbsr.bund.de/BBSR/DE/startseite/topmeldungen/entwicklung-wohnungsmieten-2025.html",
       "schlagwoerter": ["mieterhoehung", "erhoeh", "teurer", "zu hoch", "teuer", "leisten", "indexmiete", "neuvermietung"]
     },
     {
       "id": 203,
-      "beschreibung": "Hohe Baukosten und lange Genehmigungen",
-      "quelle_url": "https://example.org/mock/studie/baukosten",
-      "schlagwoerter": ["baukosten", "genehmigung", "bauen", "bauantrag", "vorschrift"]
+      "beschreibung": "Stark gestiegene Baukosten verteuern Neubau",
+      "quelle_url": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_126_61261.html",
+      "schlagwoerter": ["baukosten", "baupreise", "bauen", "bauantrag", "vorschrift", "material"]
     }
   ],
   "abdeckung": [

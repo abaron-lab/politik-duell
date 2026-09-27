@@ -59,8 +59,23 @@ describe('Datenkatalog: Prüfregeln', () => {
     ])
   })
 
-  it('verlangt für jede Partei einen Eintrag in der Abdeckung', () => {
-    expect(fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme()] }] }))).toMatch(/„Zwei“ \(2\) fehlt in „abdeckung“/)
+  it('behandelt fehlende Parteien in der Abdeckung als „noch nicht erfasst“', () => {
+    const { katalog, fehler, warnungen } = pruefeKatalog(parteien(), [thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme()] }] })])
+    expect(fehler).toEqual([])
+    expect(warnungen.join('\n')).toMatch(/noch nicht erfasst für „Zwei“ \(2\)/)
+    expect(spielbareAbdeckung(katalog).map((a) => a.partei_id)).toEqual([1])
+  })
+
+  it('erlaubt ein Thema nur mit Ursachen (Schritt 1 des Ablaufs)', () => {
+    const inhalt = { ...(thema().inhalt as Record<string, unknown>) }
+    delete inhalt.abdeckung
+    const { katalog, fehler, warnungen } = pruefeKatalog(parteien(), [{ pfad: 'themen/01-arzt.json', inhalt }])
+    expect(fehler).toEqual([])
+    expect(katalog.ursachen).toHaveLength(1)
+    expect(katalog.abdeckung).toEqual([])
+    expect(warnungen.join('\n')).toMatch(/noch nicht erfasst für „Eins“ \(1\), „Zwei“ \(2\)/)
+    expect(warnungen.join('\n')).not.toMatch(/von keiner Partei adressiert/)
+    expect(fehlerVon({ pfad: 'x.json', inhalt: { ...inhalt, abdeckung: {} } })).toMatch(/„abdeckung“ muss eine Liste sein/)
   })
 
   it('verlangt genau eines von massnahmen oder keine_massnahme', () => {
@@ -140,8 +155,14 @@ describe('Datenkatalog im Repo (daten/)', () => {
     expect(fehler).toEqual([])
   })
 
-  it('deckt jede Kombination aus Thema und Partei ab', () => {
-    expect(katalog.abdeckung).toHaveLength(katalog.themen.length * katalog.parteien.length)
+  it('hat höchstens einen Eintrag je Thema und Partei', () => {
+    const paare = katalog.abdeckung.map((a) => `${a.thema_id}/${a.partei_id}`)
+    expect(new Set(paare).size).toBe(paare.length)
+  })
+
+  it('belegt alle Ursachen mit echten Quellen (keine Platzhalter)', () => {
+    const platzhalter = katalog.ursachen.filter((u) => new URL(u.quelle_url).hostname.startsWith('example.'))
+    expect(platzhalter.map((u) => u.id)).toEqual([])
   })
 
   it('supabase/seed.sql ist aktuell (sonst: npm run seed)', () => {
