@@ -55,6 +55,108 @@ function bewertePartei(partei, themaId, ursachenIds, rolle, massnahmen) {
   };
 }
 
+// _shared/moderation.ts
+var BELEIDIGUNGEN = [
+  "arschloch",
+  "arschgeige",
+  "idiot",
+  "vollidiot",
+  "depp",
+  "trottel",
+  "vollpfosten",
+  "wichser",
+  "wixer",
+  "fotze",
+  "hurensohn",
+  "hure",
+  "schlampe",
+  "spast",
+  "spacko",
+  "missgeburt",
+  "pisser",
+  "drecksau",
+  "bastard",
+  "schwuchtel",
+  "ficken",
+  "fick dich",
+  "verpiss",
+  "honk",
+  "halt die fresse"
+];
+var BELEIDIGENDE_WORTTEILE = [
+  "drecks",
+  "schei\xDF",
+  "scheiss",
+  "arschloch",
+  "hurensohn",
+  "wichser",
+  "fotze",
+  "idiot"
+];
+var HETZE = [
+  "kanake",
+  "kanacke",
+  "neger",
+  "nigger",
+  "zigeuner",
+  "kameltreiber",
+  "untermensch",
+  "judenpack",
+  "judensau",
+  "vergasen",
+  "erschie\xDFen",
+  "erschiessen",
+  "abknallen",
+  "totschlagen",
+  "abstechen",
+  "sieg heil",
+  "heil hitler"
+];
+var PERSON_MUSTER = [
+  /(^|[^\p{L}])(Herr|Herrn|Frau|Hr\.|Fr\.|Dr\.|Prof\.)\s+[A-ZÄÖÜ][a-zäöüß]+/u,
+  /(^|\s)@[a-z0-9_]{3,}/i
+];
+var KONTAKT_MUSTER = [
+  /[\w.+-]+@[\w-]+\.[a-z]{2,}/i,
+  /(\+49|\b0049|\b0)[\s/-]?\d{2,5}[\s/-]?\d{4,}/,
+  /(https?:\/\/|www\.)\S+/i,
+  /\b[a-zäöüß]+(straße|str\.|weg|gasse|allee)\s+\d+[a-z]?\b/i
+];
+function normalisiere(text) {
+  return " " + text.toLowerCase().replace(/[0@4$1!3]/g, (z) => ({
+    "0": "o",
+    "@": "a",
+    "4": "a",
+    $: "s",
+    "1": "i",
+    "!": "i",
+    "3": "e"
+  })[z] ?? z).replace(/[^a-zäöüß ]+/g, " ").replace(/(.)\1{2,}/g, "$1$1").replace(/\s+/g, " ") + " ";
+}
+var amWortanfang = (normal, liste) => liste.some((w) => normal.includes(" " + w));
+var irgendwo = (normal, liste) => liste.some((w) => normal.includes(w));
+function pruefeText(...texte) {
+  const roh = texte.filter(Boolean).join(" \n ");
+  if (!roh.trim()) return null;
+  if (KONTAKT_MUSTER.some((m) => m.test(roh))) return "kontaktdaten";
+  const normal = normalisiere(roh);
+  if (amWortanfang(normal, HETZE)) return "hetze";
+  if (amWortanfang(normal, BELEIDIGUNGEN) || irgendwo(normal, BELEIDIGENDE_WORTTEILE)) return "beleidigung";
+  if (PERSON_MUSTER.some((m) => m.test(roh))) return "person";
+  return null;
+}
+function bereinigeStichwort(roh, ersatz) {
+  const text = (typeof roh === "string" && roh.trim() ? roh : ersatz).replace(/(https?:\/\/|www\.)\S+/gi, "").replace(/[„“"'»«.!?;:]+/g, "").replace(/\s+/g, " ").trim();
+  const woerter = text.split(" ").filter(Boolean).slice(0, 3);
+  let s = "";
+  for (const w of woerter) {
+    const neu = s ? `${s} ${w}` : w;
+    if (neu.length > 40) break;
+    s = neu;
+  }
+  return s || text.slice(0, 40) || "Problem";
+}
+
 // _shared/typen.ts
 var ROLLEN_IDS = [
   "mieter",
@@ -110,13 +212,15 @@ Zuordnung (nur bei "problem"):
   Ursachen des Problems \u2013 ohne Parteien, ohne L\xF6sungsbewertung, ohne Links.
 
 "zusammenfassung": ein kurzer, neutraler Satz zum Problem, ohne Namen oder pers\xF6nliche Details.
+"stichwort": 1\u20133 W\xF6rter, die das Problem neutral benennen (z. B. \u201EFacharzttermin\u201C, \u201ENebenkosten-Nachzahlung\u201C),
+  ohne Namen, Orte, Beleidigungen oder Wertungen.
 
 Katalog:
 ${katalog}
 
 Antworte ausschlie\xDFlich mit einem JSON-Objekt:
 {"typ": "problem" | "forderung" | "wert", "nachfrage": string | null, "thema_id": number | null,
- "ursachen_ids": number[], "zusammenfassung": string, "einschaetzung": string | null}`;
+ "ursachen_ids": number[], "zusammenfassung": string, "stichwort": string, "einschaetzung": string | null}`;
 }
 function nutzerNachrichten(verlauf, rolle) {
   const nachfragen = verlauf.filter((n) => n.von === "ki").length;
@@ -166,6 +270,7 @@ function bereinigeAntwort(roh, verlauf, themen, ursachen) {
     else nachfrage = "Was l\xE4uft in deinem Alltag konkret schief?";
   }
   const zusammenfassung = ohneLinks(kurz(r.zusammenfassung, 200)) || kurz(letzterText, 120);
+  const stichwort = bereinigeStichwort(r.stichwort, zusammenfassung);
   if (typ !== "problem") {
     return {
       typ,
@@ -173,6 +278,7 @@ function bereinigeAntwort(roh, verlauf, themen, ursachen) {
       thema_id: null,
       ursachen_ids: [],
       zusammenfassung,
+      stichwort,
       einschaetzung: null
     };
   }
@@ -184,6 +290,7 @@ function bereinigeAntwort(roh, verlauf, themen, ursachen) {
       thema_id: null,
       ursachen_ids: [],
       zusammenfassung,
+      stichwort,
       einschaetzung: ohneLinks(kurz(r.einschaetzung, 400)) || null
     };
   }
@@ -197,6 +304,7 @@ function bereinigeAntwort(roh, verlauf, themen, ursachen) {
       ...new Set(genannt)
     ] : erlaubt,
     zusammenfassung,
+    stichwort,
     einschaetzung: null
   };
 }
@@ -281,7 +389,8 @@ Deno.serve(async (req) => {
     const roh = await frageMistral(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle));
     const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen);
     if (antwort.typ !== "forderung") {
-      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle);
+      const original = anfrage.verlauf.filter((n) => n.von === "spieler").map((n) => n.text);
+      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original);
     }
     return json(antwort);
   } catch (e) {
@@ -294,9 +403,13 @@ Deno.serve(async (req) => {
     }, 502);
   }
 });
-async function speichereRunde(antwort, [parteiA, parteiB], rolle) {
+async function speichereRunde(antwort, [parteiA, parteiB], rolle, original) {
+  const stichwort = antwort.stichwort ?? null;
   const basis = {
     problem_text: antwort.zusammenfassung,
+    stichwort,
+    // Automatischer Filter: Treffer landen in der Admin-Ansicht unter „Vom Filter gestoppt“.
+    filter_grund: pruefeText(stichwort, antwort.zusammenfassung, ...original),
     partei_a: parteiA,
     partei_b: parteiB
   };

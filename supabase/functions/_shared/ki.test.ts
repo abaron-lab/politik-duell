@@ -27,6 +27,13 @@ describe('nutzerNachrichten', () => {
 })
 
 describe('bereinigeAntwort', () => {
+  it('liefert ein kurzes Stichwort für die Wortwolke', () => {
+    const a = bereinige({ typ: 'problem', thema_id: 2, stichwort: '„Mieterhöhung“', zusammenfassung: 'Miete steigt.' })
+    expect(a.stichwort).toBe('Mieterhöhung')
+    const b = bereinige({ typ: 'problem', thema_id: 2, zusammenfassung: 'Die Miete steigt stark an.' })
+    expect(b.stichwort).toBe('Die Miete steigt')
+  })
+
   it('übernimmt eine gültige Zuordnung', () => {
     const a = bereinige({ typ: 'problem', thema_id: 2, ursachen_ids: [202], zusammenfassung: 'Miete steigt stark.' })
     expect(a).toMatchObject({ typ: 'problem', thema_id: 2, ursachen_ids: [202] })

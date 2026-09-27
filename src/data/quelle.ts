@@ -79,13 +79,16 @@ export async function analysiere(
   if (error) {
     // Fehlertext der Funktion anzeigen, wenn vorhanden.
     let text = 'Die Einordnung hat gerade nicht geklappt. Bitte versuch es noch einmal.'
+    const antwort = (error as { context?: Response }).context
     try {
-      const body = await (error as { context?: Response }).context?.json()
+      const body = await antwort?.json()
       if (body?.fehler) text = body.fehler
     } catch {
       // Antwort ohne JSON – Standardtext behalten.
     }
-    throw new AnalyseFehler(text)
+    // Fehlercode anhängen, damit sich die Ursache ohne Browser-Konsole eingrenzen lässt.
+    const code = antwort instanceof Response ? antwort.status : 'Netzwerk'
+    throw new AnalyseFehler(`${text} (Fehlercode ${code})`)
   }
   if (!data) throw new AnalyseFehler('Leere Antwort von der Einordnung.')
   return data

@@ -36,6 +36,14 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 - Rate-Limit pro zufälliger Sitzungs-ID
 - Ohne Supabase-Verbindung: „Mit Beispieldaten spielen“ bzw. `VITE_DATENQUELLE=mock`
 
+## Stand: Meilenstein 4 – Wortwolke und Moderation
+
+- Wortwolke auf dem Startbildschirm mit d3-cloud: freigegebene Stichwörter, Größe nach Häufigkeit, langsames Schweben; neue Freigaben kommen live über Supabase Realtime
+- Die KI liefert pro Problem ein neutrales Stichwort (1–3 Wörter); öffentlich wird es erst nach Freigabe
+- Automatischer Filter (`supabase/functions/_shared/moderation.ts`): Beleidigungen, Hetze/Gewalt, Namen mit Anrede, Kontaktdaten und Links → „Vom Filter gestoppt“
+- Admin-Ansicht unter `#/admin` (Supabase Auth, nur Konten in `admins`): Stichwort anpassen, freigeben, ablehnen, zurückziehen, löschen; Review-Warteschlange für neue Themen abhaken
+- Zugriffsregeln: Admins dürfen nur die Moderationsfelder ändern (nicht Punkte, Parteien oder Texte); anon sieht weiter nur Freigegebenes
+
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
 
 ## Entwicklung
@@ -57,12 +65,14 @@ npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 | `supabase/seed.sql` | Beispieldaten (erzeugt aus `src/data/mock.ts`) |
 | `supabase/dashboard/` | Erzeugte Dateien zum Einfügen im Dashboard (SQL komplett, Edge Function als eine Datei) |
 | `supabase/functions/analyse/` | Edge Function: KI-Einordnung und Speichern der Runde |
-| `supabase/functions/_shared/` | Gemeinsamer Code von App und Funktion: Typen, Punktelogik, KI-Prompt und -Prüfung |
+| `supabase/functions/_shared/` | Gemeinsamer Code von App und Funktion: Typen, Punktelogik, KI-Prompt und -Prüfung, Moderationsfilter |
 | `src/data/quelle.ts` | Datenquelle der App: Supabase oder Beispieldaten |
 | `src/data/mock.ts` | Fiktive Beispieldaten |
 | `src/logic/analyse.ts` | Offline-Ersatz für die KI (Schlagwörter) |
 | `src/logic/sprache.ts` | Hook für die Spracherkennung (Push-to-talk) |
-| `src/components/` | Bildschirme: Start, Setup, Runde, Auflösung, Ende |
+| `src/components/` | Bildschirme: Start (mit Wortwolke), Setup, Runde, Auflösung, Ende |
+| `src/data/wortwolke.ts` | Daten der Wortwolke (Realtime) |
+| `src/admin/` | Admin-Ansicht zur Moderation (`#/admin`, eigenes Bundle) |
 
 ## Bewertungsregeln im Prototyp
 
