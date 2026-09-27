@@ -1,4 +1,4 @@
-import { ladeKatalog, spielbareMassnahmen, type Datei } from './katalog.ts'
+import { ladeKatalog, spielbareAbdeckung, spielbareMassnahmen, type Datei } from './katalog.ts'
 
 // ---------------------------------------------------------------------------
 // Eingebaute Daten der App (Offline-Modus, Tests) – geladen aus `daten/`.
@@ -24,6 +24,8 @@ export const THEMEN = KATALOG.themen
 export const URSACHEN = KATALOG.ursachen
 /** Nur Maßnahmen, die im Spiel zählen (bei echten Daten: geprüft). */
 export const MASSNAHMEN = spielbareMassnahmen(KATALOG)
+/** Welche Themen je Partei erfasst sind (fehlt ein Eintrag: noch nicht erfasst). */
+export const ABDECKUNG = spielbareAbdeckung(KATALOG)
 
 /** Beispielprobleme für die Hintergrund-Wortwolke (später: freigegebene Runden aus Supabase). */
 export const BEISPIEL_PROBLEME = [

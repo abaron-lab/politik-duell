@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { analysiereAsync } from '../logic/analyse'
-import { MASSNAHMEN, PARTEIEN, THEMEN, URSACHEN } from './mock'
-import type { AnalyseAnfrage, AnalyseAntwort, Massnahme, Partei, Thema, Ursache } from './types'
+import { ABDECKUNG, MASSNAHMEN, PARTEIEN, THEMEN, URSACHEN } from './mock'
+import type { AbdeckungEintrag, AnalyseAnfrage, AnalyseAntwort, Massnahme, Partei, Thema, Ursache } from './types'
 
 // Datenquelle der App: Supabase (Standard, wenn konfiguriert) oder die
 // eingebauten Beispieldaten (VITE_DATENQUELLE=mock, z. B. für Offline-Demos).
@@ -12,6 +12,8 @@ export interface Daten {
   themen: Thema[]
   ursachen: Ursache[]
   massnahmen: Massnahme[]
+  /** Welche Themen je Partei erfasst sind – fehlt ein Eintrag, wird nicht gewertet. */
+  abdeckung: AbdeckungEintrag[]
 }
 
 const URL = import.meta.env.VITE_SUPABASE_URL as string | undefined
@@ -27,18 +29,22 @@ export const MOCK_DATEN: Daten = {
   themen: THEMEN,
   ursachen: URSACHEN,
   massnahmen: MASSNAHMEN,
+  abdeckung: ABDECKUNG,
 }
 
 export async function ladeDaten(): Promise<Daten> {
   if (!supabase) return MOCK_DATEN
-  const [p, t, u, m] = await Promise.all([
+  const [p, t, u, m, a] = await Promise.all([
     supabase.from('parteien').select('*').order('id'),
     supabase.from('themen').select('*').order('id'),
     supabase.from('ursachen').select('*').order('id'),
     supabase.from('massnahmen').select('*').order('id'),
+    supabase.from('abdeckung').select('*'),
   ])
   const fehler = p.error ?? t.error ?? u.error ?? m.error
   if (fehler) throw new Error(fehler.message)
+  // Ohne Abdeckung ließe sich „nichts im Programm“ nicht von „noch nicht erfasst“ unterscheiden.
+  if (a.error) throw new Error(`Tabelle „abdeckung“ fehlt – Migration 20260928000000_abdeckung.sql ausführen (${a.error.message})`)
   if (!p.data?.length) throw new Error('Die Datenbank enthält noch keine Parteien.')
   return {
     quelle: 'supabase',
@@ -46,6 +52,7 @@ export async function ladeDaten(): Promise<Daten> {
     themen: t.data as Thema[],
     ursachen: u.data as Ursache[],
     massnahmen: m.data as Massnahme[],
+    abdeckung: a.data as AbdeckungEintrag[],
   }
 }
 

@@ -52,7 +52,8 @@ export function Methode() {
       <p>
         Für jede Partei erfassen wir die Maßnahmen aus ihrem Wahlprogramm, die an diesen Ursachen ansetzen – mit
         Seitenangabe, Stand des Programms und, wo vorhanden, einer Studie zur Wirkung. Jede Bewertung hat eine kurze
-        Begründung, die in der Auflösung angezeigt wird.
+        Begründung, die in der Auflösung angezeigt wird. Ins Spiel kommt ein Thema für eine Partei erst, wenn eine zweite
+        Person alle Einträge dazu geprüft hat.
       </p>
 
       <h2>3. Zwei Kriterien, je 0 bis 3 Punkte</h2>
@@ -72,7 +73,13 @@ export function Methode() {
         <li>Die höhere Summe bekommt den Spielpunkt, bei Gleichstand beide.</li>
         <li>
           Finden wir im Programm keine Maßnahme zu den Ursachen, gibt es 0 Punkte. Das heißt nur: Im Wahlprogramm mit
-          dem angegebenen Stand steht dazu nichts – nicht, dass die Partei sich nie dazu geäußert hätte.
+          dem angegebenen Stand steht dazu nichts – nicht, dass die Partei sich nie dazu geäußert hätte. Steht zum
+          ganzen Thema nichts im Programm, halten wir fest, was wir durchsucht haben.
+        </li>
+        <li>
+          Haben wir das Programm einer Partei zu einem Thema noch nicht vollständig ausgewertet und geprüft, zeigen wir
+          „noch nicht erfasst“. Dann wird die Runde nicht gewertet: Fehlende Daten sollen keiner Partei einen Punkt
+          kosten. Bei der besten Lösung aller Parteien vergleichen wir nur Parteien, für die das Thema erfasst ist.
         </li>
         <li>
           Themen, die wir noch nicht bewertet haben, zeigen wir als „ungeprüft – keine Wertung“, ohne Punkte und ohne

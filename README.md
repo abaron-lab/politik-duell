@@ -63,7 +63,8 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 - Alle Parteien, Themen, Ursachen und Maßnahmen liegen als JSON in [`daten/`](daten/README.md) – Änderungen per Pull Request mit Quellenpflicht
 - Automatische Prüfung (`npm run daten:pruefen`, auch in GitHub Actions): Pflichtfelder, Wertebereiche, Beleg mit Seitenanker im Programm der richtigen Partei, Quelle für jede Ursache, keine Platzhalter-Links bei echten Daten
 - **Vollständige Abdeckung:** Pro Thema steht bei jeder Partei entweder eine Maßnahme oder ausdrücklich „keine Maßnahme im Programm“ – so lässt sich „nichts im Programm“ von „noch nicht erfasst“ unterscheiden
-- Bei echten Daten zählen nur geprüfte Maßnahmen (`geprueft: true`); ungeprüfte bleiben als Entwurf im Repo und kommen nicht in die Datenbank
+- Bei echten Daten kommt ein Thema für eine Partei erst ins Spiel, wenn der ganze Eintrag geprüft ist (`geprueft: true`); ungeprüfte Entwürfe bleiben im Repo und kommen nicht in die Datenbank
+- **Anzeige im Spiel** (Tabelle `abdeckung`): „keine Maßnahme zu diesen Ursachen“, „nichts zum Thema im Programm“ (mit Begründung, was durchsucht wurde) oder „noch nicht erfasst“ – im letzten Fall wird die Runde nicht gewertet, damit fehlende Daten keiner Partei einen Punkt kosten; die beste Lösung aller Parteien vergleicht nur erfasste Parteien
 - Einträge, die älter als das aktuelle Programm einer Partei sind, werden zur Neuprüfung gemeldet
 - Bewertungsmaßstab für Wirksamkeit und Umsetzbarkeit (0–3) und Ablauf für neue Themen: [`daten/README.md`](daten/README.md)
 

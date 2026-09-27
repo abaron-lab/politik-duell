@@ -6,6 +6,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 // _shared/bewertung.ts
+var findeAbdeckung = (abdeckung, parteiId, themaId) => abdeckung.find((a) => a.partei_id === parteiId && a.thema_id === themaId) ?? null;
 function massnahmenPunkte(m, rolle) {
   const mod = rolle ? m.rollen_modifikator?.[rolle] : void 0;
   const rollenBonus = mod?.wert ?? 0;
@@ -15,7 +16,14 @@ function massnahmenPunkte(m, rolle) {
     rollenBegruendung: mod?.begruendung
   };
 }
-function bewertePartei(partei, themaId, ursachenIds, rolle, massnahmen) {
+function bewertePartei(partei, themaId, ursachenIds, rolle, massnahmen, abdeckung) {
+  const erfasst = findeAbdeckung(abdeckung, partei.id, themaId);
+  if (!erfasst) return {
+    partei,
+    punkte: 0,
+    treffer: [],
+    abdeckung: null
+  };
   const eigene = massnahmen.filter((m) => m.partei_id === partei.id && m.thema_id === themaId);
   const trefferJeMassnahme = /* @__PURE__ */ new Map();
   let punkte = 0;
@@ -51,7 +59,38 @@ function bewertePartei(partei, themaId, ursachenIds, rolle, massnahmen) {
     punkte,
     treffer: [
       ...trefferJeMassnahme.values()
+    ],
+    abdeckung: erfasst
+  };
+}
+function rundenpunkte(a, b) {
+  if (a === 0 && b === 0) return [
+    0,
+    0
+  ];
+  if (a === b) return [
+    1,
+    1
+  ];
+  return a > b ? [
+    1,
+    0
+  ] : [
+    0,
+    1
+  ];
+}
+function werteRunde(a, b) {
+  if (!a.abdeckung || !b.abdeckung) return {
+    status: "unvollstaendig",
+    punkte: [
+      0,
+      0
     ]
+  };
+  return {
+    status: "gewertet",
+    punkte: rundenpunkte(a.punkte, b.punkte)
   };
 }
 
@@ -508,21 +547,37 @@ async function speichereRunde(antwort, [parteiA, parteiB], rolle, original, part
     ]);
     return;
   }
-  const mRes = await db.from("massnahmen").select("*").eq("thema_id", antwort.thema_id).in("partei_id", [
-    parteiA,
-    parteiB
+  const [mRes, aRes] = await Promise.all([
+    db.from("massnahmen").select("*").eq("thema_id", antwort.thema_id).in("partei_id", [
+      parteiA,
+      parteiB
+    ]),
+    db.from("abdeckung").select("*").eq("thema_id", antwort.thema_id).in("partei_id", [
+      parteiA,
+      parteiB
+    ])
   ]);
-  const massnahmen = mRes.data ?? [];
+  const fehler = mRes.error ?? aRes.error;
+  if (fehler) {
+    console.error("speichereRunde:", fehler.message);
+    return;
+  }
+  const massnahmen = mRes.data;
+  const abdeckung = aRes.data;
   const a = parteien.find((p) => p.id === parteiA);
   const b = parteien.find((p) => p.id === parteiB);
   if (!a || !b) return;
-  const pa = bewertePartei(a, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen).punkte;
-  const pb = bewertePartei(b, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen).punkte;
+  const ea = bewertePartei(a, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen, abdeckung);
+  const eb = bewertePartei(b, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen, abdeckung);
+  const { status } = werteRunde(ea, eb);
+  const punkte = status === "gewertet" ? {
+    punkte_a: ea.punkte,
+    punkte_b: eb.punkte
+  } : {};
   await db.from("runden").insert({
     ...basis,
     thema_id: antwort.thema_id,
-    status: "gewertet",
-    punkte_a: pa,
-    punkte_b: pb
+    status,
+    ...punkte
   });
 }

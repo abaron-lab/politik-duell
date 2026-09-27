@@ -18,27 +18,36 @@ Die Reihenfolge ist wichtig für die Neutralität.
 3. **Bewerten** nach dem Maßstab unten, möglichst **ohne Parteinamen** (Maßnahmentext allein beurteilen).
 4. **Prüfen:** Eine zweite Person kontrolliert Zitat, Seitenanker und Bewertung und setzt `"geprueft": true`. Bei abweichender Einschätzung Begründung im Pull Request festhalten.
 
-Nur geprüfte Maßnahmen zählen im Spiel. Ungeprüfte bleiben als Entwurf im Repo und landen nicht in der Datenbank (bei fiktiven Daten zählt alles).
+Ins Spiel kommt ein Thema für eine Partei erst, wenn der **ganze Eintrag** geprüft ist: alle Maßnahmen der Partei zum Thema bzw. `keine_massnahme`. Bis dahin gilt es als **„noch nicht erfasst“** – die App zeigt das so an und wertet Runden mit dieser Partei zu diesem Thema nicht (fehlende Daten sollen keiner Partei einen Punkt kosten). Ungeprüfte Einträge bleiben als Entwurf im Repo und landen nicht in der Datenbank. Bei fiktiven Daten zählt alles.
+
+| In `daten/` | Anzeige im Spiel | Punkte |
+| --- | --- | --- |
+| Maßnahmen zum Thema, alle geprüft; eine passt zu den Ursachen | Maßnahme mit Bewertung und Belegen | nach Bewertung |
+| Maßnahmen zum Thema, alle geprüft; keine passt zu den Ursachen | „keine Maßnahme zu diesen Ursachen“ | 0 |
+| `keine_massnahme`, geprüft | „enthält keine Maßnahme zu diesem Thema“ + Begründung | 0 |
+| Eintrag (teilweise) ungeprüft | „noch nicht erfasst“ | Runde wird nicht gewertet |
 
 ## Bewertungsmaßstab
+
+Maßgeblich ist die Methodenseite der App (`src/rechtliches/Methode.tsx`, in der App unter „So bewerten wir“). Die Tabellen hier geben sie wieder und ergänzen Beispiele – bei Änderungen beide anpassen.
 
 ### Wirksamkeit (0–3): Setzt die Maßnahme an der Ursache an?
 
 | Wert | Bedeutung |
 | --- | --- |
-| 0 | Kein erkennbarer Bezug zur Ursache oder laut Studienlage wirkungslos/kontraproduktiv |
-| 1 | Lindert Folgen, ändert an der Ursache wenig (z. B. einmalige Entlastung) |
-| 2 | Setzt an der Ursache an, Wirkung begrenzt oder unsicher belegt |
-| 3 | Setzt direkt an der Ursache an, Wirkung durch Studien oder Erfahrungen gut belegt |
+| 0 | setzt an keiner der erfassten Ursachen an |
+| 1 | berührt eine Ursache nur am Rand oder mit geringer Wirkung (z. B. einmalige Entlastung, lindert nur Folgen) |
+| 2 | setzt an einer Ursache an und lässt eine spürbare Wirkung erwarten |
+| 3 | setzt direkt an einer Hauptursache an; die Wirkung ist gut belegt (Studie oder Erfahrungen anderswo) |
 
 ### Umsetzbarkeit (0–3): Ist die Maßnahme realistisch?
 
 | Wert | Bedeutung |
 | --- | --- |
-| 0 | Rechtlich kaum möglich (z. B. verfassungs- oder EU-rechtswidrig) oder nicht finanzierbar |
-| 1 | Große Hürden: Grundgesetzänderung, hohe ungeklärte Kosten oder mehr als eine Wahlperiode |
-| 2 | Machbar mit normalem Gesetzgebungsverfahren, Kosten benannt, aber mit Unsicherheiten |
-| 3 | Schnell umsetzbar, rechtlich unproblematisch, Finanzierung geklärt oder gering |
+| 0 | rechtlich oder finanziell derzeit nicht umsetzbar (z. B. verfassungs- oder EU-rechtswidrig) |
+| 1 | nur mit großen Hürden umsetzbar (z. B. Verfassungsänderung, ungeklärte Finanzierung) |
+| 2 | umsetzbar mit Aufwand oder in mehreren Jahren |
+| 3 | rechtlich möglich, finanziert und innerhalb einer Wahlperiode realistisch |
 
 ### Rollen-Modifikator (−2 bis +2, optional)
 
@@ -126,7 +135,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
 - Beleg zeigt ins Programm der richtigen Partei, mit Seitenanker
 - **Abdeckung:** jede Partei genau einmal pro Thema – mit Maßnahmen oder `keine_massnahme`
 - Einträge sind nicht älter als das aktuelle Programm
-- bei echten Daten: keine Platzhalter-Links (example.org); Warnung für ungeprüfte Einträge
+- bei echten Daten: keine Platzhalter-Links (example.org); Warnung für ungeprüfte Einträge (die im Spiel „noch nicht erfasst“ sind)
 - `supabase/seed.sql` passt zum Katalog
 
 ```bash

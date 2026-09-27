@@ -226,13 +226,43 @@ begin
 end;
 $$;
 
+-- ===== migrations/20260928000000_abdeckung.sql =====
+-- „Wer liefert?“ – Abdeckung: „keine Maßnahme im Programm“ vs. „noch nicht erfasst“
+--
+-- Pro Thema und Partei steht hier, ob das Wahlprogramm vollständig ausgewertet
+-- ist: `massnahmen` (alle Maßnahmen erfasst) oder `keine` (nachweislich nichts
+-- dazu im Programm). Fehlt der Eintrag, ist das Thema für die Partei noch nicht
+-- erfasst – dann wird die Runde nicht gewertet, damit fehlende Daten keiner
+-- Partei einen Punkt kosten. Befüllt wird die Tabelle aus daten/ (seed.sql).
+
+create table public.abdeckung (
+  thema_id     smallint not null references public.themen (id) on delete cascade,
+  partei_id    smallint not null references public.parteien (id) on delete cascade,
+  art          text not null check (art in ('massnahmen', 'keine')),
+  -- Nur bei `keine`: was im Programm durchsucht wurde.
+  begruendung  text check (char_length(begruendung) <= 400),
+  stand        date not null,
+  primary key (thema_id, partei_id),
+  check ((art = 'keine') = (begruendung is not null))
+);
+
+alter table public.abdeckung enable row level security;
+create policy "Abdeckung lesen" on public.abdeckung for select to anon, authenticated using (true);
+
+-- Neuer Rundenstatus: Thema bekannt, aber für eine der beiden Parteien noch
+-- nicht erfasst → keine Wertung, keine Punkte.
+alter table public.runden drop constraint runden_status_check;
+alter table public.runden add constraint runden_status_check
+  check (status in ('gewertet', 'ungeprueft', 'unvollstaendig', 'wert'));
+
 -- ===== seed.sql =====
 -- AUTOMATISCH ERZEUGT aus daten/ (npm run seed) – nicht von Hand bearbeiten.
 -- FIKTIVE Platzhalterdaten: Parteien, Maßnahmen, Punkte und Links sind erfunden.
 
--- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen werden neu geschrieben.
+-- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen und Abdeckung werden neu geschrieben.
 -- Gespielte Runden bleiben erhalten.
 delete from public.massnahmen;
+delete from public.abdeckung;
 
 insert into public.parteien (id, name, kurzname, farbe, programm_url, programm_stand) values
   (1, 'Partei Alpha', 'Alpha', '#2bb3a3', 'https://example.org/mock/alpha/wahlprogramm.pdf', '2026-01-01'),
@@ -280,5 +310,22 @@ insert into public.massnahmen (id, thema_id, partei_id, beschreibung, ursachen_i
   (14, 3, 5, 'Langfristige Lieferverträge für Gas absichern', '{303}', 1, 2, null, 'Mehr Planbarkeit, aber kaum Einfluss auf Strom- und Netzkosten.', 'https://example.org/mock/epsilon/wahlprogramm.pdf#page=15', null, '2026-01-01', false);
 
 select setval(pg_get_serial_sequence('public.massnahmen', 'id'), (select max(id) from public.massnahmen));
+
+insert into public.abdeckung (thema_id, partei_id, art, begruendung, stand) values
+  (1, 1, 'massnahmen', null, '2026-01-01'),
+  (1, 2, 'massnahmen', null, '2026-01-01'),
+  (1, 3, 'massnahmen', null, '2026-01-01'),
+  (1, 4, 'massnahmen', null, '2026-01-01'),
+  (1, 5, 'keine', 'Kapitel „Gesundheit“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).', '2026-01-01'),
+  (2, 1, 'massnahmen', null, '2026-01-01'),
+  (2, 2, 'massnahmen', null, '2026-01-01'),
+  (2, 3, 'keine', 'Kapitel „Bauen und Wohnen“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).', '2026-01-01'),
+  (2, 4, 'massnahmen', null, '2026-01-01'),
+  (2, 5, 'massnahmen', null, '2026-01-01'),
+  (3, 1, 'massnahmen', null, '2026-01-01'),
+  (3, 2, 'keine', 'Kapitel „Energie und Klima“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).', '2026-01-01'),
+  (3, 3, 'massnahmen', null, '2026-01-01'),
+  (3, 4, 'massnahmen', null, '2026-01-01'),
+  (3, 5, 'massnahmen', null, '2026-01-01');
 
 commit;

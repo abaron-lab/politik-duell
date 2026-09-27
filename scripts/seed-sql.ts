@@ -1,20 +1,22 @@
 // Baut den Inhalt von supabase/seed.sql aus dem geprüften Datenkatalog.
-import { spielbareMassnahmen, type Katalog } from '../src/data/katalog.ts'
+import { spielbareAbdeckung, spielbareMassnahmen, type Katalog } from '../src/data/katalog.ts'
 
 const q = (v: string | null | undefined) => (v == null ? 'null' : `'${v.replace(/'/g, "''")}'`)
 const zeilen = (werte: string[]) => werte.join(',\n  ')
 
 export function seedSql(k: Katalog): string {
   const massnahmen = spielbareMassnahmen(k)
+  const abdeckung = spielbareAbdeckung(k)
   const kopf = k.fiktiv
     ? '-- FIKTIVE Platzhalterdaten: Parteien, Maßnahmen, Punkte und Links sind erfunden.'
-    : '-- Nur geprüfte Maßnahmen (geprueft = true); ungeprüfte Entwürfe bleiben im Repo.'
+    : '-- Nur vollständig geprüfte Einträge je Thema und Partei; alles andere gilt als „noch nicht erfasst“.'
   return `-- AUTOMATISCH ERZEUGT aus daten/ (npm run seed) – nicht von Hand bearbeiten.
 ${kopf}
 
--- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen werden neu geschrieben.
+-- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen und Abdeckung werden neu geschrieben.
 -- Gespielte Runden bleiben erhalten.
 delete from public.massnahmen;
+delete from public.abdeckung;
 
 insert into public.parteien (id, name, kurzname, farbe, programm_url, programm_stand) values
   ${zeilen(k.parteien.map((p) => `(${p.id}, ${q(p.name)}, ${q(p.kurzname)}, ${q(p.farbe)}, ${q(p.programm_url)}, ${q(p.programm_stand)})`))}
@@ -44,6 +46,13 @@ insert into public.massnahmen (id, thema_id, partei_id, beschreibung, ursachen_i
   )};
 
 select setval(pg_get_serial_sequence('public.massnahmen', 'id'), (select max(id) from public.massnahmen));
+`
+    : ''
+}${
+  abdeckung.length
+    ? `
+insert into public.abdeckung (thema_id, partei_id, art, begruendung, stand) values
+  ${zeilen(abdeckung.map((a) => `(${a.thema_id}, ${a.partei_id}, ${q(a.art)}, ${q(a.begruendung)}, ${q(a.stand)})`))};
 `
     : ''
 }`

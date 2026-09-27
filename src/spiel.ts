@@ -18,13 +18,19 @@ export interface RundenErgebnis {
   /** Vorläufige Einschätzung bei ungeprüften Themen (ohne Punkte und Links). */
   einschaetzung: string | null
   thema: Thema | null
-  status: 'gewertet' | 'ungeprueft'
-  /** Ergebnisse der beiden gewählten Parteien (nur bei status „gewertet“). */
+  /**
+   * gewertet: beide Parteien für das Thema erfasst · unvollstaendig: Thema bekannt, aber für
+   * mindestens eine der beiden noch nicht erfasst (keine Punkte) · ungeprueft: Thema unbekannt.
+   */
+  status: 'gewertet' | 'unvollstaendig' | 'ungeprueft'
+  /** Ergebnisse der beiden gewählten Parteien (bei „gewertet“ und „unvollstaendig“). */
   ergebnisse: [ParteiErgebnis, ParteiErgebnis] | null
   /** Spielpunkte dieser Runde für A und B. */
   punkte: [number, number]
-  /** Parteien mit der insgesamt besten Lösung (alle Parteien der DB). */
+  /** Parteien mit der insgesamt besten Lösung (alle Parteien der DB, für die das Thema erfasst ist). */
   beste: ParteiErgebnis[]
+  /** Parteien, für die das Thema noch nicht erfasst ist. */
+  nichtErfasst: Partei[]
 }
 
 export function gesamtpunkte(runden: RundenErgebnis[]): [number, number] {

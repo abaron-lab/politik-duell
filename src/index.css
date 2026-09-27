@@ -473,9 +473,21 @@ textarea {
 .massnahme-begruendung {
   font-size: 0.95rem;
 }
-.keine-massnahme {
+.karte-punkte-leer {
+  background: var(--flaeche-2);
   color: var(--text-leise);
+}
+.keine-massnahme {
+  margin-top: 12px;
+  color: var(--text-leise);
+}
+.keine-massnahme p {
+  margin: 6px 0 4px;
   font-style: italic;
+}
+.keine-massnahme .keine-begruendung {
+  font-size: 0.85rem;
+  font-style: normal;
 }
 .belege {
   display: inline-block;
@@ -505,6 +517,11 @@ textarea {
 }
 .beste .label {
   margin-top: 0;
+}
+.beste-hinweis {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-leise);
 }
 .beste-zeile {
   padding-left: 10px;

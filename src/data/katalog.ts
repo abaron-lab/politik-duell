@@ -1,4 +1,4 @@
-import { ROLLEN_IDS, type Massnahme, type Partei, type Thema, type Ursache } from './types.ts'
+import { ROLLEN_IDS, type AbdeckungEintrag, type Massnahme, type Partei, type Thema, type Ursache } from './types.ts'
 
 // ---------------------------------------------------------------------------
 // Kuratierter Datenkatalog (Ordner `daten/`, Format siehe daten/README.md).
@@ -16,11 +16,9 @@ export interface KeineMassnahme {
   geprueft: boolean
 }
 
-export interface Abdeckung {
-  thema_id: number
-  partei_id: number
-  /** `massnahmen`: mindestens eine Maßnahme erfasst; `keine`: nachweislich nichts im Programm. */
-  art: 'massnahmen' | 'keine'
+/** Abdeckung im Repo: wie in der Datenbank, plus Prüfstatus des ganzen Eintrags. */
+export interface Abdeckung extends AbdeckungEintrag {
+  /** true, wenn `keine_massnahme` bzw. alle Maßnahmen der Partei zum Thema geprüft sind. */
   geprueft: boolean
 }
 
@@ -48,12 +46,22 @@ export interface Pruefergebnis {
 }
 
 /**
- * Maßnahmen, die im Spiel zählen. Bei echten Daten nur geprüfte – ungeprüfte
- * bleiben als Entwurf im Repo, landen aber nicht in der Datenbank. Bei
- * fiktiven Daten zählt alles, weil es dort nichts zu prüfen gibt.
+ * Was im Spiel zählt, entscheidet sich je Thema und Partei: Erst wenn der
+ * ganze Eintrag geprüft ist (alle Maßnahmen bzw. „keine_massnahme“), kommt er
+ * in die Datenbank. Sonst gilt das Thema für die Partei als „noch nicht
+ * erfasst“ und die Runde wird nicht gewertet – eine halb geprüfte Liste
+ * könnte eine Partei sonst schlechter dastehen lassen, als sie ist.
+ * Bei fiktiven Daten zählt alles, weil es dort nichts zu prüfen gibt.
  */
+export function spielbareAbdeckung(k: Katalog): AbdeckungEintrag[] {
+  return k.abdeckung
+    .filter((a) => k.fiktiv || a.geprueft)
+    .map(({ thema_id, partei_id, art, begruendung, stand }) => ({ thema_id, partei_id, art, begruendung, stand }))
+}
+
 export function spielbareMassnahmen(k: Katalog): Massnahme[] {
-  return k.fiktiv ? k.massnahmen : k.massnahmen.filter((m) => m.geprueft)
+  const frei = new Set(spielbareAbdeckung(k).map((a) => `${a.thema_id}/${a.partei_id}`))
+  return k.massnahmen.filter((m) => frei.has(`${m.thema_id}/${m.partei_id}`))
 }
 
 const DATUM = /^\d{4}-\d{2}-\d{2}$/
@@ -249,14 +257,14 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
           continue
         }
         unbekannteFelder(kOrt, k, ['begruendung', 'stand', 'geprueft'])
-        text(kOrt, k, 'begruendung')
+        const begruendung = text(kOrt, k, 'begruendung')
         const stand = datum(kOrt, k, 'stand')
         const geprueft = wahrheitswert(kOrt, k, 'geprueft')
         if (partei && stand && partei.programm_stand && stand < partei.programm_stand) {
           f(kOrt, `„stand“ ${stand} liegt vor dem Programmstand ${partei.programm_stand} – bitte im aktuellen Programm neu prüfen`)
         }
-        if (!katalog.fiktiv && !geprueft) warnungen.push(`${kOrt}: noch nicht geprüft`)
-        katalog.abdeckung.push({ thema_id: thema.id, partei_id: parteiId, art: 'keine', geprueft })
+        if (!katalog.fiktiv && !geprueft) warnungen.push(`${kOrt}: noch nicht geprüft – Thema gilt für die Partei als „noch nicht erfasst“`)
+        katalog.abdeckung.push({ thema_id: thema.id, partei_id: parteiId, art: 'keine', begruendung, stand, geprueft })
         continue
       }
 
@@ -265,6 +273,7 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
         continue
       }
       let alleGeprueft = true
+      let neuesterStand = ''
       for (const [j, mRoh] of roh.massnahmen.entries()) {
         const mOrt = `${aOrt} › massnahmen[${j}]`
         if (!istObjekt(mRoh)) {
@@ -341,11 +350,16 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
 
         if (!m.geprueft) {
           alleGeprueft = false
-          if (!katalog.fiktiv) warnungen.push(`${mOrt}: noch nicht geprüft – zählt im Spiel erst nach Prüfung`)
+          if (!katalog.fiktiv) {
+            warnungen.push(`${mOrt}: noch nicht geprüft – bis alle Maßnahmen der Partei zum Thema geprüft sind, gilt es als „noch nicht erfasst“`)
+          }
         }
+        if (m.stand > neuesterStand) neuesterStand = m.stand
         katalog.massnahmen.push(m)
       }
-      katalog.abdeckung.push({ thema_id: thema.id, partei_id: parteiId, art: 'massnahmen', geprueft: alleGeprueft })
+      katalog.abdeckung.push({
+        thema_id: thema.id, partei_id: parteiId, art: 'massnahmen', begruendung: null, stand: neuesterStand, geprueft: alleGeprueft,
+      })
     }
 
     for (const p of katalog.parteien) {

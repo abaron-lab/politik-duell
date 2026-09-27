@@ -3,7 +3,7 @@
 import { PGlite } from '@electric-sql/pglite'
 import { readFileSync, readdirSync } from 'node:fs'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { MASSNAHMEN } from '../src/data/mock'
+import { ABDECKUNG, MASSNAHMEN } from '../src/data/mock'
 
 const lies = (pfad: string) => readFileSync(new URL(pfad, import.meta.url), 'utf8')
 const db = new PGlite()
@@ -55,6 +55,18 @@ describe('Datenbank', () => {
   it('anon darf Stammdaten lesen', async () => {
     const r = await alsRolle('anon', () => db.query('select * from massnahmen'))
     expect(r.rows.length).toBe(MASSNAHMEN.length)
+  })
+
+  it('anon darf die Abdeckung lesen', async () => {
+    const r = await alsRolle('anon', () => db.query('select * from abdeckung'))
+    expect(r.rows.length).toBe(ABDECKUNG.length)
+  })
+
+  it('Abdeckung: Begründung genau bei „keine“, Status „unvollstaendig“ erlaubt', async () => {
+    await expect(db.query(`insert into abdeckung values (1, 1, 'keine', null, now())`)).rejects.toThrow()
+    await expect(db.query(`update abdeckung set begruendung = 'x' where art = 'massnahmen'`)).rejects.toThrow()
+    await expect(db.query(`insert into runden (problem_text, status) values ('x', 'unvollstaendig')`)).resolves.toBeTruthy()
+    await expect(db.query(`insert into runden (problem_text, status) values ('x', 'kaputt')`)).rejects.toThrow()
   })
 
   it('anon sieht nur freigegebene Runden', async () => {

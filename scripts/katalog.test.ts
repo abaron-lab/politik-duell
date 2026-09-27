@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { pruefeDatenordner } from './katalog-laden'
 import { seedSql } from './seed-sql'
-import { pruefeKatalog, spielbareMassnahmen, type Datei } from '../src/data/katalog'
+import { pruefeKatalog, spielbareAbdeckung, spielbareMassnahmen, type Datei } from '../src/data/katalog'
 
 // Kleiner, gültiger Katalog mit echten (nicht fiktiven) Regeln als Ausgangspunkt.
 const parteien = (fiktiv = false): Datei => ({
@@ -54,8 +54,8 @@ describe('Datenkatalog: Prüfregeln', () => {
     expect(katalog.massnahmen[0]).toMatchObject({ id: 1, thema_id: 1, partei_id: 1 })
     expect(katalog.ursachen[0]).toMatchObject({ id: 11, thema_id: 1 })
     expect(katalog.abdeckung).toEqual([
-      { thema_id: 1, partei_id: 1, art: 'massnahmen', geprueft: true },
-      { thema_id: 1, partei_id: 2, art: 'keine', geprueft: true },
+      { thema_id: 1, partei_id: 1, art: 'massnahmen', begruendung: null, stand: '2026-03-01', geprueft: true },
+      { thema_id: 1, partei_id: 2, art: 'keine', begruendung: 'Programm durchsucht, nichts gefunden.', stand: '2026-03-01', geprueft: true },
     ])
   })
 
@@ -110,13 +110,22 @@ describe('Datenkatalog: Prüfregeln', () => {
     expect(f).toMatch(/Maßnahmen-ID 1 ist doppelt/)
   })
 
-  it('zählt bei echten Daten nur geprüfte Maßnahmen und warnt vor ungeprüften', () => {
-    const t = thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme(), massnahme({ id: 2, geprueft: false })] }, { partei_id: 2, keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: false } }] })
+  it('übernimmt bei echten Daten nur vollständig geprüfte Einträge je Thema und Partei', () => {
+    // Partei 1: eine Maßnahme geprüft, eine nicht → ganzer Eintrag gilt als „noch nicht erfasst“.
+    const t = thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme(), massnahme({ id: 2, geprueft: false })] }, { partei_id: 2, keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: true } }] })
     const echt = pruefeKatalog(parteien(), [t])
     expect(echt.fehler).toEqual([])
-    expect(echt.warnungen).toHaveLength(2)
-    expect(spielbareMassnahmen(echt.katalog).map((m) => m.id)).toEqual([1])
-    expect(echt.katalog.abdeckung.every((a) => !a.geprueft)).toBe(true)
+    expect(echt.warnungen).toHaveLength(1)
+    expect(spielbareMassnahmen(echt.katalog)).toEqual([])
+    expect(spielbareAbdeckung(echt.katalog)).toEqual([
+      { thema_id: 1, partei_id: 2, art: 'keine', begruendung: 'x', stand: '2026-03-01' },
+    ])
+
+    // Sind alle Maßnahmen geprüft, zählt der Eintrag.
+    const fertig = thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme(), massnahme({ id: 2 })] }, { partei_id: 2, keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: false } }] })
+    const k = pruefeKatalog(parteien(), [fertig]).katalog
+    expect(spielbareMassnahmen(k).map((m) => m.id)).toEqual([1, 2])
+    expect(spielbareAbdeckung(k).map((a) => a.partei_id)).toEqual([1])
 
     const fiktiv = pruefeKatalog(parteien(true), [t])
     expect(fiktiv.warnungen).toEqual([])

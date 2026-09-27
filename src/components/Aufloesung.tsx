@@ -3,16 +3,9 @@ import { useDaten } from '../data/kontext'
 import { ROLLEN } from '../data/rollen'
 import type { Massnahme } from '../data/types'
 import type { ParteiErgebnis } from '../logic/bewertung'
+import { ohneTreffer } from '../logic/ohneTreffer'
 import type { RundenErgebnis, Spieler } from '../spiel'
 import { parteiStil } from './stil'
-
-const datum = (iso: string) =>
-  new Date(iso).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })
-
-/** Überprüfbare Aussage statt „Partei hat nichts“: bezogen auf Programm und Stand. */
-function nichtsGefunden(programmStand: string) {
-  return `Im Wahlprogramm (Stand ${datum(programmStand)}) keine Maßnahme zu diesen Ursachen gefunden.`
-}
 
 function seitenText(url: string) {
   const seite = /#page=(\d+)/.exec(url)?.[1]
@@ -62,6 +55,7 @@ function ParteiKarte({
 }) {
   const { ursachen } = useDaten()
   const ursacheText = (id: number) => ursachen.find((u) => u.id === id)?.beschreibung ?? ''
+  const leer = ohneTreffer(ergebnis)
   return (
     <article
       className={`partei-karte enthuellen${gewinnt ? ' gewinnt' : ''}`}
@@ -70,12 +64,27 @@ function ParteiKarte({
       <header>
         <span className="karte-spieler">{spielerName}</span>
         <h3>{ergebnis.partei.name}</h3>
-        <span className="karte-punkte" aria-label={`${ergebnis.punkte} Punkte`}>
-          {ergebnis.punkte}
-        </span>
+        {ergebnis.abdeckung ? (
+          <span className="karte-punkte" aria-label={`${ergebnis.punkte} Punkte`}>
+            {ergebnis.punkte}
+          </span>
+        ) : (
+          <span className="karte-punkte karte-punkte-leer" aria-label="keine Wertung">
+            –
+          </span>
+        )}
       </header>
-      {ergebnis.treffer.length === 0 ? (
-        <p className="keine-massnahme">{nichtsGefunden(ergebnis.partei.programm_stand)}</p>
+      {leer ? (
+        <div className="keine-massnahme">
+          {leer.badge && <span className="badge-ungeprueft">{leer.badge}</span>}
+          <p>{leer.lang}</p>
+          {ergebnis.abdeckung?.begruendung && <p className="keine-begruendung">{ergebnis.abdeckung.begruendung}</p>}
+          <span className="belege">
+            <a href={ergebnis.partei.programm_url} target="_blank" rel="noopener noreferrer">
+              Wahlprogramm
+            </a>
+          </span>
+        </div>
       ) : (
         ergebnis.treffer.map((t) => (
           <div key={t.massnahme.id} className="massnahme">
@@ -155,18 +164,27 @@ export function Aufloesung({
             ))}
           </div>
           <p className="rundensieger enthuellen" style={{ animationDelay: '900ms' }}>
-            {runde.punkte[0] === 1 && runde.punkte[1] === 1
+            {runde.status === 'unvollstaendig'
+              ? `Keine Wertung: Für ${runde.ergebnisse
+                  .filter((e) => !e.abdeckung)
+                  .map((e) => e.partei.kurzname)
+                  .join(' und ')} ist dieses Thema noch nicht erfasst. Fehlende Daten kosten keine Partei einen Punkt.`
+              : runde.punkte[0] === 1 && runde.punkte[1] === 1
               ? 'Gleichstand – beide bekommen einen Punkt.'
               : runde.punkte[0] === 1
                 ? `Punkt für ${spieler[0].name} (${spieler[0].partei.kurzname})!`
                 : runde.punkte[1] === 1
                   ? `Punkt für ${spieler[1].name} (${spieler[1].partei.kurzname})!`
-                  : 'Für keine der beiden Parteien ist dazu eine Maßnahme erfasst – kein Punkt.'}
+                  : 'Keine der beiden Parteien hat dazu eine Maßnahme im Programm – kein Punkt.'}
           </p>
           <section className="beste enthuellen" style={{ animationDelay: '1200ms' }}>
             <p className="label">Beste Lösung aller Parteien</p>
             {runde.beste.length === 0 ? (
-              <p>Für keine Partei ist dazu bisher eine Maßnahme erfasst.</p>
+              <p>
+                {runde.nichtErfasst.length === 0
+                  ? 'Keine Partei hat dazu eine Maßnahme im Programm.'
+                  : 'Unter den bisher erfassten Parteien hat keine eine Maßnahme dazu.'}
+              </p>
             ) : (
               runde.beste.map((b) => (
                 <div key={b.partei.id} className="beste-zeile" style={parteiStil(b.partei.farbe)}>
@@ -178,6 +196,11 @@ export function Aufloesung({
                   ))}
                 </div>
               ))
+            )}
+            {runde.nichtErfasst.length > 0 && (
+              <p className="beste-hinweis">
+                Noch nicht erfasst und daher nicht verglichen: {runde.nichtErfasst.map((p) => p.kurzname).join(', ')}.
+              </p>
             )}
           </section>
         </>
