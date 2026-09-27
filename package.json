@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "seed": "node --experimental-strip-types scripts/erzeuge-seed.ts"
+    "seed": "node --experimental-strip-types scripts/erzeuge-seed.ts",
+    "dashboard": "npm run seed && node --experimental-strip-types scripts/erzeuge-dashboard.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

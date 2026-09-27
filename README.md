@@ -46,6 +46,7 @@ npm run dev      # Entwicklungsserver
 npm test         # Tests: Analyse, Bewertung, KI-Prüfung, Datenbank (PGlite)
 npm run lint
 npm run build
+npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 ```
 
 ## Struktur
@@ -54,6 +55,7 @@ npm run build
 | --- | --- |
 | `supabase/migrations/` | Datenbankschema, Zugriffsregeln, Rate-Limit |
 | `supabase/seed.sql` | Beispieldaten (erzeugt aus `src/data/mock.ts`) |
+| `supabase/dashboard/` | Erzeugte Dateien zum Einfügen im Dashboard (SQL komplett, Edge Function als eine Datei) |
 | `supabase/functions/analyse/` | Edge Function: KI-Einordnung und Speichern der Runde |
 | `supabase/functions/_shared/` | Gemeinsamer Code von App und Funktion: Typen, Punktelogik, KI-Prompt und -Prüfung |
 | `src/data/quelle.ts` | Datenquelle der App: Supabase oder Beispieldaten |

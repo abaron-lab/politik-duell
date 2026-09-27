@@ -1,56 +1,50 @@
 # Supabase einrichten (Meilenstein 3)
 
-Projekt: `xfprvshhexhzhfgkfxpi` (Region Frankfurt). Die Befehle laufen im Repo-Ordner auf deinem Rechner.
-Die Supabase-CLI muss nicht installiert werden – `npx` lädt sie bei Bedarf.
+Projekt: `xfprvshhexhzhfgkfxpi` (Region Frankfurt).
 
-## Voraussetzungen
+## Weg A: nur im Browser (empfohlen, kein eigener Rechner nötig)
 
-- Node.js 20 oder neuer
-- Das **Datenbank-Passwort** deines Supabase-Projekts (hast du beim Anlegen vergeben;
-  zurücksetzen unter *Project Settings → Database*)
-- Secret `MISTRAL_API_KEY` ist unter *Edge Functions → Secrets* gespeichert ✔
+Die Dateien in `supabase/dashboard/` sind zum Kopieren gedacht. Auf GitHub gibt es oben rechts
+über jeder Datei den Knopf **„Copy raw file“** (zwei überlappende Rechtecke).
 
-## 1. Anmelden und Projekt verknüpfen
+### 1. Datenbank anlegen
+
+1. Datei öffnen: [`supabase/dashboard/1-datenbank.sql`](https://github.com/abaron-lab/wer-liefert/blob/claude/meilenstein-1-ausfuehren-qpwxov/supabase/dashboard/1-datenbank.sql) → **Copy raw file**
+2. [SQL Editor öffnen](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/sql/new), einfügen, **Run** klicken.
+3. Erwartet: „Success. No rows returned“. Im *Table Editor* stehen jetzt Tabellen mit Beispieldaten.
+
+### 2. Edge Function anlegen
+
+1. Datei öffnen: [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/claude/meilenstein-1-ausfuehren-qpwxov/supabase/dashboard/2-analyse.ts) → **Copy raw file**
+2. [Edge Functions öffnen](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions) → **Deploy a new function** → **Via Editor**.
+3. Den vorhandenen Beispielcode komplett löschen, den kopierten Inhalt einfügen.
+4. Als Namen der Funktion **`analyse`** eintragen (genau so, klein geschrieben) → **Deploy function**.
+5. In der Funktion unter **Details** (bzw. *Settings*) die Option **„Enforce JWT Verification“ / „Verify JWT“ ausschalten** und speichern.
+   Die App ruft ohne Login auf; geschützt ist die Funktion durch Eingabeprüfung und ein
+   Rate-Limit (40 Anfragen pro 30 Minuten und Sitzung).
+
+Das Secret `MISTRAL_API_KEY` ist schon gespeichert ✔. Optional wechselt das Secret
+`MISTRAL_MODEL` das Modell (Standard: `mistral-small-latest`).
+
+### 3. App im Netz starten (Vercel, kostenlos)
+
+1. Auf [vercel.com](https://vercel.com) mit GitHub anmelden → **Add New… → Project** → Repository `wer-liefert` importieren.
+2. Vercel erkennt Vite automatisch. **Deploy** klicken.
+3. Vercel baut zunächst den Branch `main`. Für den aktuellen Stand: im Projekt unter
+   **Deployments** das Deployment des Branches `claude/meilenstein-1-ausfuehren-qpwxov` öffnen
+   (entsteht bei jedem Push automatisch) – oder den Branch nach `main` übernehmen.
+
+URL und Publishable Key liest die App aus der Datei `.env` im Repo; dort ist nichts einzutragen.
+
+## Weg B: mit der Supabase-Kommandozeile (auf einem eigenen Rechner)
 
 ```bash
 npx supabase login
-npx supabase link --project-ref xfprvshhexhzhfgkfxpi
-```
-
-`login` öffnet den Browser. `link` fragt nach dem Datenbank-Passwort.
-
-## 2. Datenbank anlegen und Beispieldaten einspielen
-
-```bash
+npx supabase link --project-ref xfprvshhexhzhfgkfxpi   # fragt nach dem Datenbank-Passwort
 npx supabase db push --include-seed
-```
-
-Das legt die Tabellen mit Zugriffsregeln an (`supabase/migrations/`) und spielt die fiktiven
-Beispieldaten ein (`supabase/seed.sql`).
-
-**Ohne CLI** geht es auch im Dashboard: *SQL Editor → New query*, zuerst den Inhalt von
-`supabase/migrations/20260926000000_schema.sql` einfügen und ausführen, danach `supabase/seed.sql`.
-
-## 3. Edge Function `analyse` veröffentlichen
-
-```bash
 npx supabase functions deploy analyse --no-verify-jwt
+npm install && npm run dev
 ```
-
-`--no-verify-jwt` ist nötig, weil die App ohne Login aufruft. Geschützt ist die Funktion durch
-Eingabeprüfung und ein Rate-Limit (40 Anfragen pro 30 Minuten und Sitzung).
-
-Optional: Mit dem Secret `MISTRAL_MODEL` lässt sich das Modell wechseln (Standard: `mistral-small-latest`).
-
-## 4. App starten
-
-```bash
-npm install
-npm run dev
-```
-
-Die App liest URL und Publishable Key aus `.env`. Auf der Startseite steht „Spiel starten“, sobald die
-Daten aus Supabase geladen sind.
 
 ## Prüfen, ob alles läuft
 
@@ -59,14 +53,15 @@ Daten aus Supabase geladen sind.
   `review_warteschlange`.
 - Fehler der Funktion: *Edge Functions → analyse → Logs*.
 
-## Beispieldaten ändern
+## Nach Änderungen am Code
 
-Die Seed-Daten werden aus `src/data/mock.ts` erzeugt:
+`npm run dashboard` erzeugt `supabase/seed.sql` und beide Dateien in `supabase/dashboard/` neu.
+Danach im Dashboard:
 
-```bash
-npm run seed                         # schreibt supabase/seed.sql neu
-npx supabase db push --include-seed  # oder seed.sql im SQL Editor ausführen
-```
+- **Beispieldaten geändert:** nur den Inhalt von `supabase/seed.sql` im SQL Editor ausführen
+  (mehrfach ausführbar, gespielte Runden bleiben erhalten).
+- **Edge Function geändert:** in der Funktion `analyse` den Code durch `2-analyse.ts` ersetzen → Deploy.
+- **Neue Migration:** nur die neue Datei aus `supabase/migrations/` im SQL Editor ausführen.
 
 ## Datenschutz
 
