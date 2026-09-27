@@ -94,6 +94,7 @@ Datenbank: **nichts zu tun** (keine neue Migration).
      ohne Schrägstrich am Ende. `*` steht für einen Teil des Namens (für Vercel-Vorschauen), z. B.
      `https://wer-liefert.de, https://www.wer-liefert.de, https://wer-liefert-*.vercel.app`.
      Leer lassen = von überall erlaubt (praktisch beim Einrichten).
+     Aktueller Wert, Erklärung und Fehlersuche: [`ERLAUBTE_URSPRUENGE.md`](ERLAUBTE_URSPRUENGE.md).
    - `RATE_LIMIT_GLOBAL` – optional, KI-Anfragen pro Stunde für alle zusammen (Standard: 600).
      Pro Sitzung gelten weiter 40 Anfragen in 30 Minuten.
 3. **Impressum und Datenschutz ausfüllen:** [`src/rechtliches/betreiber.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/src/rechtliches/betreiber.ts)
