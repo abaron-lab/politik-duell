@@ -5,6 +5,9 @@
 // Secrets (Supabase → Edge Functions → Secrets):
 //   MISTRAL_API_KEY            – Pflicht
 //   MISTRAL_MODEL              – optional, Standard: mistral-small-latest
+//   ERLAUBTE_URSPRUENGE        – optional, z. B. „https://wer-liefert.de, https://wer-liefert-*.vercel.app“;
+//                                leer: Aufrufe von überall erlaubt
+//   RATE_LIMIT_GLOBAL          – optional, Anfragen pro Stunde über alle Sitzungen (Standard: 600)
 // Automatisch vorhanden: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
@@ -12,19 +15,21 @@ import { bewertePartei } from '../_shared/bewertung.ts'
 import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, pruefeAnfrage, systemPrompt } from '../_shared/ki.ts'
 import { pruefeText } from '../_shared/moderation.ts'
 import type { AnalyseAntwort, Massnahme, Partei, Rolle, Thema, Ursache } from '../_shared/typen.ts'
+import {
+  corsKoepfe,
+  erlaubteUrspruenge,
+  GLOBALE_SITZUNG,
+  globalesLimit,
+  RATE_LIMIT_GLOBAL,
+  RATE_LIMIT_SITZUNG,
+  ursprungErlaubt,
+} from '../_shared/zugriff.ts'
 
-const RATE_LIMIT_MAX = 40
-const RATE_LIMIT_FENSTER = '30 minutes'
 const MISTRAL_URL = 'https://api.mistral.ai/v1/chat/completions'
+const MAX_ANFRAGE_BYTES = 8_000
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { ...CORS, 'Content-Type': 'application/json' } })
+const ERLAUBT = erlaubteUrspruenge(Deno.env.get('ERLAUBTE_URSPRUENGE'))
+const GLOBAL_MAX = globalesLimit(Deno.env.get('RATE_LIMIT_GLOBAL'))
 
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
   auth: { persistSession: false },
@@ -50,38 +55,62 @@ async function frageMistral(system: string, nachrichten: ReturnType<typeof nutze
   return JSON.parse(daten.choices?.[0]?.message?.content ?? '{}')
 }
 
+async function lesJson(req: Request): Promise<unknown> {
+  const text = await req.text()
+  if (new TextEncoder().encode(text).length > MAX_ANFRAGE_BYTES) throw new EingabeFehler('Anfrage zu groß.')
+  try {
+    return JSON.parse(text)
+  } catch {
+    return null
+  }
+}
+
+/** Zählt eine Anfrage; false, wenn das Limit im Zeitfenster überschritten ist. */
+async function imLimit(sitzung: string, max: number, fenster: string): Promise<boolean> {
+  const { data, error } = await db.rpc('rate_limit_pruefen', { p_sitzung: sitzung, p_max: max, p_fenster: fenster })
+  if (error) throw error
+  return data === true
+}
+
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
+  const ursprung = req.headers.get('origin')
+  const cors = corsKoepfe(ursprung, ERLAUBT)
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { ...cors, 'Content-Type': 'application/json' } })
+
+  if (!ursprungErlaubt(ursprung, ERLAUBT)) return json({ fehler: 'Aufruf von dieser Seite nicht erlaubt.' }, 403)
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   if (req.method !== 'POST') return json({ fehler: 'Nur POST erlaubt.' }, 405)
 
   try {
-    const anfrage = pruefeAnfrage(await req.json().catch(() => null))
+    const anfrage = pruefeAnfrage(await lesJson(req))
 
-    const { data: erlaubt, error: rlFehler } = await db.rpc('rate_limit_pruefen', {
-      p_sitzung: anfrage.sitzung,
-      p_max: RATE_LIMIT_MAX,
-      p_fenster: RATE_LIMIT_FENSTER,
-    })
-    if (rlFehler) throw rlFehler
-    if (!erlaubt) return json({ fehler: 'Zu viele Anfragen. Bitte warte ein paar Minuten.' }, 429)
+    // Erst pro Sitzung, dann für alle zusammen (Kostendeckel für die KI).
+    if (!(await imLimit(anfrage.sitzung, RATE_LIMIT_SITZUNG.max, RATE_LIMIT_SITZUNG.fenster)))
+      return json({ fehler: 'Zu viele Anfragen. Bitte warte ein paar Minuten.' }, 429)
+    if (!(await imLimit(GLOBALE_SITZUNG, GLOBAL_MAX, RATE_LIMIT_GLOBAL.fenster)))
+      return json({ fehler: 'Gerade spielen sehr viele Leute. Bitte versuch es etwas später noch einmal.' }, 503)
 
-    const [themenRes, ursachenRes] = await Promise.all([
+    const [themenRes, ursachenRes, parteienRes] = await Promise.all([
       db.from('themen').select('id, name, beschreibung'),
       db.from('ursachen').select('id, thema_id, beschreibung, quelle_url'),
+      db.from('parteien').select('*'),
     ])
     if (themenRes.error) throw themenRes.error
     if (ursachenRes.error) throw ursachenRes.error
+    if (parteienRes.error) throw parteienRes.error
     const themen = themenRes.data as Thema[]
     const ursachen = ursachenRes.data as Ursache[]
+    const parteien = parteienRes.data as Partei[]
 
     const roh = await frageMistral(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle))
-    const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen)
+    const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen, parteien)
 
     // Abgeschlossene Runde anonym speichern (nur die neutrale Zusammenfassung).
     if (antwort.typ !== 'forderung') {
       // Der Originaltext wird nur geprüft, nicht gespeichert.
       const original = anfrage.verlauf.filter((n) => n.von === 'spieler').map((n) => n.text)
-      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original)
+      await speichereRunde(antwort, anfrage.parteien, anfrage.rolle, original, parteien)
     }
 
     return json(antwort)
@@ -97,6 +126,7 @@ async function speichereRunde(
   [parteiA, parteiB]: [number, number],
   rolle: Rolle | null,
   original: string[],
+  parteien: Partei[],
 ) {
   const stichwort = antwort.stichwort ?? null
   const basis = {
@@ -124,11 +154,7 @@ async function speichereRunde(
     return
   }
 
-  const [pRes, mRes] = await Promise.all([
-    db.from('parteien').select('*').in('id', [parteiA, parteiB]),
-    db.from('massnahmen').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB]),
-  ])
-  const parteien = (pRes.data ?? []) as Partei[]
+  const mRes = await db.from('massnahmen').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB])
   const massnahmen = (mRes.data ?? []) as Massnahme[]
   const a = parteien.find((p) => p.id === parteiA)
   const b = parteien.find((p) => p.id === parteiB)

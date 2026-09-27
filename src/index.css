@@ -821,3 +821,100 @@ textarea {
 .admin-fehler {
   color: var(--warnung);
 }
+
+/* ---------- Einwilligung, Fußzeile, Rechtsseiten ---------- */
+.einwilligung {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 1.25rem auto 1rem;
+  max-width: 420px;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.einwilligung input {
+  flex: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--akzent);
+}
+.fusszeile {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 20px;
+  padding: 16px 0 0;
+  font-size: 0.85rem;
+}
+.fusszeile a {
+  color: var(--text-leise);
+}
+.recht {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  overflow-wrap: break-word;
+}
+.recht-kopf {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+.recht-marke {
+  display: flex;
+}
+.recht h1 {
+  margin-top: 0.5rem;
+  font-size: clamp(1.6rem, 7.5vw, 2.2rem);
+  hyphens: auto;
+}
+.recht h2 {
+  margin-top: 1.75rem;
+  font-size: 1.15rem;
+}
+.recht ul {
+  padding-left: 1.25rem;
+}
+.recht-warnung {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--warnung);
+  color: var(--warnung);
+  background: rgb(255 176 32 / 0.08);
+}
+.einwilligung + .knopf-gross {
+  margin-top: 0;
+}
+.recht h3 {
+  margin-top: 1.25rem;
+  font-size: 1rem;
+}
+.skala {
+  display: grid;
+  gap: 6px;
+  margin: 0.5rem 0 1rem;
+}
+.skala div {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+.skala dt {
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--akzent);
+}
+.skala dd {
+  margin: 0;
+}
+.methode-link {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+}

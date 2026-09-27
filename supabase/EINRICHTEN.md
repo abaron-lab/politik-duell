@@ -1,4 +1,4 @@
-# Supabase einrichten (Meilenstein 3 und 4)
+# Supabase einrichten (Meilenstein 3 bis 5)
 
 Projekt: `xfprvshhexhzhfgkfxpi` (Region Frankfurt).
 
@@ -81,6 +81,44 @@ So läuft die Moderation:
 - Die Wortwolke auf dem Startbildschirm aktualisiert sich live (Supabase Realtime). Solange noch
   nichts freigegeben ist, zeigt sie Beispielwörter.
 
+### 5. Meilenstein 5: Start für die Öffentlichkeit
+
+Datenbank: **nichts zu tun** (keine neue Migration).
+
+1. **Edge Function aktualisieren:** in der Funktion `analyse` den Code durch
+   [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/dashboard/2-analyse.ts) ersetzen → **Deploy**.
+   Neu: globales Rate-Limit über alle Sitzungen (Kostendeckel für die KI, ohne IP-Adressen),
+   optionale Beschränkung auf die eigene Website, Größenlimit für Anfragen.
+2. **Secrets setzen** ([Edge Functions → Secrets](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions/secrets)):
+   - `ERLAUBTE_URSPRUENGE` – Adressen, von denen die App die Funktion aufrufen darf, mit Komma getrennt,
+     ohne Schrägstrich am Ende. `*` steht für einen Teil des Namens (für Vercel-Vorschauen), z. B.
+     `https://wer-liefert.de, https://www.wer-liefert.de, https://wer-liefert-*.vercel.app`.
+     Leer lassen = von überall erlaubt (praktisch beim Einrichten).
+   - `RATE_LIMIT_GLOBAL` – optional, KI-Anfragen pro Stunde für alle zusammen (Standard: 600).
+     Pro Sitzung gelten weiter 40 Anfragen in 30 Minuten.
+3. **Impressum und Datenschutz ausfüllen:** [`src/rechtliches/betreiber.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/src/rechtliches/betreiber.ts)
+   auf GitHub bearbeiten (Stift-Symbol) und alle Felder in `[…]` ersetzen: Name, ladungsfähige
+   Anschrift, E-Mail, Aufsichtsbehörde des Bundeslands. Solange etwas fehlt, zeigen beide Seiten
+   einen gelben Entwurfs-Hinweis. Die Seiten stehen unter `#/impressum` und `#/datenschutz` und
+   sind von jedem Bildschirm aus in der Fußzeile verlinkt.
+   **Empfehlung:** die Datenschutzerklärung vor dem Start rechtlich prüfen lassen.
+4. **Verträge zur Auftragsverarbeitung (AVV/DPA)** abschließen bzw. bestätigen:
+   - Supabase: Dashboard → *Organization → Legal Documents* → DPA
+   - Vercel: [vercel.com/legal/dpa](https://vercel.com/legal/dpa)
+   - Mistral: gilt mit den Nutzungsbedingungen; im Free-Plan unter *Privacy* das Training abschalten,
+     für den Start besser den bezahlten Plan (dort ohne Training).
+   - Mistral-Ausgabenlimit setzen (z. B. 5–20 €/Monat) – zusammen mit `RATE_LIMIT_GLOBAL` der Kostendeckel.
+5. **Vercel:** `vercel.json` im Repo setzt Sicherheits-Header (u. a. Content-Security-Policy, nur
+   Verbindungen zur eigenen Supabase-Instanz, Mikrofon nur für die eigene Seite). Nach dem Merge
+   baut Vercel automatisch neu. Wechselt das Supabase-Projekt, die Adresse in `vercel.json` anpassen.
+6. **Domain:** in Vercel unter *Settings → Domains* die Domain eintragen (z. B. `wer-liefert.de`) und
+   die angezeigten DNS-Einträge beim Domain-Anbieter setzen. Danach die Domain in
+   `ERLAUBTE_URSPRUENGE` ergänzen.
+7. **Supabase Auth:** unter [Authentication → URL Configuration](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/auth/url-configuration)
+   die *Site URL* auf die öffentliche Adresse setzen. „Allow new users to sign up“ ausgeschaltet lassen (Schritt 4.5).
+8. **Probe:** Seite öffnen → Einwilligung anhaken → eine Runde spielen. Im Browser (F12 → Konsole)
+   dürfen keine Meldungen „Content Security Policy“ erscheinen.
+
 ## Weg B: mit der Supabase-Kommandozeile (auf einem eigenen Rechner)
 
 ```bash
@@ -119,5 +157,8 @@ Danach im Dashboard:
   einem Tag gelöscht.
 - Mistral: Im kostenlosen Plan in der Mistral-Konsole unter *Privacy* die Nutzung für Training
   abschalten. Für den öffentlichen Start den bezahlten Plan nutzen (dort kein Training).
-- Supabase und Mistral protokollieren technisch bedingt Zugriffe; das gehört in die
-  Datenschutzerklärung (Meilenstein 5).
+- Supabase, Vercel und Mistral protokollieren technisch bedingt Zugriffe; das steht in der
+  Datenschutzerklärung (`src/rechtliches/Rechtliches.tsx`). Bei neuen Diensten oder neuen
+  gespeicherten Feldern die Erklärung mit anpassen.
+- Vor dem Spielstart gibt es eine ausdrückliche Einwilligung (Art. 9 DSGVO), weil Eingaben
+  politische Meinungen erkennen lassen können. Sie wird nicht gespeichert.
