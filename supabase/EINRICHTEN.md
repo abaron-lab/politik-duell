@@ -25,8 +25,10 @@ Die Dateien in `supabase/dashboard/` sind zum Kopieren gedacht. Auf GitHub gibt 
    Die App ruft ohne Login auf; geschützt ist die Funktion durch Eingabeprüfung und ein
    Rate-Limit (40 Anfragen pro 30 Minuten und Sitzung).
 
-Das Secret `MISTRAL_API_KEY` ist schon gespeichert ✔. Optional wechselt das Secret
-`MISTRAL_MODEL` das Modell (Standard: `mistral-small-latest`).
+Die Funktion braucht das Secret **`ANTHROPIC_API_KEY`** (Claude-API-Key aus der
+[Claude Console](https://platform.claude.com) → *API Keys*), einzutragen unter
+[Edge Functions → Secrets](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions/secrets).
+Optional wechselt das Secret `ANTHROPIC_MODEL` das Modell (Standard: `claude-haiku-4-5`).
 
 ### 3. App im Netz starten (Vercel, kostenlos)
 
@@ -111,7 +113,8 @@ Danach im Dashboard:
 - Gespeichert wird nur die neutrale Kurzfassung eines Problems (`runden.problem_text`) und ein Stichwort, keine
   Rohtexte, keine IPs, kein Audio. Die Sitzungs-ID für das Rate-Limit ist zufällig und wird nach
   einem Tag gelöscht.
-- Mistral: Im kostenlosen Plan in der Mistral-Konsole unter *Privacy* die Nutzung für Training
-  abschalten. Für den öffentlichen Start den bezahlten Plan nutzen (dort kein Training).
-- Supabase und Mistral protokollieren technisch bedingt Zugriffe; das gehört in die
+- Claude (Anthropic): Eingaben über die API werden laut Anthropics kommerziellen Bedingungen
+  nicht zum Training verwendet. Die Verarbeitung findet in den USA statt – das gehört mit in die
+  Datenschutzerklärung (Meilenstein 5).
+- Supabase und Anthropic protokollieren technisch bedingt Zugriffe; das gehört in die
   Datenschutzerklärung (Meilenstein 5).

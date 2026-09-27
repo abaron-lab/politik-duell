@@ -3,6 +3,7 @@
 // Im Supabase-Dashboard: Edge Functions → Deploy a new function → Via Editor,
 // Name „analyse“, diesen Inhalt komplett einfügen → Deploy.
 // analyse/index.ts
+import Anthropic from "npm:@anthropic-ai/sdk@0.128";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 // _shared/bewertung.ts
@@ -225,17 +226,80 @@ Antworte ausschlie\xDFlich mit einem JSON-Objekt:
 function nutzerNachrichten(verlauf, rolle) {
   const nachfragen = verlauf.filter((n) => n.von === "ki").length;
   const hinweis = `Rolle der Person: ${rolle ? ROLLEN_TEXT[rolle] : "keine Angabe"}.` + (nachfragen >= MAX_NACHFRAGEN ? ' Es wurde bereits zweimal nachgefragt: Ordne jetzt als "problem" oder "wert" ein, nicht als "forderung".' : "");
-  return [
-    {
-      role: "system",
-      content: hinweis
-    },
-    ...verlauf.map((n) => ({
-      role: n.von === "spieler" ? "user" : "assistant",
-      content: n.text
-    }))
-  ];
+  const nachrichten = verlauf.map((n) => ({
+    role: n.von === "spieler" ? "user" : "assistant",
+    content: n.text
+  }));
+  return {
+    hinweis,
+    nachrichten
+  };
 }
+var ANTWORT_SCHEMA = {
+  type: "object",
+  properties: {
+    typ: {
+      type: "string",
+      enum: [
+        "problem",
+        "forderung",
+        "wert"
+      ]
+    },
+    nachfrage: {
+      anyOf: [
+        {
+          type: "string"
+        },
+        {
+          type: "null"
+        }
+      ]
+    },
+    thema_id: {
+      anyOf: [
+        {
+          type: "integer"
+        },
+        {
+          type: "null"
+        }
+      ]
+    },
+    ursachen_ids: {
+      type: "array",
+      items: {
+        type: "integer"
+      }
+    },
+    zusammenfassung: {
+      type: "string"
+    },
+    stichwort: {
+      type: "string"
+    },
+    einschaetzung: {
+      anyOf: [
+        {
+          type: "string"
+        },
+        {
+          type: "null"
+        }
+      ]
+    }
+  },
+  required: [
+    "typ",
+    "nachfrage",
+    "thema_id",
+    "ursachen_ids",
+    "zusammenfassung",
+    "stichwort",
+    "einschaetzung"
+  ],
+  additionalProperties: false
+};
 var EingabeFehler = class extends Error {
 };
 function pruefeAnfrage(roh) {
@@ -312,7 +376,6 @@ function bereinigeAntwort(roh, verlauf, themen, ursachen) {
 // analyse/index.ts
 var RATE_LIMIT_MAX = 40;
 var RATE_LIMIT_FENSTER = "30 minutes";
-var MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions";
 var CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -330,35 +393,44 @@ var db = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVI
     persistSession: false
   }
 });
-async function frageMistral(system, nachrichten) {
-  const key = Deno.env.get("MISTRAL_API_KEY");
-  if (!key) throw new Error("MISTRAL_API_KEY fehlt");
-  const res = await fetch(MISTRAL_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: Deno.env.get("MISTRAL_MODEL") ?? "mistral-small-latest",
-      temperature: 0.1,
-      max_tokens: 400,
-      response_format: {
-        type: "json_object"
-      },
-      messages: [
-        {
-          role: "system",
-          content: system
-        },
-        ...nachrichten
-      ]
-    }),
-    signal: AbortSignal.timeout(2e4)
+var claude = null;
+async function frageKi(system, { hinweis, nachrichten }) {
+  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY fehlt");
+  claude ??= new Anthropic({
+    apiKey,
+    timeout: 2e4,
+    maxRetries: 1
   });
-  if (!res.ok) throw new Error(`Mistral ${res.status}: ${(await res.text()).slice(0, 200)}`);
-  const daten = await res.json();
-  return JSON.parse(daten.choices?.[0]?.message?.content ?? "{}");
+  const antwort = await claude.messages.create({
+    model: Deno.env.get("ANTHROPIC_MODEL") ?? "claude-haiku-4-5",
+    max_tokens: 800,
+    temperature: 0.1,
+    system: [
+      // Katalog und Regeln sind je Datenstand gleich → cachebar; der Hinweis wechselt pro Runde.
+      {
+        type: "text",
+        text: system,
+        cache_control: {
+          type: "ephemeral"
+        }
+      },
+      {
+        type: "text",
+        text: hinweis
+      }
+    ],
+    messages: nachrichten,
+    output_config: {
+      format: {
+        type: "json_schema",
+        schema: ANTWORT_SCHEMA
+      }
+    }
+  });
+  if (antwort.stop_reason === "refusal") throw new Error("KI hat die Antwort verweigert");
+  const text = antwort.content.find((b) => b.type === "text")?.text ?? "{}";
+  return JSON.parse(text);
 }
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", {
@@ -386,7 +458,7 @@ Deno.serve(async (req) => {
     if (ursachenRes.error) throw ursachenRes.error;
     const themen = themenRes.data;
     const ursachen = ursachenRes.data;
-    const roh = await frageMistral(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle));
+    const roh = await frageKi(systemPrompt(themen, ursachen), nutzerNachrichten(anfrage.verlauf, anfrage.rolle));
     const antwort = bereinigeAntwort(roh, anfrage.verlauf, themen, ursachen);
     if (antwort.typ !== "forderung") {
       const original = anfrage.verlauf.filter((n) => n.von === "spieler").map((n) => n.text);
