@@ -9,13 +9,13 @@ Die Dateien in `supabase/dashboard/` sind zum Kopieren gedacht. Auf GitHub gibt 
 
 ### 1. Datenbank anlegen
 
-1. Datei öffnen: [`supabase/dashboard/1-datenbank.sql`](https://github.com/abaron-lab/wer-liefert/blob/claude/meilenstein-1-ausfuehren-qpwxov/supabase/dashboard/1-datenbank.sql) → **Copy raw file**
+1. Datei öffnen: [`supabase/dashboard/1-datenbank.sql`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/dashboard/1-datenbank.sql) → **Copy raw file**
 2. [SQL Editor öffnen](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/sql/new), einfügen, **Run** klicken.
 3. Erwartet: „Success. No rows returned“. Im *Table Editor* stehen jetzt Tabellen mit Beispieldaten.
 
 ### 2. Edge Function anlegen
 
-1. Datei öffnen: [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/claude/meilenstein-1-ausfuehren-qpwxov/supabase/dashboard/2-analyse.ts) → **Copy raw file**
+1. Datei öffnen: [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/dashboard/2-analyse.ts) → **Copy raw file**
 2. [Edge Functions öffnen](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions) → **Deploy a new function** → **Via Editor**.
 3. Den vorhandenen Beispielcode komplett löschen, den kopierten Inhalt einfügen.
 4. Als Namen der Funktion **`analyse`** eintragen (genau so, klein geschrieben) → **Deploy function**.
@@ -39,9 +39,8 @@ Das Secret `MISTRAL_API_KEY` ist schon gespeichert ✔. Optional wechselt das Se
 
 1. Auf [vercel.com](https://vercel.com) mit GitHub anmelden → **Add New… → Project** → Repository `wer-liefert` importieren.
 2. Vercel erkennt Vite automatisch. **Deploy** klicken.
-3. Vercel baut zunächst den Branch `main`. Für den aktuellen Stand: im Projekt unter
-   **Deployments** das Deployment des Branches `claude/meilenstein-1-ausfuehren-qpwxov` öffnen
-   (entsteht bei jedem Push automatisch) – oder den Branch nach `main` übernehmen.
+3. Vercel veröffentlicht den Branch `main` unter der Hauptadresse. Für jeden anderen Branch
+   entsteht bei jedem Push ein Vorschau-Deployment (im Projekt unter **Deployments**).
 
 URL und Publishable Key liest die App aus der Datei `.env` im Repo; dort ist nichts einzutragen.
 
@@ -49,12 +48,12 @@ URL und Publishable Key liest die App aus der Datei `.env` im Repo; dort ist nic
 
 Einmalig, wenn Schritt 1–3 schon erledigt sind:
 
-1. **Datenbank ergänzen:** [`supabase/migrations/20260927000000_moderation.sql`](https://github.com/abaron-lab/wer-liefert/blob/claude/gallant-meitner-7zqaw2/supabase/migrations/20260927000000_moderation.sql)
+1. **Datenbank ergänzen:** [`supabase/migrations/20260927000000_moderation.sql`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/migrations/20260927000000_moderation.sql)
    → **Copy raw file** → im [SQL Editor](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/sql/new)
    einfügen → **Run**. Legt Stichwort- und Moderationsfelder, die Tabelle `admins` und die
    Zugriffsregeln für Admins an und schaltet Realtime für `runden` ein.
 2. **Edge Function aktualisieren:** in der Funktion `analyse` den Code durch
-   [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/claude/gallant-meitner-7zqaw2/supabase/dashboard/2-analyse.ts) ersetzen → **Deploy**
+   [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/dashboard/2-analyse.ts) ersetzen → **Deploy**
    (sie speichert jetzt ein Stichwort und prüft es mit dem automatischen Filter).
 3. **Admin-Konto anlegen:** [Authentication → Users](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/auth/users)
    → **Add user → Create new user**, E-Mail und ein starkes Passwort eintragen,
