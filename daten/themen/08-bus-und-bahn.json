@@ -12,14 +12,14 @@
     },
     {
       "id": 802,
-      "beschreibung": "Überaltertes Schienennetz mit großem Sanierungsstau",
-      "quelle_url": "https://www.bundesrechnungshof.de/SharedDocs/Downloads/DE/Berichte/2025/evaluation-luf-3_volltext.pdf?__blob=publicationFile&v=3",
+      "beschreibung": "Marodes, überaltertes Schienennetz mit wachsendem Nachholbedarf",
+      "quelle_url": "https://www.bundesrechnungshof.de/fileadmin/import/SharedDocs/Downloads/DE/Berichte/2025/evaluation-luf-3_volltext-evaluation-luf-3_volltext.pdf",
       "schlagwoerter": ["verspaetung", "baustelle", "stellwerk", "gleis", "marode", "ersatzverkehr", "schienenersatz", "streckensperrung"]
     },
     {
       "id": 803,
-      "beschreibung": "Zu wenige Fahrerinnen und Fahrer; Verkehrsbetriebe dünnen deshalb teils Fahrpläne aus",
-      "quelle_url": "https://www.iwkoeln.de/studien/jurek-tiedemann-gero-kunath-fachkraeftereport-juni-2025-verkehrsbetriebe-zwischen-personalmangel-und-finanzierungsfragen.html",
+      "beschreibung": "Zu wenige Bus- und Straßenbahnfahrerinnen und -fahrer; viele Stellen bleiben unbesetzt",
+      "quelle_url": "https://www.kofa.de/daten-und-fakten/studien/fachkraeftereport-juni-2025/",
       "schlagwoerter": ["personal", "fahrer", "busfahrer", "lokfuehrer", "personalmangel", "gestrichen", "faellt aus"]
     }
   ]

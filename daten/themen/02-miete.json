@@ -12,14 +12,14 @@
     },
     {
       "id": 202,
-      "beschreibung": "Mieten bei Neuvermietung steigen, besonders in Großstädten",
+      "beschreibung": "Mieten bei Neuvermietung liegen rund 43 % über Bestandsmieten, in großen Städten besonders hoch",
       "quelle_url": "https://www.bbsr.bund.de/BBSR/DE/startseite/topmeldungen/entwicklung-wohnungsmieten-2025.html",
       "schlagwoerter": ["mieterhoehung", "erhoeh", "teurer", "zu hoch", "teuer", "leisten", "indexmiete", "neuvermietung"]
     },
     {
       "id": 203,
-      "beschreibung": "Stark gestiegene Baukosten verteuern Neubau",
-      "quelle_url": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_126_61261.html",
+      "beschreibung": "Stark gestiegene Baukosten: Wohngebäude wurden 2010 bis 2025 um 89 % teurer, mehr als doppelt so stark wie die Inflation",
+      "quelle_url": "https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Baupreise-Immobilienpreisindex/_inhalt.html",
       "schlagwoerter": ["baukosten", "baupreise", "bauen", "bauantrag", "vorschrift", "material"]
     }
   ],

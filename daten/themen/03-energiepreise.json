@@ -18,8 +18,8 @@
     },
     {
       "id": 303,
-      "beschreibung": "Hohe Abhängigkeit von importiertem Gas und Öl mit schwankenden Weltmarktpreisen",
-      "quelle_url": "https://www.umweltbundesamt.de/daten/energie/primaerenergiegewinnung-importe",
+      "beschreibung": "Rund 70 % der Energie wird importiert, vor allem Öl, Gas und Steinkohle",
+      "quelle_url": "https://www.umweltbundesamt.de/daten/umweltzustand-trends/energie/primaerenergiegewinnung-importe",
       "schlagwoerter": ["gas", "oel", "import", "abhaengig", "heizoel"]
     }
   ],
