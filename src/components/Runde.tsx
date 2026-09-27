@@ -3,7 +3,7 @@ import { useDaten } from '../data/kontext'
 import { analysiere, AnalyseFehler, type Daten } from '../data/quelle'
 import { ROLLEN } from '../data/rollen'
 import type { AnalyseAntwort, Nachricht } from '../data/types'
-import { besteParteien, bewertePartei, rundenpunkte } from '../logic/bewertung'
+import { besteParteien, bewertePartei, findeAbdeckung, werteRunde } from '../logic/bewertung'
 import type { RundenErgebnis, Spieler } from '../spiel'
 import { SprechKnopf } from './SprechKnopf'
 import { parteiStil } from './stil'
@@ -17,7 +17,7 @@ function werteAus(
   nr: number,
   sprecher: 0 | 1,
   spieler: [Spieler, Spieler],
-  { themen, parteien, massnahmen }: Daten,
+  { themen, parteien, massnahmen, abdeckung }: Daten,
 ): RundenErgebnis {
   const rolle = spieler[sprecher].rolle
   const thema = themen.find((t) => t.id === analyse.thema_id) ?? null
@@ -27,19 +27,21 @@ function werteAus(
     return {
       nr, sprecher, rolle, thema: null, status: 'ungeprueft',
       zusammenfassung: analyse.zusammenfassung, einschaetzung: analyse.einschaetzung ?? null,
-      ergebnisse: null, punkte: [0, 0], beste: [],
+      ergebnisse: null, punkte: [0, 0], beste: [], nichtErfasst: [],
     }
   }
 
-  const ea = bewertePartei(spieler[0].partei, thema.id, analyse.ursachen_ids, rolle, massnahmen)
-  const eb = bewertePartei(spieler[1].partei, thema.id, analyse.ursachen_ids, rolle, massnahmen)
+  const ea = bewertePartei(spieler[0].partei, thema.id, analyse.ursachen_ids, rolle, massnahmen, abdeckung)
+  const eb = bewertePartei(spieler[1].partei, thema.id, analyse.ursachen_ids, rolle, massnahmen, abdeckung)
+  const { status, punkte } = werteRunde(ea, eb)
   return {
-    nr, sprecher, rolle, thema, status: 'gewertet',
+    nr, sprecher, rolle, thema, status,
     zusammenfassung: analyse.zusammenfassung,
     einschaetzung: null,
     ergebnisse: [ea, eb],
-    punkte: rundenpunkte(ea.punkte, eb.punkte),
-    beste: besteParteien(parteien, thema.id, analyse.ursachen_ids, rolle, massnahmen),
+    punkte,
+    beste: besteParteien(parteien, thema.id, analyse.ursachen_ids, rolle, massnahmen, abdeckung),
+    nichtErfasst: parteien.filter((p) => !findeAbdeckung(abdeckung, p.id, thema.id)),
   }
 }
 

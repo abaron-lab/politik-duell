@@ -62,6 +62,20 @@ export interface Massnahme {
   geprueft: boolean
 }
 
+/**
+ * Ist ein Thema für eine Partei vollständig erfasst? Fehlt der Eintrag, ist das
+ * Programm dazu noch nicht (fertig) ausgewertet – dann wird nicht gewertet.
+ */
+export interface AbdeckungEintrag {
+  thema_id: number
+  partei_id: number
+  /** `massnahmen`: alle Maßnahmen zum Thema erfasst; `keine`: Programm enthält nachweislich nichts dazu. */
+  art: 'massnahmen' | 'keine'
+  /** Nur bei `keine`: was durchsucht wurde. */
+  begruendung: string | null
+  stand: string
+}
+
 /** Antwortformat der Edge Function `analyse` (siehe CLAUDE.md). */
 export interface AnalyseAntwort {
   typ: 'problem' | 'forderung' | 'wert'

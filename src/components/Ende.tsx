@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { gesamtpunkte, type RundenErgebnis, type Spieler } from '../spiel'
+import { ohneTreffer } from '../logic/ohneTreffer'
 import { Belege } from './Aufloesung'
 import { Logo } from './Logo'
 import { parteiStil } from './stil'
@@ -60,18 +61,27 @@ export function Ende({
               <p className="zf-kopf">
                 <strong>Runde {r.nr}</strong> · {spieler[r.sprecher].name} ·{' '}
                 {r.thema ? r.thema.name : <span className="badge-ungeprueft">ungeprüft – keine Wertung</span>}
+                {r.status === 'unvollstaendig' && (
+                  <>
+                    {' '}
+                    <span className="badge-ungeprueft">keine Wertung – Daten unvollständig</span>
+                  </>
+                )}
               </p>
               <p className="zf-problem">„{r.zusammenfassung}“</p>
               {r.ergebnisse && (
                 <div className="zf-parteien">
-                  {r.ergebnisse.map((e, i) => (
-                    <div key={e.partei.id} className="zf-partei" style={parteiStil(e.partei.farbe)}>
-                      <span>
-                        {e.partei.kurzname}: {e.punkte} P. {r.punkte[i] === 1 && '✓'}
-                      </span>
-                      {e.treffer.length > 0 ? <Belege ergebnis={e} /> : <small className="zf-leer">nichts im Programm gefunden</small>}
-                    </div>
-                  ))}
+                  {r.ergebnisse.map((e, i) => {
+                    const leer = ohneTreffer(e)
+                    return (
+                      <div key={e.partei.id} className="zf-partei" style={parteiStil(e.partei.farbe)}>
+                        <span>
+                          {e.partei.kurzname}: {e.abdeckung ? `${e.punkte} P.` : '–'} {r.punkte[i] === 1 && '✓'}
+                        </span>
+                        {leer ? <small className="zf-leer">{leer.kurz}</small> : <Belege ergebnis={e} />}
+                      </div>
+                    )
+                  })}
                 </div>
               )}
               {r.beste.length > 0 && (

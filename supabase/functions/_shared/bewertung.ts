@@ -1,4 +1,4 @@
-import type { Massnahme, Partei, Rolle } from './typen.ts'
+import type { AbdeckungEintrag, Massnahme, Partei, Rolle } from './typen.ts'
 
 // Deterministische Punktevergabe aus der kuratierten Datenbank.
 // Die KI ist hier nicht beteiligt.
@@ -17,7 +17,12 @@ export interface ParteiErgebnis {
   partei: Partei
   punkte: number
   treffer: Treffer[]
+  /** Erfassung des Themas für diese Partei; null = noch nicht erfasst (keine Wertung möglich). */
+  abdeckung: AbdeckungEintrag | null
 }
+
+export const findeAbdeckung = (abdeckung: AbdeckungEintrag[], parteiId: number, themaId: number) =>
+  abdeckung.find((a) => a.partei_id === parteiId && a.thema_id === themaId) ?? null
 
 export function massnahmenPunkte(m: Massnahme, rolle: Rolle | null) {
   const mod = rolle ? m.rollen_modifikator?.[rolle] : undefined
@@ -32,7 +37,8 @@ export function massnahmenPunkte(m: Massnahme, rolle: Rolle | null) {
 /**
  * Rundenpunkte einer Partei = Summe über die zugeordneten Ursachen.
  * Pro Ursache zählt die beste Maßnahme der Partei, die diese Ursache adressiert.
- * Keine Maßnahme zum Thema → 0 Punkte.
+ * Keine Maßnahme zum Thema → 0 Punkte. Ob das „nichts im Programm“ oder
+ * „noch nicht erfasst“ heißt, steht in `abdeckung`.
  */
 export function bewertePartei(
   partei: Partei,
@@ -40,7 +46,11 @@ export function bewertePartei(
   ursachenIds: number[],
   rolle: Rolle | null,
   massnahmen: Massnahme[],
+  abdeckung: AbdeckungEintrag[],
 ): ParteiErgebnis {
+  // Nicht erfasst → keine Maßnahmen verwenden, auch wenn (inkonsistent) welche vorliegen.
+  const erfasst = findeAbdeckung(abdeckung, partei.id, themaId)
+  if (!erfasst) return { partei, punkte: 0, treffer: [], abdeckung: null }
   const eigene = massnahmen.filter((m) => m.partei_id === partei.id && m.thema_id === themaId)
   const trefferJeMassnahme = new Map<number, Treffer>()
   let punkte = 0
@@ -68,7 +78,7 @@ export function bewertePartei(
     }
   }
 
-  return { partei, punkte, treffer: [...trefferJeMassnahme.values()] }
+  return { partei, punkte, treffer: [...trefferJeMassnahme.values()], abdeckung: erfasst }
 }
 
 /**
@@ -81,15 +91,32 @@ export function rundenpunkte(a: number, b: number): [number, number] {
   return a > b ? [1, 0] : [0, 1]
 }
 
-/** Alle Parteien mit der höchsten Punktzahl zu diesem Problem (leer, wenn niemand liefert). */
+/**
+ * Wertung einer Runde zwischen zwei Parteien. Ist das Thema für eine der
+ * beiden noch nicht erfasst, wird nicht gewertet: Fehlende Daten dürfen
+ * keiner Partei einen Punkt kosten.
+ */
+export function werteRunde(a: ParteiErgebnis, b: ParteiErgebnis): { status: 'gewertet' | 'unvollstaendig'; punkte: [number, number] } {
+  if (!a.abdeckung || !b.abdeckung) return { status: 'unvollstaendig', punkte: [0, 0] }
+  return { status: 'gewertet', punkte: rundenpunkte(a.punkte, b.punkte) }
+}
+
+/**
+ * Alle Parteien mit der höchsten Punktzahl zu diesem Problem (leer, wenn niemand liefert).
+ * Berücksichtigt nur Parteien, für die das Thema erfasst ist.
+ */
 export function besteParteien(
   parteien: Partei[],
   themaId: number,
   ursachenIds: number[],
   rolle: Rolle | null,
   massnahmen: Massnahme[],
+  abdeckung: AbdeckungEintrag[],
 ): ParteiErgebnis[] {
-  const alle = parteien.map((p) => bewertePartei(p, themaId, ursachenIds, rolle, massnahmen))
+  const alle = parteien
+    .map((p) => bewertePartei(p, themaId, ursachenIds, rolle, massnahmen, abdeckung))
+    .filter((e) => e.abdeckung)
+  if (!alle.length) return []
   const max = Math.max(...alle.map((e) => e.punkte))
   if (max <= 0) return []
   return alle.filter((e) => e.punkte === max)

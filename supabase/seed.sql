@@ -1,9 +1,10 @@
--- AUTOMATISCH ERZEUGT aus src/data/mock.ts (npm run seed) – nicht von Hand bearbeiten.
+-- AUTOMATISCH ERZEUGT aus daten/ (npm run seed) – nicht von Hand bearbeiten.
 -- FIKTIVE Platzhalterdaten: Parteien, Maßnahmen, Punkte und Links sind erfunden.
 
--- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen werden neu geschrieben.
+-- Mehrfach ausführbar: Stammdaten per Upsert, Maßnahmen und Abdeckung werden neu geschrieben.
 -- Gespielte Runden bleiben erhalten.
 delete from public.massnahmen;
+delete from public.abdeckung;
 
 insert into public.parteien (id, name, kurzname, farbe, programm_url, programm_stand) values
   (1, 'Partei Alpha', 'Alpha', '#2bb3a3', 'https://example.org/mock/alpha/wahlprogramm.pdf', '2026-01-01'),
@@ -51,3 +52,20 @@ insert into public.massnahmen (id, thema_id, partei_id, beschreibung, ursachen_i
   (14, 3, 5, 'Langfristige Lieferverträge für Gas absichern', '{303}', 1, 2, null, 'Mehr Planbarkeit, aber kaum Einfluss auf Strom- und Netzkosten.', 'https://example.org/mock/epsilon/wahlprogramm.pdf#page=15', null, '2026-01-01', false);
 
 select setval(pg_get_serial_sequence('public.massnahmen', 'id'), (select max(id) from public.massnahmen));
+
+insert into public.abdeckung (thema_id, partei_id, art, begruendung, stand) values
+  (1, 1, 'massnahmen', null, '2026-01-01'),
+  (1, 2, 'massnahmen', null, '2026-01-01'),
+  (1, 3, 'massnahmen', null, '2026-01-01'),
+  (1, 4, 'massnahmen', null, '2026-01-01'),
+  (1, 5, 'keine', 'Kapitel „Gesundheit“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).', '2026-01-01'),
+  (2, 1, 'massnahmen', null, '2026-01-01'),
+  (2, 2, 'massnahmen', null, '2026-01-01'),
+  (2, 3, 'keine', 'Kapitel „Bauen und Wohnen“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).', '2026-01-01'),
+  (2, 4, 'massnahmen', null, '2026-01-01'),
+  (2, 5, 'massnahmen', null, '2026-01-01'),
+  (3, 1, 'massnahmen', null, '2026-01-01'),
+  (3, 2, 'keine', 'Kapitel „Energie und Klima“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).', '2026-01-01'),
+  (3, 3, 'massnahmen', null, '2026-01-01'),
+  (3, 4, 'massnahmen', null, '2026-01-01'),
+  (3, 5, 'massnahmen', null, '2026-01-01');

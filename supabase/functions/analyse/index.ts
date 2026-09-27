@@ -11,10 +11,10 @@
 // Automatisch vorhanden: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { bewertePartei } from '../_shared/bewertung.ts'
+import { bewertePartei, werteRunde } from '../_shared/bewertung.ts'
 import { bereinigeAntwort, EingabeFehler, nutzerNachrichten, pruefeAnfrage, systemPrompt } from '../_shared/ki.ts'
 import { pruefeText } from '../_shared/moderation.ts'
-import type { AnalyseAntwort, Massnahme, Partei, Rolle, Thema, Ursache } from '../_shared/typen.ts'
+import type { AbdeckungEintrag, AnalyseAntwort, Massnahme, Partei, Rolle, Thema, Ursache } from '../_shared/typen.ts'
 import {
   corsKoepfe,
   erlaubteUrspruenge,
@@ -154,14 +154,27 @@ async function speichereRunde(
     return
   }
 
-  const mRes = await db.from('massnahmen').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB])
-  const massnahmen = (mRes.data ?? []) as Massnahme[]
+  const [mRes, aRes] = await Promise.all([
+    db.from('massnahmen').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB]),
+    db.from('abdeckung').select('*').eq('thema_id', antwort.thema_id).in('partei_id', [parteiA, parteiB]),
+  ])
+  // Speichern ist Nebensache: Ein Fehler hier soll die Antwort an die App nicht verhindern.
+  const fehler = mRes.error ?? aRes.error
+  if (fehler) {
+    console.error('speichereRunde:', fehler.message)
+    return
+  }
+  const massnahmen = mRes.data as Massnahme[]
+  const abdeckung = aRes.data as AbdeckungEintrag[]
   const a = parteien.find((p) => p.id === parteiA)
   const b = parteien.find((p) => p.id === parteiB)
   if (!a || !b) return
 
-  const pa = bewertePartei(a, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen).punkte
-  const pb = bewertePartei(b, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen).punkte
+  const ea = bewertePartei(a, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen, abdeckung)
+  const eb = bewertePartei(b, antwort.thema_id, antwort.ursachen_ids, rolle, massnahmen, abdeckung)
+  const { status } = werteRunde(ea, eb)
   // Gespeichert werden die Rundenpunkte (Summe über die Ursachen), nicht der Spielpunkt.
-  await db.from('runden').insert({ ...basis, thema_id: antwort.thema_id, status: 'gewertet', punkte_a: pa, punkte_b: pb })
+  // Ist das Thema für eine Partei noch nicht erfasst, gibt es keine Punkte.
+  const punkte = status === 'gewertet' ? { punkte_a: ea.punkte, punkte_b: eb.punkte } : {}
+  await db.from('runden').insert({ ...basis, thema_id: antwort.thema_id, status, ...punkte })
 }

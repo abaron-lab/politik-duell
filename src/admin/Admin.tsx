@@ -305,7 +305,7 @@ function RundenEintrag({
       {offen && warnung && <p className="admin-warnung">Achtung, Stichwort: {warnung}</p>}
       <div className="admin-aktionen">
         <span className="admin-klein">
-          {zeit(runde.created_at)} · {runde.status === 'gewertet' ? 'gewertet' : 'ungeprüft'}
+          {zeit(runde.created_at)} · {runde.status === 'gewertet' ? 'gewertet' : runde.status === 'unvollstaendig' ? 'Partei noch nicht erfasst' : 'ungeprüft'}
         </span>
         {offen ? (
           <>

@@ -94,6 +94,7 @@ Datenbank: **nichts zu tun** (keine neue Migration).
      ohne Schrägstrich am Ende. `*` steht für einen Teil des Namens (für Vercel-Vorschauen), z. B.
      `https://wer-liefert.de, https://www.wer-liefert.de, https://wer-liefert-*.vercel.app`.
      Leer lassen = von überall erlaubt (praktisch beim Einrichten).
+     Aktueller Wert, Erklärung und Fehlersuche: [`ERLAUBTE_URSPRUENGE.md`](ERLAUBTE_URSPRUENGE.md).
    - `RATE_LIMIT_GLOBAL` – optional, KI-Anfragen pro Stunde für alle zusammen (Standard: 600).
      Pro Sitzung gelten weiter 40 Anfragen in 30 Minuten.
 3. **Impressum und Datenschutz ausfüllen:** [`src/rechtliches/betreiber.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/src/rechtliches/betreiber.ts)
@@ -139,6 +140,20 @@ Admin-Konto danach wie in Weg A, Schritt 4.3–4.5.
 - Fehler der Funktion: *Edge Functions → analyse → Logs*.
 - Moderation: neue Runden erscheinen in `#/admin` unter „Offen“ ohne Neuladen; nach „Freigeben“
   taucht das Stichwort auf dem Startbildschirm auf (ggf. ein paar Sekunden warten).
+
+### 6. Abdeckung: „nichts im Programm“ vs. „noch nicht erfasst“
+
+Einmalig, **in dieser Reihenfolge** (sonst zeigt die App „Die Spieldaten konnten nicht geladen werden“):
+
+1. **Datenbank ergänzen:** [`supabase/migrations/20260928000000_abdeckung.sql`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/migrations/20260928000000_abdeckung.sql)
+   → **Copy raw file** → im [SQL Editor](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/sql/new)
+   einfügen → **Run**. Legt die Tabelle `abdeckung` an und erlaubt den Rundenstatus `unvollstaendig`.
+2. **Daten einspielen:** Inhalt von [`supabase/seed.sql`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/seed.sql)
+   im SQL Editor ausführen (füllt `abdeckung`; gespielte Runden bleiben erhalten).
+3. **Edge Function aktualisieren:** in der Funktion `analyse` den Code durch
+   [`supabase/dashboard/2-analyse.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/dashboard/2-analyse.ts) ersetzen → **Deploy**
+   (speichert Runden mit einer noch nicht erfassten Partei als `unvollstaendig`, ohne Punkte).
+4. Erst danach den Branch nach `main` übernehmen, damit Vercel die neue App veröffentlicht.
 
 ## Nach Änderungen am Code
 

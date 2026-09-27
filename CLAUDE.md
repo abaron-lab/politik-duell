@@ -33,6 +33,8 @@ Pro Maßnahme in der Datenbank:
 
 Rundenpunkte = Summe über die zugeordneten Ursachen. Höhere Summe gewinnt die Runde (1 Punkt). Gleichstand: beide je 1 Punkt. Hat eine Partei keine Maßnahme zum Thema: 0.
 
+Ist ein Thema für eine der beiden Parteien noch **nicht erfasst** (Programm nicht vollständig ausgewertet und geprüft, Tabelle `abdeckung`), wird die Runde nicht gewertet – fehlende Daten dürfen keiner Partei einen Punkt kosten. Die Anzeige unterscheidet „keine Maßnahme zu diesen Ursachen“, „nichts zum Thema im Programm“ und „noch nicht erfasst“.
+
 Ist ein Thema nicht in der DB: KI gibt eine vorläufige Einschätzung, deutlich als **„ungeprüft – keine Wertung"** gekennzeichnet, ohne Punkte und ohne Links. Eintrag landet in einer Review-Warteschlange.
 
 ## Tech-Stack
@@ -114,5 +116,5 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 ## Offene Punkte
 
 - Welche Parteien sind dabei (Vorschlag: CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW)?
-- Wer pflegt und prüft die Bewertungen? Idee: öffentlich im Repo als JSON, Änderungen per Pull Request mit Quellenpflicht.
+- Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung, Vier-Augen-Prinzip über `geprueft`, siehe `daten/README.md`) – offen ist, welche Personen das übernehmen.
 - Domain prüfen und sichern (z. B. werliefert.de oder wer-liefert.de).
