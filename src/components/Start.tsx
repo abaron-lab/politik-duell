@@ -1,3 +1,4 @@
+import { useId, useState } from 'react'
 import { Logo } from './Logo'
 import { Wortwolke } from './Wortwolke'
 
@@ -12,6 +13,8 @@ export function Start({
   onBeispieldaten: () => void
   onStart: () => void
 }) {
+  const [einverstanden, setEinverstanden] = useState(false)
+  const id = useId()
   return (
     <main className="start">
       <Wortwolke />
@@ -31,14 +34,31 @@ export function Start({
             </button>
           </div>
         ) : (
-          <button className="knopf knopf-gross" onClick={onStart} disabled={!bereit}>
-            {bereit ? 'Spiel starten' : 'Lade Spieldaten …'}
-          </button>
+          <>
+            {/* Ausdrückliche Einwilligung (Art. 9 DSGVO): Eingaben können politische Meinungen erkennen lassen. */}
+            <label className="einwilligung" htmlFor={id}>
+              <input
+                id={id}
+                type="checkbox"
+                checked={einverstanden}
+                onChange={(e) => setEinverstanden(e.target.checked)}
+              />
+              <span>
+                Ich bin einverstanden, dass eine KI meine Eingaben wie in der{' '}
+                <a href="#/datenschutz">Datenschutzerklärung</a> beschrieben einordnet. Mir ist klar, dass sie
+                politische Meinungen erkennen lassen können.
+              </span>
+            </label>
+            <button className="knopf knopf-gross" onClick={onStart} disabled={!bereit || !einverstanden}>
+              {bereit ? 'Spiel starten' : 'Lade Spieldaten …'}
+            </button>
+          </>
         )}
         <p className="datenschutz">
-          <strong>Datenschutz:</strong> Keine Konten, keine IP-Adressen, kein Audio. Deine Eingaben ordnet eine KI
-          (Mistral, EU) ein. Gespeichert wird nur eine anonyme, neutrale Kurzfassung des Problems; ein Stichwort
-          daraus kann nach Prüfung in der Wortwolke erscheinen.
+          <strong>Datenschutz:</strong> Keine Konten, keine Cookies, keine IP-Adressen, kein Audio. Deine Eingaben
+          ordnet eine KI (Mistral, EU) ein. Gespeichert wird nur eine anonyme, neutrale Kurzfassung des Problems; ein
+          Stichwort daraus kann nach Prüfung in der Wortwolke erscheinen.{' '}
+          <a href="#/datenschutz">Mehr erfahren</a>
         </p>
       </div>
     </main>

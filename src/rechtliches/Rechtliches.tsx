@@ -1,0 +1,202 @@
+import { useEffect } from 'react'
+import { Logo } from '../components/Logo'
+import { BETREIBER, betreiberVollstaendig, DATENSCHUTZ_STAND } from './betreiber'
+
+// Impressum (#/impressum) und Datenschutzerklärung (#/datenschutz).
+// Die Texte beschreiben, was die App tatsächlich tut – bei Änderungen an
+// Datenflüssen (neue Dienste, neue gespeicherte Felder) hier mit anpassen.
+
+export type RechtsSeite = 'impressum' | 'datenschutz'
+
+function Unvollstaendig() {
+  if (betreiberVollstaendig()) return null
+  return (
+    <p className="recht-warnung" role="alert">
+      Entwurf: Die Angaben zum Betreiber fehlen noch (Datei <code>src/rechtliches/betreiber.ts</code>).
+    </p>
+  )
+}
+
+function Anschrift() {
+  return (
+    <p>
+      {BETREIBER.name}
+      <br />
+      {BETREIBER.strasse}
+      <br />
+      {BETREIBER.ort}
+      <br />
+      E-Mail: <a href={`mailto:${BETREIBER.email}`}>{BETREIBER.email}</a>
+      {BETREIBER.telefon && (
+        <>
+          <br />
+          Telefon: {BETREIBER.telefon}
+        </>
+      )}
+    </p>
+  )
+}
+
+export function Rechtliches({ seite, onZurueck }: { seite: RechtsSeite; onZurueck: () => void }) {
+  useEffect(() => {
+    scrollTo(0, 0)
+  }, [seite])
+
+  return (
+    <main className="seite recht">
+      <header className="recht-kopf">
+        <button className="knopf knopf-leise" onClick={onZurueck}>
+          ← Zurück
+        </button>
+        <a href="#/" className="recht-marke" aria-label="Wer liefert? – Startseite">
+          <Logo groesse={32} />
+        </a>
+      </header>
+      <Unvollstaendig />
+      {seite === 'impressum' ? <Impressum /> : <Datenschutz />}
+    </main>
+  )
+}
+
+function Impressum() {
+  return (
+    <article>
+      <h1>Impressum</h1>
+      <h2>Angaben nach § 5 DDG</h2>
+      <Anschrift />
+      <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+      <p>{BETREIBER.inhaltlichVerantwortlich}</p>
+      <h2>Zum Projekt</h2>
+      <p>
+        „Wer liefert?“ ist ein unabhängiges, nicht-kommerzielles Spiel. Es wird von keiner Partei beauftragt oder
+        finanziert. Alle Parteien werden nach denselben, offen einsehbaren Kriterien bewertet; die Bewertungen und
+        ihre Belege stehen im <a href={BETREIBER.quellcode}>öffentlichen Quellcode</a>. Fehler oder fehlende Belege
+        bitte dort melden oder per E-Mail.
+      </p>
+      <h2>Haftung für Links</h2>
+      <p>
+        Die Beleg-Links führen zu Wahlprogrammen und Studien auf fremden Websites. Für deren Inhalte sind allein die
+        jeweiligen Anbieter verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar; wird uns
+        einer bekannt, entfernen wir den Link.
+      </p>
+    </article>
+  )
+}
+
+function Datenschutz() {
+  return (
+    <article>
+      <h1>Datenschutzerklärung</h1>
+      <p className="meta">Stand: {DATENSCHUTZ_STAND}</p>
+
+      <h2>Das Wichtigste in Kürze</h2>
+      <ul>
+        <li>Keine Konten, keine Cookies, kein Tracking, keine Werbung.</li>
+        <li>Wir speichern keine IP-Adressen und kein Audio.</li>
+        <li>
+          Was du eingibst, ordnet eine KI (Mistral AI, Paris) ein. Wir speichern davon nur eine anonyme, neutrale
+          Kurzfassung und ein Stichwort – nicht deinen Originaltext.
+        </li>
+        <li>Ein Stichwort erscheint erst nach Prüfung durch uns in der öffentlichen Wortwolke.</li>
+      </ul>
+
+      <h2>1. Verantwortlich</h2>
+      <Anschrift />
+
+      <h2>2. Aufruf der Website</h2>
+      <p>
+        Die Website wird bei Vercel Inc. (USA) gehostet und über deren weltweites Netz ausgeliefert. Beim Aufruf
+        verarbeitet Vercel technisch notwendige Verbindungsdaten (IP-Adresse, Zeitpunkt, aufgerufene Datei,
+        Browserkennung) in Server-Logs, um die Seite auszuliefern und vor Angriffen zu schützen. Rechtsgrundlage ist
+        unser berechtigtes Interesse an einem sicheren Betrieb (Art. 6 Abs. 1 lit. f DSGVO). Mit Vercel besteht ein
+        Vertrag zur Auftragsverarbeitung; Übermittlungen in die USA stützen sich auf das EU-US Data Privacy Framework
+        bzw. auf Standardvertragsklauseln (Art. 45, 46 DSGVO).
+      </p>
+
+      <h2>3. Spieldaten und Datenbank</h2>
+      <p>
+        Parteien, Themen und Bewertungen lädt die App aus unserer Datenbank bei Supabase (Supabase Inc.,
+        Rechenzentrum in Frankfurt am Main). Supabase verarbeitet dabei technisch notwendige Verbindungsdaten
+        einschließlich der IP-Adresse in kurzzeitigen Zugriffsprotokollen (Art. 6 Abs. 1 lit. f DSGVO,
+        Auftragsverarbeitungsvertrag). In unseren eigenen Tabellen speichern wir keine IP-Adressen.
+      </p>
+
+      <h2>4. Deine Eingaben im Spiel</h2>
+      <p>
+        Wenn du ein Problem eingibst oder einsprichst, schickt die App den Text zusammen mit der gewählten Rolle und den
+        beiden gewählten Parteien an unsere Funktion bei Supabase (Frankfurt). Diese bittet Mistral AI SAS (Paris,
+        Frankreich) um eine Einordnung: Ist es ein Problem, eine Forderung oder eine Haltung, und zu welchem Thema
+        gehört es? Die Punkte vergibt nicht die KI, sondern unsere feste Bewertungstabelle.
+      </p>
+      <p>
+        Deine Eingaben können politische Meinungen erkennen lassen – das sind besonders geschützte Daten (Art. 9
+        DSGVO). Deshalb fragen wir vor dem Spielstart ausdrücklich nach deiner Einwilligung (Art. 6 Abs. 1 lit. a und
+        Art. 9 Abs. 2 lit. a DSGVO). Bitte gib keine Namen, Adressen oder anderen persönlichen Details ein.
+      </p>
+      <p>
+        Mistral verarbeitet den Text als Auftragsverarbeiter nur für die Einordnung und nicht zum Training seiner
+        Modelle; nach seinen Bedingungen kann Mistral Anfragen für begrenzte Zeit zur Missbrauchserkennung aufbewahren.
+        Wir selbst speichern den Originaltext nicht. Er wird nur kurz automatisch auf Beleidigungen, Namen und
+        Kontaktdaten geprüft und dann verworfen.
+      </p>
+      <p>
+        <strong>Gespeichert wird pro Runde:</strong> eine neutrale Kurzfassung des Problems (höchstens 200 Zeichen,
+        von der KI ohne Namen und persönliche Details formuliert), ein Stichwort, das zugeordnete Thema, die beiden
+        gewählten Parteien, deren Punkte und der Zeitpunkt. Deine Rolle und dein Name im Spiel werden nicht
+        gespeichert. Diese Daten lassen sich keiner Person zuordnen. Probleme zu Themen, die wir noch nicht bewertet
+        haben, landen zusätzlich mit einer kurzen vorläufigen Einschätzung in einer Liste zur redaktionellen Prüfung.
+      </p>
+      <p>
+        <strong>Wortwolke:</strong> Stichwörter erscheinen erst in der öffentlichen Wortwolke, nachdem wir sie geprüft
+        und freigegeben haben.
+      </p>
+      <p>
+        <strong>Widerruf:</strong> Du kannst deine Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen,
+        indem du nicht weiterspielst. Bereits gespeicherte Kurzfassungen sind anonym; wir können sie dir deshalb
+        nicht mehr zuordnen und nicht gezielt löschen.
+      </p>
+
+      <h2>5. Spracheingabe</h2>
+      <p>
+        Der Mikrofon-Knopf nutzt die Spracherkennung deines Browsers. Dabei schickt der Browser die Aufnahme an den
+        Dienst seines Herstellers – bei Chrome an Google, bei Safari an Apple (teils auch direkt auf dem Gerät). Das
+        geschieht zwischen dir und dem Browser-Hersteller nach dessen Datenschutzbestimmungen; wir erhalten nur den
+        erkannten Text und nie Audio. Die Spracheingabe ist freiwillig – du kannst jederzeit tippen.
+      </p>
+
+      <h2>6. Schutz vor Missbrauch</h2>
+      <p>
+        Damit die KI nicht überlastet wird, begrenzen wir die Anfragen. Dafür erzeugt die App eine zufällige
+        Sitzungsnummer und legt sie im Sitzungsspeicher des Browsers ab (sessionStorage – wird beim Schließen des Tabs
+        gelöscht). Auf dem Server steht sie mit einem Zähler höchstens einen Tag lang. Sie enthält keine Angaben
+        über dich. Das Speichern im Browser ist für den Dienst unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG),
+        Rechtsgrundlage für die Verarbeitung ist Art. 6 Abs. 1 lit. f DSGVO.
+      </p>
+
+      <h2>7. Links, Teilen und Schriften</h2>
+      <p>
+        Beleg-Links führen zu fremden Websites (z. B. Wahlprogramme, Studien); erst mit dem Klick gelten deren
+        Datenschutzbestimmungen. „Teilen“ nutzt die Teilen-Funktion deines Geräts bzw. die Zwischenablage – wir
+        erfahren davon nichts. Wir laden keine Schriften oder Skripte von fremden Servern.
+      </p>
+
+      <h2>8. Moderation</h2>
+      <p>
+        Nur für die Moderation gibt es Konten (Supabase Auth, E-Mail und Passwort). Sie betreffen ausschließlich
+        unser Moderationsteam, nicht die Spieler:innen.
+      </p>
+
+      <h2>9. Deine Rechte</h2>
+      <p>
+        Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit
+        und Widerspruch (Art. 15–21 DSGVO) sowie auf Widerruf einer Einwilligung (Art. 7 Abs. 3 DSGVO). Da wir keine
+        Daten speichern, die sich dir zuordnen lassen, können wir Anfragen zu gespeicherten Kurzfassungen meist nicht
+        beantworten (Art. 11 DSGVO). Schreib uns trotzdem gern: <a href={`mailto:${BETREIBER.email}`}>{BETREIBER.email}</a>.
+      </p>
+      <p>
+        Du kannst dich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren, zum Beispiel bei der für uns
+        zuständigen: <a href={BETREIBER.aufsichtsbehoerde.url}>{BETREIBER.aufsichtsbehoerde.name}</a>.
+      </p>
+    </article>
+  )
+}

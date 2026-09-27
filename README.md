@@ -44,6 +44,15 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 - Admin-Ansicht unter `#/admin` (Supabase Auth, nur Konten in `admins`): Stichwort anpassen, freigeben, ablehnen, zurückziehen, löschen; Review-Warteschlange für neue Themen abhaken
 - Zugriffsregeln: Admins dürfen nur die Moderationsfelder ändern (nicht Punkte, Parteien oder Texte); anon sieht weiter nur Freigegebenes
 
+## Stand: Meilenstein 5 – Rechtliches, Rate-Limit, Deployment
+
+- Datenschutzerklärung (`#/datenschutz`) und Impressum (`#/impressum`), verlinkt in der Fußzeile jedes Bildschirms; ein laufendes Spiel bleibt beim Öffnen erhalten
+- Betreiberangaben zentral in `src/rechtliches/betreiber.ts` – solange Platzhalter drinstehen, zeigen beide Seiten einen Entwurfs-Hinweis
+- Ausdrückliche Einwilligung vor dem Spielstart (Art. 9 DSGVO: Eingaben können politische Meinungen erkennen lassen)
+- Rate-Limit zweistufig: pro Sitzung (40 / 30 min) und global über alle Sitzungen (Standard 600 / h, Secret `RATE_LIMIT_GLOBAL`) als Kostendeckel – ohne IP-Adressen; Anfragen über 8 KB werden abgelehnt
+- Optional nur Aufrufe von der eigenen Website (Secret `ERLAUBTE_URSPRUENGE`, mit `*` für Vercel-Vorschauen)
+- `vercel.json`: Build-Einstellungen und Sicherheits-Header (Content-Security-Policy, HSTS, `Referrer-Policy: no-referrer`, Mikrofon nur für die eigene Seite), lange Cache-Zeiten für Assets
+
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
 
 ## Entwicklung
@@ -73,6 +82,8 @@ npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 | `src/components/` | Bildschirme: Start (mit Wortwolke), Setup, Runde, Auflösung, Ende |
 | `src/data/wortwolke.ts` | Daten der Wortwolke (Realtime) |
 | `src/admin/` | Admin-Ansicht zur Moderation (`#/admin`, eigenes Bundle) |
+| `src/rechtliches/` | Impressum, Datenschutzerklärung und Betreiberangaben |
+| `vercel.json` | Deployment: Build und Sicherheits-Header |
 
 ## Bewertungsregeln im Prototyp
 

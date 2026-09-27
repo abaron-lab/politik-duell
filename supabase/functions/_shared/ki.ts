@@ -82,11 +82,15 @@ export function nutzerNachrichten(verlauf: Nachricht[], rolle: Rolle | null) {
 
 export class EingabeFehler extends Error {}
 
+const SITZUNG_MUSTER = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
 /** Prüft die Anfrage der App. Wirft EingabeFehler bei ungültigen Daten. */
 export function pruefeAnfrage(roh: unknown): AnalyseAnfrage {
   const a = roh as Partial<AnalyseAnfrage> | null
   if (!a || typeof a !== 'object') throw new EingabeFehler('Anfrage fehlt.')
-  if (typeof a.sitzung !== 'string' || !/^[0-9a-f-]{36}$/i.test(a.sitzung)) throw new EingabeFehler('Ungültige Sitzung.')
+  // Nur zufällige UUIDs (Version 4, wie crypto.randomUUID). Damit kann die App
+  // nicht die feste ID des globalen Rate-Limits (siehe zugriff.ts) verwenden.
+  if (typeof a.sitzung !== 'string' || !SITZUNG_MUSTER.test(a.sitzung)) throw new EingabeFehler('Ungültige Sitzung.')
   if (!Array.isArray(a.verlauf) || a.verlauf.length === 0 || a.verlauf.length > MAX_NACHRICHTEN)
     throw new EingabeFehler('Ungültiger Verlauf.')
   for (const n of a.verlauf) {

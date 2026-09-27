@@ -238,10 +238,11 @@ function nutzerNachrichten(verlauf, rolle) {
 }
 var EingabeFehler = class extends Error {
 };
+var SITZUNG_MUSTER = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 function pruefeAnfrage(roh) {
   const a = roh;
   if (!a || typeof a !== "object") throw new EingabeFehler("Anfrage fehlt.");
-  if (typeof a.sitzung !== "string" || !/^[0-9a-f-]{36}$/i.test(a.sitzung)) throw new EingabeFehler("Ung\xFCltige Sitzung.");
+  if (typeof a.sitzung !== "string" || !SITZUNG_MUSTER.test(a.sitzung)) throw new EingabeFehler("Ung\xFCltige Sitzung.");
   if (!Array.isArray(a.verlauf) || a.verlauf.length === 0 || a.verlauf.length > MAX_NACHRICHTEN) throw new EingabeFehler("Ung\xFCltiger Verlauf.");
   for (const n of a.verlauf) {
     if (!n || n.von !== "spieler" && n.von !== "ki" || typeof n.text !== "string") throw new EingabeFehler("Ung\xFCltige Nachricht.");
@@ -309,22 +310,45 @@ function bereinigeAntwort(roh, verlauf, themen, ursachen) {
   };
 }
 
-// analyse/index.ts
-var RATE_LIMIT_MAX = 40;
-var RATE_LIMIT_FENSTER = "30 minutes";
-var MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions";
-var CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS"
+// _shared/zugriff.ts
+var RATE_LIMIT_SITZUNG = {
+  max: 40,
+  fenster: "30 minutes"
 };
-var json = (body, status = 200) => new Response(JSON.stringify(body), {
-  status,
-  headers: {
-    ...CORS,
-    "Content-Type": "application/json"
-  }
-});
+var RATE_LIMIT_GLOBAL = {
+  max: 600,
+  fenster: "1 hour"
+};
+var GLOBALE_SITZUNG = "00000000-0000-0000-0000-000000000000";
+function globalesLimit(wert) {
+  const n = Number(wert);
+  return Number.isInteger(n) && n > 0 ? n : RATE_LIMIT_GLOBAL.max;
+}
+function erlaubteUrspruenge(wert) {
+  const eintraege = (wert ?? "").split(",").map((s) => s.trim().replace(/\/+$/, "")).filter(Boolean);
+  if (eintraege.length === 0) return null;
+  return eintraege.map((e) => new RegExp("^" + e.split("*").map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("[a-z0-9-]*") + "$", "i"));
+}
+function ursprungErlaubt(ursprung, erlaubt) {
+  if (!erlaubt) return true;
+  return ursprung !== null && erlaubt.some((r) => r.test(ursprung));
+}
+function corsKoepfe(ursprung, erlaubt) {
+  return {
+    "Access-Control-Allow-Origin": erlaubt ? ursprungErlaubt(ursprung, erlaubt) ? ursprung : "null" : "*",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    ...erlaubt ? {
+      Vary: "Origin"
+    } : {}
+  };
+}
+
+// analyse/index.ts
+var MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions";
+var MAX_ANFRAGE_BYTES = 8e3;
+var ERLAUBT = erlaubteUrspruenge(Deno.env.get("ERLAUBTE_URSPRUENGE"));
+var GLOBAL_MAX = globalesLimit(Deno.env.get("RATE_LIMIT_GLOBAL"));
 var db = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"), {
   auth: {
     persistSession: false
@@ -360,24 +384,51 @@ async function frageMistral(system, nachrichten) {
   const daten = await res.json();
   return JSON.parse(daten.choices?.[0]?.message?.content ?? "{}");
 }
+async function lesJson(req) {
+  const text = await req.text();
+  if (new TextEncoder().encode(text).length > MAX_ANFRAGE_BYTES) throw new EingabeFehler("Anfrage zu gro\xDF.");
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+async function imLimit(sitzung, max, fenster) {
+  const { data, error } = await db.rpc("rate_limit_pruefen", {
+    p_sitzung: sitzung,
+    p_max: max,
+    p_fenster: fenster
+  });
+  if (error) throw error;
+  return data === true;
+}
 Deno.serve(async (req) => {
+  const ursprung = req.headers.get("origin");
+  const cors = corsKoepfe(ursprung, ERLAUBT);
+  const json = (body, status = 200) => new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...cors,
+      "Content-Type": "application/json"
+    }
+  });
+  if (!ursprungErlaubt(ursprung, ERLAUBT)) return json({
+    fehler: "Aufruf von dieser Seite nicht erlaubt."
+  }, 403);
   if (req.method === "OPTIONS") return new Response("ok", {
-    headers: CORS
+    headers: cors
   });
   if (req.method !== "POST") return json({
     fehler: "Nur POST erlaubt."
   }, 405);
   try {
-    const anfrage = pruefeAnfrage(await req.json().catch(() => null));
-    const { data: erlaubt, error: rlFehler } = await db.rpc("rate_limit_pruefen", {
-      p_sitzung: anfrage.sitzung,
-      p_max: RATE_LIMIT_MAX,
-      p_fenster: RATE_LIMIT_FENSTER
-    });
-    if (rlFehler) throw rlFehler;
-    if (!erlaubt) return json({
+    const anfrage = pruefeAnfrage(await lesJson(req));
+    if (!await imLimit(anfrage.sitzung, RATE_LIMIT_SITZUNG.max, RATE_LIMIT_SITZUNG.fenster)) return json({
       fehler: "Zu viele Anfragen. Bitte warte ein paar Minuten."
     }, 429);
+    if (!await imLimit(GLOBALE_SITZUNG, GLOBAL_MAX, RATE_LIMIT_GLOBAL.fenster)) return json({
+      fehler: "Gerade spielen sehr viele Leute. Bitte versuch es etwas sp\xE4ter noch einmal."
+    }, 503);
     const [themenRes, ursachenRes] = await Promise.all([
       db.from("themen").select("id, name, beschreibung"),
       db.from("ursachen").select("id, thema_id, beschreibung, quelle_url")

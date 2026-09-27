@@ -87,6 +87,7 @@ describe('pruefeAnfrage', () => {
 
   it.each([
     ['ohne Sitzung', { ...gueltig, sitzung: 'x' }],
+    ['feste Sitzung des globalen Limits', { ...gueltig, sitzung: '00000000-0000-0000-0000-000000000000' }],
     ['mit zu langem Text', { ...gueltig, verlauf: [spieler('a'.repeat(501))] }],
     ['mit KI als letzter Nachricht', { ...gueltig, verlauf: [spieler('a'), ki('b')] }],
     ['mit unbekannter Rolle', { ...gueltig, rolle: 'koenig' }],
