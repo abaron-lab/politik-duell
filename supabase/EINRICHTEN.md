@@ -19,7 +19,9 @@ Die Dateien in `supabase/dashboard/` sind zum Kopieren gedacht. Auf GitHub gibt 
 2. [Edge Functions öffnen](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions) → **Deploy a new function** → **Via Editor**.
 3. Den vorhandenen Beispielcode komplett löschen, den kopierten Inhalt einfügen.
 4. Als Namen der Funktion **`analyse`** eintragen (genau so, klein geschrieben) → **Deploy function**.
-5. In der Funktion unter **Details** (bzw. *Settings*) die Option **„Enforce JWT Verification“ / „Verify JWT“ ausschalten** und speichern.
+5. In der Funktion unter *Details → Function configuration* die Option
+   **„Verify JWT with legacy secret“ ausschalten** → **Save changes**.
+   Pflicht: Der Publishable Key der App ist kein JWT, sonst werden alle Aufrufe abgelehnt.
    Die App ruft ohne Login auf; geschützt ist die Funktion durch Eingabeprüfung und ein
    Rate-Limit (40 Anfragen pro 30 Minuten und Sitzung).
 
