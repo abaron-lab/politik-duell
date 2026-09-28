@@ -173,11 +173,17 @@ Einmalig, **in dieser Reihenfolge**. Ablauf und Regeln: [`daten/README.md`](../d
 3. **Branch nach `main` übernehmen**, damit Vercel die Prüfseite und den Admin-Bereich veröffentlicht.
 4. **Einladungen anlegen:** `#/admin` → Reiter **„Prüfung“** → Name eintragen, Thema (z. B. Miete) anhaken →
    **Einladung anlegen**. Den angezeigten Link sofort kopieren und der Person persönlich schicken – er wird
-   nicht gespeichert und lässt sich später nicht noch einmal anzeigen. Geht ein Link verloren: Einladung
-   löschen und neu anlegen.
-5. **Auswerten und übernehmen:** Sind genug Bewertungen abgesendet, unter „Auswertung“ **Export (ohne Namen)**
+   nicht gespeichert und lässt sich später nicht noch einmal anzeigen. Geht ein Link verloren: bei der
+   Person **„Neuer Link“** – der alte Link wird ungültig, Bewertungen und Einwilligung bleiben erhalten
+   (braucht Schritt 6).
+5. **Auswerten und übernehmen:** Sind genug Bewertungen fertig gemeldet, unter „Auswertung“ **Export (ohne Namen)**
    herunterladen und auf einem Rechner mit dem Repo `npm run pruefung:uebernehmen -- <datei>` ausführen
    (oder die Datei in einer Claude-Code-Sitzung übergeben).
+
+6. **„Neuer Link“ freischalten** (einmalig, nachträglich ergänzt):
+   [`supabase/migrations/20260930000000_pruefung_neuer_link.sql`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/migrations/20260930000000_pruefung_neuer_link.sql)
+   → **Copy raw file** → im SQL Editor einfügen → **Run**. Erwartet: „Success. No rows returned“.
+   Die Edge Function bleibt unverändert.
 
 Nach Änderungen an den Maßnahmen eines Themas (neue IDs) `npm run dashboard` ausführen und `3-pruefung.ts`
 neu einspielen – die Funktion kennt die Maßnahmen-IDs je Thema aus dem Datenkatalog.
