@@ -66,7 +66,7 @@ Einmalig, wenn Schritt 1–3 schon erledigt sind:
 5. **Empfohlen:** [Authentication → Sign In / Providers](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/auth/providers)
    → **„Allow new users to sign up“ ausschalten** → Save. Fremde Konten hätten ohnehin keine Rechte,
    so entstehen aber gar keine.
-6. **Moderieren:** In der App die Adresse um `#/admin` ergänzen (z. B. `https://…vercel.app/#/admin`)
+6. **Moderieren:** In der App die Adresse um `#/admin` ergänzen (z. B. `https://politik-duell.vercel.app/#/admin`)
    und anmelden.
 
 So läuft die Moderation:
@@ -92,7 +92,7 @@ Datenbank: **nichts zu tun** (keine neue Migration).
 2. **Secrets setzen** ([Edge Functions → Secrets](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions/secrets)):
    - `ERLAUBTE_URSPRUENGE` – Adressen, von denen die App die Funktion aufrufen darf, mit Komma getrennt,
      ohne Schrägstrich am Ende. `*` steht für einen Teil des Namens (für Vercel-Vorschauen), z. B.
-     `https://politikduell.de, https://www.politikduell.de, https://wer-liefert-*.vercel.app`.
+     `https://politikduell.de, https://www.politikduell.de, https://politik-duell-*.vercel.app`.
      Leer lassen = von überall erlaubt (praktisch beim Einrichten).
      Aktueller Wert, Erklärung und Fehlersuche: [`ERLAUBTE_URSPRUENGE.md`](ERLAUBTE_URSPRUENGE.md).
    - `RATE_LIMIT_GLOBAL` – optional, KI-Anfragen pro Stunde für alle zusammen (Standard: 600).
