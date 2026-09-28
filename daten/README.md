@@ -35,7 +35,7 @@ Ein Pull Request pro Thema. Die Prüfung hat zwei Teile: Die **Bewertung** über
 
 ### Bewertung durch eingeladene Prüfende
 
-1. **Einladen:** In der Admin-Ansicht (`#/admin` → „Prüfung“) je Person eine Einladung mit Name und Themen anlegen. Der Link wird nur einmal angezeigt – kopieren und persönlich schicken.
+1. **Einladen:** Zuerst die Besetzung planen: gleich viele Personen aus den beiden gegensätzlichen Perspektiven des Themas, möglichst plus eine ohne Bindung (siehe [`docs/plan-pruefung.md` → „Auswahl der Prüfenden“](../docs/plan-pruefung.md#auswahl-der-prüfenden)). Dann in der Admin-Ansicht (`#/admin` → „Prüfung“) je Person eine Einladung mit Name und Themen anlegen. Der Link wird nur einmal angezeigt – kopieren und persönlich schicken.
 2. **Bewerten:** Die Person willigt ein und bewertet in der App (`#/pruefen/…`) jede Maßnahme des Themas: ohne Parteinamen, in gemischter Reihenfolge, ohne die Bewertungen der anderen zu sehen. Die Empfehlung (Entwurfswerte und Begründung) wird erst nach der eigenen Bewertung sichtbar; Änderungen danach werden vermerkt. Am Ende „Absenden“.
 3. **Auswerten:** Admin → „Prüfung“ → „Auswertung“ zeigt je Maßnahme alle Einzelwerte, Median Wirksamkeit, Median Umsetzbarkeit, Punkte (= Median W × Median U) und Spannweite. Es zählen nur abgesendete Bewertungen nicht gesperrter Einladungen.
 4. **Übernehmen:** „Export (ohne Namen)“ herunterladen, dann `npm run pruefung:uebernehmen -- <export.json>`. Das Skript schreibt die Mediane als `wirksamkeit`/`umsetzbarkeit` und hält in `bewertung` Anzahl, Mediane, Spannweite, Datum und die ursprünglichen Entwurfswerte fest. Die Exportdatei selbst gehört nicht ins Repo.
@@ -43,7 +43,8 @@ Ein Pull Request pro Thema. Die Prüfung hat zwei Teile: Die **Bewertung** über
 Regeln:
 
 - **Mindestens 2, besser 3** unabhängige Bewertungen je Thema. Bei echten Daten darf eine Maßnahme erst mit `bewertung.anzahl` ≥ 2 `geprueft: true` sein (prüft `npm run daten:pruefen`).
-- **Median je Kriterium**, Punkte erst daraus. Bei gerader Anzahl mit zwei verschiedenen mittleren Werten (z. B. 2,5) entscheidet die Betreiberin zwischen diesen beiden, trägt den Wert in der Exportdatei ein und begründet es im Pull Request – das Skript nimmt vorher nichts an.
+- **Gegensätzlich besetzt:** Aus beiden Perspektiven des Themas gleich viele abgesendete Bewertungen, sonst keine Übernahme; fällt jemand aus, aus derselben Perspektive nachbesetzen. Auswahl nach Tätigkeit, nie nach Parteimitgliedschaft oder Wahlabsicht fragen. Mindestens eine Person je Thema nicht aus dem eigenen Bekanntenkreis. Bis Admin und Skript die Perspektive kennen, prüft die Betreiberin das von Hand und nennt die Besetzung (ohne Namen) im Pull Request.
+- **Median je Kriterium**, Punkte erst daraus. Bei gerader Anzahl mit zwei verschiedenen mittleren Werten (z. B. 2,5) vorzugsweise eine weitere Person ohne Bindung einladen. Gelingt das nicht, entscheidet die Betreiberin zwischen diesen beiden Werten, trägt den Wert in der Exportdatei ein und begründet es im Pull Request – das Skript nimmt vorher nichts an.
 - **Spannweite ≥ 2:** vor der Übernahme klären – Maßstab hier präzisieren oder bei den Prüfenden nachfragen. Danach übernehmen mit `--geklaert`.
 - **Namen nie ins Repo.** Im Datenkatalog stehen nur Anzahl, Median, Spannweite und Datum; die Zuordnung Person ↔ Bewertung bleibt in Supabase. Die Methodenseite nennt Namen nur von Personen, die der öffentlichen Nennung zugestimmt haben, sonst „von n unabhängigen Prüfenden“.
 - **Löschen:** Auf Wunsch die Einladung in der Admin-Ansicht löschen (löscht alle Bewertungen der Person) – oder die Person widerruft selbst auf der Prüfseite.

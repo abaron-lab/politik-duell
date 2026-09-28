@@ -107,14 +107,14 @@ Technisch abgesichert: Die KI antwortet in einem festen Format, die Antwort wird
 
 ## Prüfverfahren
 
-Eine Bewertung zählt erst, wenn mindestens zwei unabhängige Prüfende sie bestätigt haben und alle Belege kontrolliert sind. Bis dahin zeigt das Spiel „noch nicht erfasst“.
+Eine Bewertung zählt erst, wenn Prüfende aus gegensätzlichen Perspektiven sie unabhängig voneinander bewertet haben und alle Belege kontrolliert sind. Bis dahin zeigt das Spiel „noch nicht erfasst“.
 
 ```mermaid
 flowchart TD
     U["1 · Ursachen festlegen<br/><small>vor dem Blick in die Programme, mit unabhängigen Quellen</small>"]
     M["2 · Maßnahmen erfassen<br/><small>je Partei: Zitat mit Seite oder „keine Maßnahme“</small>"]
     E["3 · Entwurf bewerten<br/><small>ohne Parteinamen, mit kurzer Begründung</small>"]
-    B["4 · Blind bewerten<br/><small>mind. 2 Prüfende, getrennt; es zählt der Median</small>"]
+    B["4 · Blind bewerten<br/><small>gegensätzlich besetzt, getrennt; es zählt der Median</small>"]
     S{"Spannweite ≥ 2?"}
     K["Maßstab klären<br/><small>oder nachfragen</small>"]
     L["5 · Belege prüfen<br/><small>Link, Seite, wörtliches Zitat, Zuordnung zu Ursachen</small>"]
@@ -125,10 +125,13 @@ flowchart TD
     G -. "neues Programm oder Fehlermeldung: neu prüfen" .-> M
 ```
 
+- **Gegensätzlich besetzt:** Für jedes Thema legen wir vorab zwei gegensätzliche Perspektiven fest, etwa bei Miete die Mieterseite und die Vermieter- und Bauseite. Aus beiden bewerten gleich viele Personen, möglichst ergänzt um eine Person aus der Wissenschaft ohne Bindung an eine Seite. So hebt sich die Schlagseite einzelner Prüfender im Median auf, statt sich zu addieren.
+- **Ausgewählt nach Tätigkeit, nicht nach Gesinnung:** Wer zu welcher Perspektive gehört, ergibt sich aus Beruf, Institution oder Veröffentlichungen. Nach Parteimitgliedschaft oder Wahlabsicht fragen wir nicht. Abgeordnete sowie Amtsträger:innen und Beschäftigte von Parteien und Fraktionen bewerten nicht.
+- **Nicht nur aus dem eigenen Umfeld:** Je Thema gewinnen wir mindestens eine prüfende Person über eine Organisation oder Hochschule, nicht über den Bekanntenkreis der Initiatorin.
 - **Blind bewerten:** Die Prüfenden sehen keine Parteinamen, die Maßnahmen kommen in gemischter Reihenfolge, und niemand sieht die Werte der anderen. Den Entwurf mit Begründung sehen sie erst nach ihrer eigenen Bewertung.
 - **Median statt Mittelwert:** Je Maßnahme zählt der Median, getrennt für Wirksamkeit und Umsetzbarkeit. Einzelne Ausreißer verschieben das Ergebnis so kaum.
 - **Streit wird geklärt, nicht gemittelt:** Liegen zwei Einschätzungen zwei oder mehr Stufen auseinander, wird der Maßstab geklärt, bevor Werte übernommen werden.
-- **Namen nur mit Einwilligung:** Prüfende werden öffentlich nur genannt, wenn sie zustimmen; sonst heißt es „von n unabhängigen Prüfenden“.
+- **Namen nur mit Einwilligung:** Prüfende werden öffentlich nur genannt, wenn sie zustimmen; sonst heißt es „von n unabhängigen Prüfenden“. Aus welchen Perspektiven wie viele Personen ein Thema bewertet haben, steht immer dabei.
 - **Korrigierbar:** Fehler kann jede Person melden, mit Link auf die Stelle im Programm. Parteien können ihre Einträge jederzeit prüfen und eine Stellungnahme schicken.
 
 ## Grenzen der Methode
@@ -136,14 +139,14 @@ flowchart TD
 Die Methode ist so fair wie möglich, aber nicht fehlerfrei. Wir benennen ihre Grenzen offen:
 
 - **Programme sind nicht Politik.** Bewertet wird, was im Wahlprogramm steht, nicht was eine Partei im Parlament oder in einer Regierung tatsächlich getan hat.
-- **Bewerten bleibt Urteil.** Wirksamkeit und Umsetzbarkeit sind Einschätzungen. Blinde Prüfung, Median und offene Begründungen machen sie nachvollziehbar, aber nicht objektiv.
+- **Bewerten bleibt Urteil.** Wirksamkeit und Umsetzbarkeit sind Einschätzungen. Blinde Prüfung, gegensätzlich besetzte Prüfende, Median und offene Begründungen machen sie nachvollziehbar, aber nicht objektiv. Die Blindbewertung hat Lücken: Manche Maßnahmen erkennt man am Inhalt – umso wichtiger ist die gegensätzliche Besetzung.
 - **Die Ursachenliste prägt das Ergebnis.** Welche Ursachen ein Thema hat, entscheidet mit, welche Maßnahmen zählen. Deshalb werden sie vorab mit unabhängigen Quellen festgelegt und nur in begründeten Ausnahmen ergänzt.
 - **Ein Spiel ist ein Ausschnitt.** Es deckt fünf Probleme ab und ist kein Gesamturteil über eine Partei – und keine Wahlempfehlung.
 - **Die KI kann falsch zuordnen.** Deshalb zeigt jede Runde, welchem Thema und welchen Ursachen das Problem zugeordnet wurde, damit Spielende es nachprüfen können.
 
 ## Stand und Mitmachen
 
-Die App läuft als spielbarer Prototyp mit Spracheingabe, KI-Zuordnung, Wortwolke und Datenschutz. Die Daten sind im Aufbau:
+Die App läuft als spielbarer Prototyp mit Spracheingabe, KI-Zuordnung, Wortwolke und Datenschutz. Bis Methode und Daten belastbar sind, ist das Politik-Duell eine **geschlossene Beta**: Wir zeigen es Prüfenden, Partnerorganisationen und Testgruppen mit echten Parteinamen, bewerben es aber nicht öffentlich. Die Daten sind im Aufbau:
 
 | Baustein | Stand September 2026 |
 | --- | --- |
@@ -154,7 +157,7 @@ Die App läuft als spielbarer Prototyp mit Spracheingabe, KI-Zuordnung, Wortwolk
 
 Wir suchen:
 
-- **Prüfende mit Fachwissen** zu einem der zehn Themen, z. B. Wohnen, Gesundheit, Energie, Rente. Aufwand: etwa 20–30 Minuten je Thema, in der App, ohne Konto.
+- **Prüfende mit Fachwissen** zu einem der zehn Themen, z. B. Wohnen, Gesundheit, Energie, Rente – ausdrücklich aus unterschiedlichen, auch gegensätzlichen Perspektiven. Aufwand: etwa 20–30 Minuten je Thema, in der App, ohne Konto.
 - **Partnerorganisationen**, die die Methode fachlich begleiten, das Spiel in ihren Netzwerken bekannt machen oder es in der politischen Bildung einsetzen.
 - **Hinweise auf Fehler** in Maßnahmen, Zitaten oder Ursachen, immer mit Link auf die Quelle.
 

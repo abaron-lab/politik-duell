@@ -17,6 +17,7 @@ Die Betreiberin schickt 2–3 (oder mehr) Bekannten mit Fachwissen je einen pers
 | Zusammenfassung | Median je Kriterium, nicht Mittelwert |
 | Punkte | Erst am Ende: Median Wirksamkeit × Median Umsetzbarkeit |
 | Empfehlung (Entwurfswerte) | Erst sichtbar, nachdem die Person die Maßnahme selbst bewertet hat |
+| Zusammensetzung | Je Thema gegensätzlich besetzt: gleich viele Prüfende aus zwei vorab festgelegten, gegensätzlichen Perspektiven, möglichst ergänzt um eine Person ohne Bindung an eine Seite (ergänzt 28. 9. 2026, siehe „Auswahl der Prüfenden“) |
 
 ## Grundsätze
 
@@ -24,6 +25,50 @@ Die Betreiberin schickt 2–3 (oder mehr) Bekannten mit Fachwissen je einen pers
 - **Namen nie ins Repo.** Das Repo ist öffentlich. Im Datenkatalog stehen nur Anzahl, Median und Datum – die Zuordnung Person ↔ Bewertung bleibt in Supabase.
 - **Blind bewerten:** keine Parteinamen, gemischte Reihenfolge (wie in der Prüfliste), Entwurfswerte erst nach eigener Bewertung.
 - **Unabhängig:** Prüfende sehen die Bewertungen der anderen nicht.
+- **Gegensätzlich besetzt:** Blindbewertung allein schützt nicht vor Schlagseite – viele Maßnahmen sind am Inhalt erkennbar, und Prüfende aus dem Bekanntenkreis der Betreiberin teilen oft ihre Sicht. Deshalb bewerten je Thema Menschen, die das Thema aus entgegengesetzten Interessen kennen (siehe „Auswahl der Prüfenden“).
+
+## Auswahl der Prüfenden
+
+Ergänzt am 28. 9. 2026. Gilt für alle Themen, auch für Miete.
+
+### Regeln
+
+1. **Perspektiven vorab festlegen.** Für jedes Thema werden zwei gegensätzliche Perspektiven benannt (Tabelle unten), **bevor** jemand eingeladen wird. Sie richten sich nach Interessen im Thema (z. B. Mieter- und Vermieterseite), nicht nach Parteien oder politischen Lagern. Änderungen an der Tabelle per Pull Request mit Begründung.
+2. **Gleich viele aus beiden Perspektiven.** Mindestbesetzung: je eine Person aus Perspektive A und B. Empfohlen: zusätzlich eine Person aus Wissenschaft oder Praxis ohne Bindung an eine der beiden Seiten („ohne Bindung“), damit der Median nicht zwischen zwei Lagern hängt. Mehr Personen sind willkommen, solange A und B gleich stark vertreten sind.
+3. **Übernahme erst bei vollständiger Besetzung.** Die Werte eines Themas werden erst übernommen, wenn aus A und B gleich viele abgesendete Bewertungen vorliegen. Fällt eine Person aus, wird aus derselben Perspektive nachbesetzt – nicht mit den vorhandenen Werten weitergemacht.
+4. **Patt nicht selbst entscheiden.** Ergeben sich bei gerader Anzahl zwei verschiedene mittlere Werte, wird vorzugsweise eine weitere Person „ohne Bindung“ eingeladen. Nur wenn das nicht gelingt, entscheidet die Betreiberin zwischen den beiden Werten und begründet es im Pull Request.
+5. **Nicht nur aus dem eigenen Umfeld.** Je Thema wird mindestens eine Person über eine Organisation, Hochschule oder Fachveröffentlichung gewonnen, nicht über den persönlichen Bekanntenkreis der Betreiberin.
+6. **Auswahl über Tätigkeit, nie über Gesinnung.** Die Zuordnung zu einer Perspektive ergibt sich aus Beruf, Institution oder Veröffentlichungen. Nach Parteimitgliedschaft, Wahlabsicht oder politischer Haltung wird **nicht** gefragt (Art. 9 DSGVO).
+7. **Keine Parteinähe im Amt.** Nicht eingeladen werden Abgeordnete, Mandats- und Amtsträger:innen von Parteien sowie Beschäftigte von Parteien, Fraktionen oder Abgeordneten (auch in den letzten drei Jahren). Die Person bestätigt das vor der Einladung; gespeichert wird nur die Einladung selbst, nicht die Erklärung.
+8. **Offen berichten, ohne Namen.** Öffentlich steht je Thema, aus welchen Perspektiven wie viele Personen bewertet haben (z. B. „3 Prüfende: Mieterseite, Vermieter- und Bauseite, Wissenschaft“). Namen weiterhin nur mit Einwilligung.
+
+### Perspektiven je Thema (Vorschlag)
+
+Beispiele für Institutionen sind nur Orientierung für die Suche; eingeladen werden Einzelpersonen, die für sich selbst bewerten, nicht als Vertretung ihrer Organisation.
+
+| Thema | Perspektive A | Perspektive B | Ohne Bindung (z. B.) |
+| --- | --- | --- | --- |
+| Arzttermine | Patienten und Versicherte (Patientenberatung, Verbraucherschutz, Krankenkassen) | Ärzteschaft und Praxen (Kassenärztliche Vereinigungen, Ärzteverbände) | Gesundheitsökonomie, Versorgungsforschung |
+| Miete | Mieterseite (Mieterberatung, Sozialverbände) | Vermieter- und Bauseite (Eigentümer, Wohnungs- und Bauwirtschaft) | Immobilien- und Stadtökonomie |
+| Energiepreise | Verbraucher- und Umweltseite | Energiewirtschaft und energieintensive Industrie | Energieökonomie |
+| Schule | Schulpraxis mit Schwerpunkt Chancengleichheit (z. B. Gesamt- und Gemeinschaftsschulen, Bildungsgewerkschaft) | Schulpraxis mit Schwerpunkt Leistung und Gliederung (z. B. Gymnasien, Philologen- und Realschulverbände) | Bildungsforschung |
+| Arbeitsplätze | Arbeitnehmerseite (Gewerkschaften, gewerkschaftsnahe Institute) | Arbeitgeberseite (Arbeitgeber- und Wirtschaftsverbände, arbeitgebernahe Institute) | Arbeitsmarktforschung |
+| Zuwanderung und Integration | Integrations- und Flüchtlingsarbeit | Kommunen, Ausländer- und Sicherheitsbehörden | Migrationsforschung, Migrationsrecht |
+| Rente | Sozialverbände, Gewerkschaften | Arbeitgeber, Generationengerechtigkeit, private Vorsorge | Rentenversicherung, Alterssicherungsforschung |
+| Bus und Bahn | Fahrgast- und Umweltverbände | Straßenverkehr, Logistik, ländliche Kommunen | Verkehrswissenschaft |
+| Sicherheit | Polizei und Strafverfolgung | Bürgerrechte und Strafverteidigung | Kriminologie |
+| Pflege | Pflegebedürftige, Angehörige, Pflegekräfte | Träger und Kostenträger (Heimbetreiber, Pflegekassen) | Pflegewissenschaft, Gesundheitsökonomie |
+
+### Umsetzung (offen, eigener Pull Request)
+
+Bis dahin hält die Betreiberin die Perspektive je Einladung von Hand fest und prüft die Besetzung vor der Übernahme selbst.
+
+- **Datenbank:** Spalte `perspektive text check (perspektive in ('a','b','ohne'))` in `pruef_einladungen`.
+- **Admin:** Perspektive beim Anlegen der Einladung wählen (mit den Bezeichnungen aus der Tabelle); in der Auswertung je Thema anzeigen, wie viele abgesendete Bewertungen je Perspektive vorliegen, und warnen, wenn A und B nicht gleich stark vertreten sind.
+- **Export und Übernahme:** Export enthält je Maßnahme die Anzahl je Perspektive (ohne Namen); `pruefung:uebernehmen` schreibt sie nach `bewertung.perspektiven`, z. B. `{ "a": 1, "b": 1, "ohne": 1 }`, und bricht ab, wenn `a ≠ b` oder eine der beiden 0 ist.
+- **Katalogprüfung:** Bei echten Daten `geprueft: true` nur mit `bewertung.perspektiven.a = b ≥ 1`.
+- **Perspektiven im Katalog:** Bezeichnungen je Thema als Feld `perspektiven` in `daten/themen/*.json`, damit Admin, Methodenseite und diese Tabelle dieselbe Quelle haben.
+- **Methodenseite:** je Thema „bewertet von n Prüfenden aus …“ statt nur der Anzahl.
 
 ## Umsetzung
 

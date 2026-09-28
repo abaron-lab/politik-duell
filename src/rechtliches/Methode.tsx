@@ -85,7 +85,11 @@ export function Methode() {
       </p>
       <p>
         <strong>Wer bewertet?</strong> Mindestens zwei, besser drei unabhängige Prüfende mit Fachwissen, die wir
-        persönlich einladen. Jede Person bewertet die Maßnahmen eines Themas für sich: ohne Parteinamen, in gemischter
+        persönlich einladen – bewusst gegensätzlich besetzt: Für jedes Thema legen wir vorab zwei gegensätzliche
+        Perspektiven fest (bei Miete etwa Mieterseite und Vermieter- und Bauseite), aus denen gleich viele Personen
+        bewerten, möglichst ergänzt um eine Person aus der Wissenschaft ohne Bindung an eine Seite. Wer zu welcher
+        Perspektive gehört, ergibt sich aus Beruf oder Institution; nach Parteimitgliedschaft oder Wahlabsicht fragen
+        wir nicht, und Beschäftigte von Parteien und Fraktionen bewerten nicht. Jede Person bewertet die Maßnahmen eines Themas für sich: ohne Parteinamen, in gemischter
         Reihenfolge und ohne die Bewertungen der anderen zu sehen. Unseren Entwurf mit Begründung sehen sie erst,
         nachdem sie selbst bewertet haben. Je Maßnahme zählt der Median der Einzelwerte, getrennt für Wirksamkeit und
         Umsetzbarkeit; die Punkte ergeben sich erst daraus. Liegen die Einschätzungen weit auseinander, klären wir den

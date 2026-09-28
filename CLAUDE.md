@@ -106,6 +106,15 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 - Eigenes, originales Logo und Design mit Quizshow-Anmutung (Spannung, Auflösung, Punktestand), aber **nicht** Logo, Farbschema oder Studiodesign von „Wer wird Millionär" nachbilden (markenrechtlich geschützt).
 - Tonalität: neutral, freundlich, leicht spielerisch; keine Seitenhiebe auf einzelne Parteien in Texten, Grafiken oder Animationen.
 
+## Status: geschlossene Beta
+
+Entschieden am 28. 9. 2026: Bis Methode und Daten belastbar sind, läuft das Politik-Duell als **geschlossene Beta**. Gezeigt wird es Prüfenden, möglichen Partnerorganisationen und Testgruppen – mit echten Parteinamen (keine Tarnnamen: Beleg-Links und öffentliches Repo würden sie ohnehin verraten). Nicht öffentlich bewerben, nicht in sozialen Medien teilen, keine Pressearbeit.
+
+Vorschlag für den öffentlichen Start (noch zu bestätigen):
+- mindestens 3 Themen für alle Parteien geprüft, mit gegensätzlich besetzten Prüfenden (`docs/plan-pruefung.md` → „Auswahl der Prüfenden“),
+- Parteien haben ihre Einträge erhalten und hatten Gelegenheit zur Stellungnahme,
+- ein Träger (Verein) oder mindestens eine Partnerorganisation steht dahinter.
+
 ## Meilensteine
 
 1. **Klickbarer Prototyp:** Parteiwahl, Texteingabe, Mock-Daten für 3 Themen (Arzttermine, Miete, Energiepreise), Punktevergabe + Beleg-Links, Endbildschirm.
@@ -117,6 +126,6 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 ## Offene Punkte
 
 - ~~Welche Parteien sind dabei?~~ Entschieden: CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW. Grundlage sind die Wahlprogramme zur Bundestagswahl 2025, wo vorhanden ergänzt um neuere Grundsatzprogramme.
-- Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung; Bewertung durch eingeladene Prüfende in der App mit Median je Kriterium, Belegprüfung durch die Betreiberin, siehe `daten/README.md` → „Prüfung“ und `docs/plan-pruefung.md`) – offen ist, welche Personen das übernehmen.
+- Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung; Bewertung durch eingeladene, gegensätzlich besetzte Prüfende in der App mit Median je Kriterium, Belegprüfung durch die Betreiberin, siehe `daten/README.md` → „Prüfung“ und `docs/plan-pruefung.md`) – offen ist, welche Personen das übernehmen.
 - ~~Domain sichern~~ Erledigt (September 2026): politik-duell.de ist die Hauptadresse (bei INWX, in Vercel verbunden, HTTPS, in `ERLAUBTE_URSPRUENGE` und als Supabase *Site URL* eingetragen), politikduell.de leitet dorthin weiter. Kontakt: politik-duell@posteo.de.
 - Markenlage vor einer Markenanmeldung oder Veröffentlichung in App Stores prüfen (DPMAregister, TMview). „Politik-Duell“ ist beschreibend und daher kaum als Marke schützbar.
