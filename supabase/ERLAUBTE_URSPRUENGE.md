@@ -5,12 +5,14 @@ Liste der Website-Adressen, von denen aus die Edge Function `analyse` (KI-Einord
 ## Aktueller Wert
 
 ```
-https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
+https://politik-duell.de, https://www.politik-duell.de, https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
 ```
 
 | Eintrag | Wofür |
 | --- | --- |
-| `https://politik-duell.vercel.app` | Hauptadresse der App (Branch `main`) |
+| `https://politik-duell.de` | Hauptadresse der App (eigene Domain, seit September 2026) |
+| `https://www.politik-duell.de` | Schreibweise mit `www` (Vercel leitet sie auf die Hauptadresse weiter) |
+| `https://politik-duell.vercel.app` | Vercel-Adresse der App (Branch `main`), bleibt erreichbar |
 | `https://politik-duell-*.vercel.app` | Vorschau-Adressen, die Vercel für jeden Branch und Pull Request erzeugt |
 
 Seit der Umbenennung des Vercel-Projekts (September 2026) lauten die Adressen `politik-duell…` statt `wer-liefert…`. Die alten `wer-liefert…vercel.app`-Einträge gehören nicht mehr in die Liste: Freigewordene `vercel.app`-Namen kann jemand anderes übernehmen.
@@ -35,12 +37,6 @@ Jeder Aufruf der Funktion kostet Geld bei Mistral. Die Funktion prüft deshalb, 
 1. [Edge Functions → Secrets](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions/secrets) öffnen, beim Eintrag `ERLAUBTE_URSPRUENGE` den Wert ändern → **Save**.
 2. Greift die Änderung nach ein, zwei Minuten nicht: Funktion `analyse` einmal neu deployen.
 3. Diese Datei (Abschnitt „Aktueller Wert“) anpassen.
-
-**Mit eigener Domain** (nach Einrichtung in Vercel unter *Settings → Domains*) beide Schreibweisen der Hauptadresse `politik-duell.de` ergänzen:
-
-```
-https://politik-duell.de, https://www.politik-duell.de, https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
-```
 
 `politikduell.de` (ohne Bindestrich) muss nicht auf die Liste: Die Domain leitet nur auf `politik-duell.de` weiter, die App selbst läuft dort nie.
 
