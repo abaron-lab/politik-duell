@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { gesamtpunkte, type RundenErgebnis, type Spieler } from '../spiel'
 import { ohneTreffer } from '../logic/ohneTreffer'
 import { Belege } from './Aufloesung'
+import { Kreuz } from './Kreuz'
 import { Logo } from './Logo'
 import { parteiStil } from './stil'
 
@@ -43,14 +44,14 @@ export function Ende({
     <main className="seite ende">
       <div className="ende-kopf">
         <Logo groesse={72} />
-        <p className="label">Endstand</p>
+        <h2 className="sr-only">Endstand</h2>
         <p className="endstand">
           <span style={parteiStil(spieler[0].partei.farbe)}>{spieler[0].partei.kurzname}</span> {pa} : {pb}{' '}
           <span style={parteiStil(spieler[1].partei.farbe)}>{spieler[1].partei.kurzname}</span>
         </p>
-        <h2 className="sieger">
+        <p className="sieger">
           {sieger ? `${sieger.partei.name} liefert in diesem Spiel mehr – ${sieger.name} gewinnt!` : 'Unentschieden!'}
-        </h2>
+        </p>
       </div>
 
       <section>
@@ -59,7 +60,7 @@ export function Ende({
           {runden.map((r) => (
             <li key={r.nr}>
               <p className="zf-kopf">
-                <strong>Runde {r.nr}</strong> · {spieler[r.sprecher].name} ·{' '}
+                <strong>Runde {r.nr}</strong>, {spieler[r.sprecher].name}:{' '}
                 {r.thema ? r.thema.name : <span className="badge-ungeprueft">ungeprüft – keine Wertung</span>}
                 {r.status === 'unvollstaendig' && (
                   <>
@@ -76,7 +77,12 @@ export function Ende({
                     return (
                       <div key={e.partei.id} className="zf-partei" style={parteiStil(e.partei.farbe)}>
                         <span>
-                          {e.partei.kurzname}: {e.abdeckung ? `${e.punkte} P.` : '–'} {r.punkte[i] === 1 && '✓'}
+                          {e.partei.kurzname}: {e.abdeckung ? `${e.punkte} P.` : '–'} {r.punkte[i] === 1 && (
+                            <>
+                              <Kreuz className="kreuz-klein" />
+                              <span className="sr-only">Punkt</span>
+                            </>
+                          )}
                         </span>
                         {leer ? <small className="zf-leer">{leer.kurz}</small> : <Belege ergebnis={e} />}
                       </div>
