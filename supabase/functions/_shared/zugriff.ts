@@ -21,7 +21,7 @@ export function globalesLimit(wert: string | undefined): number {
 
 /**
  * Liest die erlaubten Herkünfte aus dem Secret ERLAUBTE_URSPRUENGE, z. B.
- * „https://wer-liefert.de, https://wer-liefert-*.vercel.app“. `*` steht für
+ * „https://politikduell.de, https://wer-liefert-*.vercel.app“. `*` steht für
  * einen Teil eines Hostnamens (Buchstaben, Ziffern, Bindestriche).
  * Leer → keine Einschränkung (für Entwicklung und Einrichtung).
  */

@@ -235,7 +235,7 @@ function systemPrompt(themen, ursachen) {
     return `- Thema ${t.id}: ${t.name} \u2013 ${t.beschreibung}
 ${u}`;
   }).join("\n");
-  return `Du moderierst das Spiel \u201EWer liefert?\u201C. Spieler:innen nennen Alltagsprobleme.
+  return `Du moderierst das Spiel \u201EPolitik-Duell\u201C. Spieler:innen nennen Alltagsprobleme.
 Deine einzige Aufgabe: die \xC4u\xDFerung einordnen und einem Thema und Ursachen aus dem Katalog zuordnen.
 
 Regeln:

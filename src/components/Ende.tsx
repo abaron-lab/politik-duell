@@ -21,11 +21,11 @@ export function Ende({
 
   async function teilen() {
     const text =
-      `Wer liefert? – ${runden.length} Alltagsprobleme geprüft. ` +
+      `Politik-Duell – ${runden.length} Alltagsprobleme geprüft. ` +
       `Ergebnis: ${spieler[0].partei.kurzname} ${pa} : ${pb} ${spieler[1].partei.kurzname}. Versprechen kann jeder.`
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'Wer liefert?', text, url: location.href })
+        await navigator.share({ title: 'Politik-Duell', text, url: location.href })
         return
       } catch (e) {
         // Abbruch durch Nutzer:in – nichts weiter tun. Sonst: Zwischenablage.

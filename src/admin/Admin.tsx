@@ -59,7 +59,7 @@ export function Admin() {
       <header className="admin-kopf">
         <a href="#/" className="admin-marke">
           <Logo groesse={36} />
-          <span>Wer liefert? · Moderation</span>
+          <span>Politik-Duell · Moderation</span>
         </a>
         {session && (
           <button className="knopf knopf-leise" onClick={() => adminDb?.auth.signOut()}>

@@ -25,7 +25,7 @@ export function Start({
       <div className="start-inhalt stimmzettel">
         <div className="start-kopf">
           <div>
-            <h1 className="titel">Wer liefert?</h1>
+            <h1 className="titel">Politik-Duell</h1>
             <p className="slogan">Versprechen kann jeder.</p>
           </div>
           <Logo groesse={72} />

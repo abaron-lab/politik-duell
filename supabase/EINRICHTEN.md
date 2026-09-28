@@ -92,7 +92,7 @@ Datenbank: **nichts zu tun** (keine neue Migration).
 2. **Secrets setzen** ([Edge Functions → Secrets](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions/secrets)):
    - `ERLAUBTE_URSPRUENGE` – Adressen, von denen die App die Funktion aufrufen darf, mit Komma getrennt,
      ohne Schrägstrich am Ende. `*` steht für einen Teil des Namens (für Vercel-Vorschauen), z. B.
-     `https://wer-liefert.de, https://www.wer-liefert.de, https://wer-liefert-*.vercel.app`.
+     `https://politikduell.de, https://www.politikduell.de, https://wer-liefert-*.vercel.app`.
      Leer lassen = von überall erlaubt (praktisch beim Einrichten).
      Aktueller Wert, Erklärung und Fehlersuche: [`ERLAUBTE_URSPRUENGE.md`](ERLAUBTE_URSPRUENGE.md).
    - `RATE_LIMIT_GLOBAL` – optional, KI-Anfragen pro Stunde für alle zusammen (Standard: 600).
@@ -112,7 +112,7 @@ Datenbank: **nichts zu tun** (keine neue Migration).
 5. **Vercel:** `vercel.json` im Repo setzt Sicherheits-Header (u. a. Content-Security-Policy, nur
    Verbindungen zur eigenen Supabase-Instanz, Mikrofon nur für die eigene Seite). Nach dem Merge
    baut Vercel automatisch neu. Wechselt das Supabase-Projekt, die Adresse in `vercel.json` anpassen.
-6. **Domain:** in Vercel unter *Settings → Domains* die Domain eintragen (z. B. `wer-liefert.de`) und
+6. **Domain:** in Vercel unter *Settings → Domains* die Domain eintragen (z. B. `politikduell.de`) und
    die angezeigten DNS-Einträge beim Domain-Anbieter setzen. Danach die Domain in
    `ERLAUBTE_URSPRUENGE` ergänzen.
 7. **Supabase Auth:** unter [Authentication → URL Configuration](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/auth/url-configuration)

@@ -40,7 +40,7 @@ export function systemPrompt(themen: Thema[], ursachen: Ursache[]): string {
     })
     .join('\n')
 
-  return `Du moderierst das Spiel „Wer liefert?“. Spieler:innen nennen Alltagsprobleme.
+  return `Du moderierst das Spiel „Politik-Duell“. Spieler:innen nennen Alltagsprobleme.
 Deine einzige Aufgabe: die Äußerung einordnen und einem Thema und Ursachen aus dem Katalog zuordnen.
 
 Regeln:

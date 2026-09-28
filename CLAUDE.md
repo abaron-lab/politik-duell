@@ -1,4 +1,4 @@
-# Projekt: „Wer liefert?"
+# Projekt: „Politik-Duell"
 
 Slogan: *„Versprechen kann jeder."*
 
@@ -101,7 +101,8 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 
 ## Branding
 
-- Name: **„Wer liefert?"**, Slogan: **„Versprechen kann jeder."**
+- Name: **„Politik-Duell"**, Slogan: **„Versprechen kann jeder."**
+- „Wer liefert?" ist nicht mehr der Name (zu nah an der Marke „wer liefert was“/wlw), darf aber als Frage im Spiel vorkommen. Repository, Vercel-Projekt und Supabase-Projekt heißen technisch weiterhin `wer-liefert`.
 - Eigenes, originales Logo und Design mit Quizshow-Anmutung (Spannung, Auflösung, Punktestand), aber **nicht** Logo, Farbschema oder Studiodesign von „Wer wird Millionär" nachbilden (markenrechtlich geschützt).
 - Tonalität: neutral, freundlich, leicht spielerisch; keine Seitenhiebe auf einzelne Parteien in Texten, Grafiken oder Animationen.
 
@@ -117,4 +118,5 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 
 - ~~Welche Parteien sind dabei?~~ Entschieden: CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW. Grundlage sind die Wahlprogramme zur Bundestagswahl 2025, wo vorhanden ergänzt um neuere Grundsatzprogramme.
 - Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung; Bewertung durch eingeladene Prüfende in der App mit Median je Kriterium, Belegprüfung durch die Betreiberin, siehe `daten/README.md` → „Prüfung“ und `docs/plan-pruefung.md`) – offen ist, welche Personen das übernehmen.
-- Domain prüfen und sichern (z. B. werliefert.de oder wer-liefert.de).
+- Domain sichern: politikduell.de (dazu politik-duell.de als Weiterleitung) – laut DNS-Abfrage im September 2026 vermutlich frei, beim Anbieter bestätigen. werliefert.de, wer-liefert.de und werliefert.com sind vergeben.
+- Markenlage vor einer Markenanmeldung oder Veröffentlichung in App Stores prüfen (DPMAregister, TMview). „Politik-Duell“ ist beschreibend und daher kaum als Marke schützbar.

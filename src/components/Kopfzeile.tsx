@@ -16,7 +16,7 @@ export function Kopfzeile({
     <header className="kopfzeile">
       <button type="button" className="kopfzeile-marke" onClick={() => bestaetigt() && onStartseite()}>
         <Logo groesse={30} />
-        <span>Wer liefert?</span>
+        <span>Politik-Duell</span>
         <span className="sr-only"> – zur Startseite</span>
       </button>
       <button type="button" className="knopf knopf-zweit knopf-klein" onClick={() => bestaetigt() && onNeuesSpiel()}>
