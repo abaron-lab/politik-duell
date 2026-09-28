@@ -5,7 +5,7 @@
 // Secrets (Supabase → Edge Functions → Secrets):
 //   MISTRAL_API_KEY            – Pflicht
 //   MISTRAL_MODEL              – optional, Standard: mistral-small-latest
-//   ERLAUBTE_URSPRUENGE        – optional, z. B. „https://politikduell.de, https://politik-duell-*.vercel.app“;
+//   ERLAUBTE_URSPRUENGE        – optional, z. B. „https://politik-duell.de, https://politik-duell-*.vercel.app“;
 //                                leer: Aufrufe von überall erlaubt
 //   RATE_LIMIT_GLOBAL          – optional, Anfragen pro Stunde über alle Sitzungen (Standard: 600)
 // Automatisch vorhanden: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY

@@ -158,7 +158,7 @@ export function Methode() {
       </p>
       <ul>
         <li>
-          per E-Mail: <a href={`mailto:${BETREIBER.email}?subject=Wer%20liefert%3F%20%E2%80%93%20Fehler`}>{BETREIBER.email}</a>
+          per E-Mail: <a href={`mailto:${BETREIBER.email}?subject=Politik-Duell%20%E2%80%93%20Fehler`}>{BETREIBER.email}</a>
         </li>
         <li>
           oder öffentlich auf <a href={`${BETREIBER.quellcode}/issues/new`}>GitHub</a>
