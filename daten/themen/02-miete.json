@@ -2,6 +2,7 @@
   "id": 2,
   "name": "Miete",
   "beschreibung": "Hohe Mieten und schwierige Wohnungssuche.",
+  "ziel": "Mieterinnen und Mieter finden eine passende Wohnung und können sich die Miete dauerhaft leisten.",
   "schlagwoerter": ["miete", "mieten", "wohnung", "vermieter", "mieterhoehung", "wohnen", "wg-zimmer", "kaltmiete", "warmmiete", "umzug"],
   "ursachen": [
     {
@@ -376,6 +377,176 @@
           "zitat": "Die AfD steht für ein ausgewogenes Mietrecht und lehnt staatliche Überregulierungen sowie Investitionshemmnisse wie die Mietpreisbremse oder den Mietendeckel ab.",
           "beleg_programm_url": "https://www.afd.de/wp-content/uploads/2025/02/AfD_Bundestagswahlprogramm2025_web.pdf#page=39",
           "stand": "2026-09-27",
+          "geprueft": false
+        }
+      ]
+    },
+    {
+      "partei_id": 16,
+      "massnahmen": [
+        {
+          "id": 2051,
+          "beschreibung": "Bundesweiter Mietendeckel; besonders hohe Mieten in angespannten Märkten absenken",
+          "ursachen_ids": [202],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 1,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Senkt oder begrenzt die Miete unmittelbar."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Begrenzt oder senkt Mieteinnahmen."
+            }
+          },
+          "begruendung": "Begrenzt Mieten direkt, auch bei Neuvermietung; schafft keine neuen Wohnungen. Eine Absenkung bestehender Mieten ist verfassungsrechtlich umstritten.",
+          "zitat": "Wir fordern einen bundesweiten Mietendeckel! Unser Ziel: Die Explosion der Mieten nicht nur bremsen, sondern beenden und rückgängig machen",
+          "beleg_programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf#page=8",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2052,
+          "beschreibung": "Mieterhöhungen bundesweit für sechs Jahre ausschließen; Staffel- und Indexmieten verbieten",
+          "ursachen_ids": [204],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 1,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Verhindert Mieterhöhungen im laufenden Mietverhältnis."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Schließt Mieterhöhungen im Bestand zeitweise aus."
+            }
+          },
+          "begruendung": "Stoppt Erhöhungen in laufenden Mietverträgen vollständig; ein bundesweiter Stopp über sechs Jahre wirft erhebliche verfassungsrechtliche Fragen auf.",
+          "zitat": "Als Sofortmaßnahme müssen Mieterhöhungen bundesweit für die nächsten sechs Jahre ausgeschlossen werden",
+          "beleg_programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf#page=8",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2053,
+          "beschreibung": "20 Milliarden Euro im Jahr für gemeinnützigen Wohnungsbau, Sozialbindung dauerhaft, Investitionen von der Schuldenbremse ausnehmen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 1,
+          "begruendung": "Würde das Angebot dauerhaft günstiger Wohnungen deutlich erhöhen; die Ausnahme von der Schuldenbremse erfordert eine Verfassungsänderung.",
+          "zitat": "Wir wollen 20 Milliarden Euro im Jahr in gemeinnützigen Wohnraum investieren",
+          "beleg_programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf#page=9",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2054,
+          "beschreibung": "Wohnungsbestände von Konzernen mit mehr als 3.000 Wohnungen vergesellschaften",
+          "ursachen_ids": [202],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 1,
+          "begruendung": "Kann Mieten im übernommenen Bestand dämpfen, schafft aber keine neuen Wohnungen; Entschädigung unter Marktwert ist rechtlich umstritten und teuer.",
+          "zitat": "Wir wollen den Wohnbestand von Immobilien konzernen mit mehr als 3 000 Wohnungen vergesellschaften und in eine Anstalt öffentlichen Rechts mit demokratischer Verwaltung überführen",
+          "beleg_programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf#page=9",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2055,
+          "beschreibung": "Leerstand erfassen und mit einer Abgabe von 10 Euro pro Quadratmeter belegen",
+          "ursachen_ids": [201],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 2,
+          "begruendung": "Kann leerstehende Wohnungen auf den Markt bringen; in angespannten Märkten ist der Leerstand gering, ein großer Teil liegt in schrumpfenden Regionen.",
+          "zitat": "Wohnungsleerstände müssen systematisch erfasst werden und dann mit einer Leerstandsabgabe von 10 Euro pro Quadratmeter belegt werden",
+          "beleg_programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf#page=9",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2056,
+          "beschreibung": "Regulierungen beim Neubau überprüfen, soweit sie nur die Preise treiben",
+          "ursachen_ids": [203],
+          "wirksamkeit": 1,
+          "umsetzbarkeit": 3,
+          "begruendung": "Setzt an Vorschriften als Kostentreiber an, bleibt aber allgemein und nennt keine konkreten Regeln.",
+          "zitat": "Wir wollen Regulierungen überprüfen: Nicht alle Regulierungen beim Neubau sind sozial und ökologisch sinnvoll, manche treiben lediglich die Preise in die Höhe",
+          "beleg_programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf#page=9",
+          "stand": "2026-09-28",
+          "geprueft": false
+        }
+      ]
+    },
+    {
+      "partei_id": 17,
+      "massnahmen": [
+        {
+          "id": 2061,
+          "beschreibung": "Gemeinnützigen und kommunalen Wohnungsbau stärken: zinsvergünstigte Kredite, großes Wohnungsbauprogramm, dauerhafte Sozialbindung",
+          "ursachen_ids": [201],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Mehr Kapital für gemeinwohlorientierte Bauherren kann das Angebot günstiger Wohnungen erhöhen; Umfang und Finanzierung sind nicht beziffert.",
+          "zitat": "Größere Teile des Wohnungsmarktes müssen wieder den Regeln der Gemeinnützigkeit unterliegen, gemeinnützige und kommunale Wohnungsbauunternehmen sollten zinsvergünstigte Kredite erhalten und ein großes Wohnungsbauprogramm auflegen.",
+          "beleg_programm_url": "https://bsw-vg.de/wp-content/themes/bsw/assets/downloads/BSW%20Wahlprogramm%202025.pdf#page=28",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2062,
+          "beschreibung": "Bundesweiter Mietendeckel statt Mietpreisbremse",
+          "ursachen_ids": [202],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 1,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Senkt oder begrenzt die Miete unmittelbar."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Begrenzt oder senkt Mieteinnahmen."
+            }
+          },
+          "begruendung": "Begrenzt Mieten direkt, auch bei Neuvermietung; schafft keine neuen Wohnungen. Ein bundesweiter Mietendeckel ist verfassungsrechtlich umstritten.",
+          "zitat": "Wir fordern einen bundesweiten Mietendeckel statt einer wirkungslosen Mietpreisbremse.",
+          "beleg_programm_url": "https://bsw-vg.de/wp-content/themes/bsw/assets/downloads/BSW%20Wahlprogramm%202025.pdf#page=28",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2063,
+          "beschreibung": "Mieten in Regionen mit knappem bezahlbarem Wohnraum bis Ende des Jahrzehnts einfrieren; Sanierungskosten tragen die Vermieter",
+          "ursachen_ids": [204],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "rollen_modifikator": {
+            "mieter": {
+              "wert": 1,
+              "begruendung": "Verhindert Mieterhöhungen im laufenden Mietverhältnis."
+            },
+            "eigentuemer": {
+              "wert": -1,
+              "begruendung": "Schließt Mieterhöhungen im Bestand zeitweise aus."
+            }
+          },
+          "begruendung": "Stoppt Erhöhungen in laufenden Mietverträgen in angespannten Regionen; schafft keine neuen Wohnungen. Ein Mietenstopp wirft verfassungsrechtliche Fragen auf.",
+          "zitat": "In allen Regionen, in denen es nicht mehr möglich ist, sich mit einem normalen Einkommen adäquaten Wohnraum zu leisten, wollen wir die Mieten bis zum Ende des Jahrzehnts einfrieren.",
+          "beleg_programm_url": "https://bsw-vg.de/wp-content/themes/bsw/assets/downloads/BSW%20Wahlprogramm%202025.pdf#page=28",
+          "stand": "2026-09-28",
+          "geprueft": false
+        },
+        {
+          "id": 2064,
+          "beschreibung": "Bauvorhaben beschleunigen: serielles Bauen vereinfachen, vereinfachtes Genehmigungsverfahren für sozialen Wohnungsbau, überzogene Bauvorschriften prüfen",
+          "ursachen_ids": [201, 203],
+          "wirksamkeit": 2,
+          "umsetzbarkeit": 2,
+          "begruendung": "Setzt an Verfahrensdauer und Vorschriften an; wie stark die Kosten sinken, hängt von der Umsetzung in den Ländern ab.",
+          "zitat": "Notwendig ist auch die Beschleunigung von Bauvorhaben, etwa durch die Vereinfachung von seriellem Bauen und die Einführung eines vereinfachten Genehmigungsverfahrens für sozialen Wohnungsbau.",
+          "beleg_programm_url": "https://bsw-vg.de/wp-content/themes/bsw/assets/downloads/BSW%20Wahlprogramm%202025.pdf#page=28",
+          "stand": "2026-09-28",
           "geprueft": false
         }
       ]

@@ -87,16 +87,20 @@ Noch nicht aufgenommen, Kandidaten für später: soziale Ungerechtigkeit/Armut (
 
 Maßgeblich ist die Methodenseite der App (`src/rechtliches/Methode.tsx`, in der App unter „So bewerten wir“). Die Tabellen hier geben sie wieder und ergänzen Beispiele – bei Änderungen beide anpassen.
 
-### Wirksamkeit (0–3): Setzt die Maßnahme an der Ursache an?
+### Wirksamkeit (0–3): Wie stark bringt die Maßnahme das Ziel des Themas voran?
+
+Jedes Thema hat ein **Ziel aus Sicht der Betroffenen** (`ziel`, z. B. Miete: „Mieterinnen und Mieter finden eine passende Wohnung und können sich die Miete dauerhaft leisten.“). Gemessen wird, wie stark die Maßnahme über die Ursache, an der sie ansetzt, zu diesem Ziel beiträgt. Vor- oder Nachteile für andere Gruppen (z. B. Vermieter) gehören nicht in die Wirksamkeit, sondern höchstens in den Rollen-Modifikator.
 
 | Wert | Bedeutung |
 | --- | --- |
-| 0 | setzt an keiner der erfassten Ursachen an |
-| 1 | berührt eine Ursache nur am Rand oder mit geringer Wirkung (z. B. einmalige Entlastung, lindert nur Folgen) |
-| 2 | setzt an einer Ursache an und lässt eine spürbare Wirkung erwarten |
-| 3 | setzt direkt an einer Hauptursache an; die Wirkung ist gut belegt (Studie oder Erfahrungen anderswo) |
+| 0 | hilft beim Ziel nicht: setzt an keiner der erfassten Ursachen an |
+| 1 | hilft kaum: berührt eine Ursache nur am Rand oder lindert nur Folgen (z. B. einmalige Entlastung, Zuschuss ohne mehr Angebot) |
+| 2 | hilft spürbar: setzt an einer Ursache an, eine deutliche Verbesserung ist zu erwarten |
+| 3 | hilft stark: setzt direkt an einer Hauptursache an; die Wirkung ist gut belegt (Studie oder Erfahrungen anderswo) |
 
 ### Umsetzbarkeit (0–3): Ist die Maßnahme realistisch?
+
+Gemeint ist: Könnte eine Bundesregierung sie in einer Wahlperiode rechtlich und finanziell umsetzen? Ob die Maßnahme politisch mehrheitsfähig ist, spielt keine Rolle.
 
 | Wert | Bedeutung |
 | --- | --- |
@@ -142,6 +146,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
   "id": 4,
   "name": "Kita-Plätze",
   "beschreibung": "Kurzer neutraler Satz.",
+  "ziel": "Was sich für die Betroffenen ändern soll – Maßstab für die Wirksamkeit.",
   "schlagwoerter": ["kita", "betreuung"],
   "ursachen": [
     { "id": 401, "beschreibung": "Zu wenige Fachkräfte", "quelle_url": "https://…" }

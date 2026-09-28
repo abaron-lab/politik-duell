@@ -2,6 +2,7 @@
   "id": 4,
   "name": "Schule",
   "beschreibung": "Unterrichtsausfall, fehlende Lehrkräfte und marode Schulgebäude.",
+  "ziel": "Kinder bekommen verlässlichen Unterricht in intakten Schulgebäuden und lernen, was sie brauchen.",
   "schlagwoerter": ["schule", "lehrer", "lehrerin", "lehrkraft", "unterricht", "klasse", "schueler", "zeugnis", "abschluss", "hausaufgaben", "schulgebaeude", "turnhalle"],
   "ursachen": [
     {

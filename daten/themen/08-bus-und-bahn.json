@@ -2,6 +2,7 @@
   "id": 8,
   "name": "Bus und Bahn",
   "beschreibung": "Seltene Verbindungen, Ausfälle und Verspätungen.",
+  "ziel": "Menschen kommen mit Bus und Bahn zuverlässig und in vertretbarer Zeit ans Ziel, auch auf dem Land.",
   "schlagwoerter": ["bus", "bahn", "im zug", "mit dem zug", "regionalzug", "zuege", "oepnv", "nahverkehr", "haltestelle", "verspaetung", "ausfall", "anschluss", "tram", "s-bahn", "deutschlandticket", "pendeln"],
   "ursachen": [
     {

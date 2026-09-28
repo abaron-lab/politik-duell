@@ -5,10 +5,10 @@ import { BETREIBER } from './betreiber'
 // Maßnahmen bewertet, richtet sich nach dieser Seite.
 
 const WIRKSAMKEIT = [
-  'setzt an keiner der erfassten Ursachen an',
-  'berührt eine Ursache nur am Rand oder mit geringer Wirkung',
-  'setzt an einer Ursache an und lässt eine spürbare Wirkung erwarten',
-  'setzt direkt an einer Hauptursache an; die Wirkung ist gut belegt',
+  'hilft beim Ziel nicht: setzt an keiner der erfassten Ursachen an',
+  'hilft kaum: berührt eine Ursache nur am Rand oder lindert nur Folgen',
+  'hilft spürbar: setzt an einer Ursache an, eine deutliche Verbesserung ist zu erwarten',
+  'hilft stark: setzt direkt an einer Hauptursache an, die Wirkung ist gut belegt',
 ]
 
 const UMSETZBARKEIT = [
@@ -63,7 +63,12 @@ export function Methode() {
       </p>
 
       <h2>3. Zwei Kriterien, je 0 bis 3 Punkte</h2>
-      <h3>Wirksamkeit: Setzt die Maßnahme an den tatsächlichen Ursachen an?</h3>
+      <h3>Wirksamkeit: Wie stark hilft die Maßnahme den Betroffenen?</h3>
+      <p>
+        Jedes Thema hat ein Ziel aus Sicht der Menschen, die das Problem haben – bei Miete etwa: eine passende Wohnung
+        finden und die Miete dauerhaft bezahlen können. Wir bewerten, wie stark eine Maßnahme über die Ursache, an der
+        sie ansetzt, zu diesem Ziel beiträgt.
+      </p>
       <Skala stufen={WIRKSAMKEIT} />
       <h3>Umsetzbarkeit: Ist sie rechtlich, finanziell und zeitlich realistisch?</h3>
       <Skala stufen={UMSETZBARKEIT} />

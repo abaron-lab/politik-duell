@@ -2,6 +2,7 @@
   "id": 6,
   "name": "Zuwanderung und Integration",
   "beschreibung": "Probleme bei Aufnahme, Integration und Rückführung von Zugewanderten.",
+  "ziel": "Aufnahme, Integration und Rückführung funktionieren geordnet, und die Belastung vor Ort bleibt tragbar.",
   "schlagwoerter": ["zuwanderung", "migration", "migranten", "fluechtlinge", "gefluechtete", "asyl", "integration", "auslaender", "abschiebung", "einwanderung", "sprachkurs"],
   "ursachen": [
     {

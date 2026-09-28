@@ -2,6 +2,7 @@
   "id": 7,
   "name": "Rente",
   "beschreibung": "Niedrige Renten und Sorge um die Altersvorsorge.",
+  "ziel": "Menschen können im Alter von ihrer Rente auskömmlich leben, und die Rente bleibt dauerhaft finanzierbar.",
   "schlagwoerter": ["rente", "renten", "rentner", "rentnerin", "im alter", "altersarmut", "ruhestand", "vorsorge", "altersvorsorge", "grundsicherung"],
   "ursachen": [
     {

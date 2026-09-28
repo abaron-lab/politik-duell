@@ -28,6 +28,8 @@ export interface Thema {
   id: number
   name: string
   beschreibung: string
+  /** Ziel aus Sicht der Betroffenen – Maßstab für die Wirksamkeit (nur im Repo, nicht in der Datenbank). */
+  ziel?: string
   /** Nur Mock: Schlagwörter, mit denen die Mock-Analyse Themen erkennt. */
   schlagwoerter?: string[]
 }

@@ -2,6 +2,7 @@
   "id": 1,
   "name": "Arzttermine",
   "beschreibung": "Lange Wartezeiten und schwer erreichbare Praxen.",
+  "ziel": "Patientinnen und Patienten bekommen in angemessener Zeit und erreichbarer Nähe einen Arzttermin.",
   "schlagwoerter": ["arzt", "aerzt", "praxis", "praxen", "hausarzt", "facharzt", "kinderarzt", "wartezimmer", "behandlung", "krank", "orthopaed", "termin beim"],
   "ursachen": [
     {

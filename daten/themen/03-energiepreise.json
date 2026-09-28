@@ -2,6 +2,7 @@
   "id": 3,
   "name": "Energiepreise",
   "beschreibung": "Hohe Kosten für Strom und Heizung.",
+  "ziel": "Haushalte können Strom und Heizung dauerhaft bezahlen.",
   "schlagwoerter": ["strom", "energie", "heiz", "gasrechnung", "gaspreis", "abschlag", "fernwaerme", "stromrechnung", "heizkosten"],
   "ursachen": [
     {

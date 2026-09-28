@@ -70,6 +70,10 @@ const STIL = `
   .leise { color: var(--leise); font-size: 0.9rem; }
   .abschnitt { display: grid; gap: 12px; }
   .kopf { display: grid; gap: 6px; }
+  .ziel { background: var(--flaeche); border: 1px solid var(--linie); border-left: 4px solid var(--akzent); border-radius: 8px; padding: 10px 14px; display: grid; gap: 4px; font-size: 1.05rem; }
+  details.empfehlung { grid-column: 2 / -1; font-size: 0.92rem; }
+  details.empfehlung summary { cursor: pointer; color: var(--akzent); font-weight: 700; }
+  details.empfehlung[open] summary { margin-bottom: 4px; }
   .schritte { display: flex; flex-wrap: wrap; gap: 8px; }
   .schritt { background: var(--flaeche-2); border-radius: 999px; padding: 4px 12px; font-size: 0.85rem; }
   details.massstab { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 10px; padding: 12px 14px; }
@@ -160,6 +164,9 @@ for (const thema of katalog.themen) {
           <p class="leise">Setzt an bei: ${m.ursachen_ids.map((u) => esc(ursacheText(u))).join(' · ')}</p>
         </div>
         <div class="wahl">${auswahl(m.id, 'w', 'Wirks.')}${auswahl(m.id, 'u', 'Umsetz.')}</div>
+        <details class="empfehlung"><summary>Empfehlung ansehen</summary>
+          <p><b>Wirksamkeit ${m.wirksamkeit}, Umsetzbarkeit ${m.umsetzbarkeit}</b> (= ${m.wirksamkeit * m.umsetzbarkeit} Punkte). ${esc(m.begruendung)}</p>
+        </details>
         <p class="vergleich" aria-live="polite"></p>
       </div>`
 
@@ -195,14 +202,16 @@ for (const thema of katalog.themen) {
     <p class="leise">${massnahmen.length} Maßnahmen aus ${new Set(massnahmen.map((m) => m.partei_id)).size} Wahlprogrammen${keine.length ? `, ${keine.length} × „keine Maßnahme“` : ''}.${
       fehlend.length ? ` Noch nicht erfasst: ${fehlend.map((p) => esc(p.name)).join(', ')}.` : ''
     } Deine Eingaben bleiben nur in diesem Browser gespeichert.</p>
+    ${thema.ziel ? `<div class="ziel"><p class="etikett">Ziel – daran misst sich die Wirksamkeit</p><p>${esc(thema.ziel)}</p></div>` : ''}
     <div class="schritte"><span class="schritt">1 · Ohne Parteinamen bewerten</span><span class="schritt">2 · Vergleichen</span><span class="schritt">3 · Belege prüfen</span><span class="schritt">4 · Ergebnis kopieren</span></div>
   </header>
 
   <details class="massstab">
     <summary>Maßstab und Ursachen</summary>
-    <p class="etikett">Wirksamkeit: Setzt die Maßnahme an der Ursache an?</p>
-    <div class="skala"><b>0</b><span>setzt an keiner der erfassten Ursachen an</span><b>1</b><span>nur am Rand oder mit geringer Wirkung (z. B. lindert nur Folgen)</span><b>2</b><span>setzt an einer Ursache an, spürbare Wirkung zu erwarten</span><b>3</b><span>direkt an einer Hauptursache, Wirkung gut belegt</span></div>
-    <p class="etikett">Umsetzbarkeit: Ist sie realistisch?</p>
+    <p class="etikett">Wirksamkeit: Wie stark hilft sie beim Ziel?</p>
+    <p class="leise" style="margin-bottom:6px">Nur aus Sicht der Betroffenen. Vor- und Nachteile für andere (z. B. Vermieter) zählen hier nicht.</p>
+    <div class="skala"><b>0</b><span>hilft beim Ziel nicht: setzt an keiner der erfassten Ursachen an</span><b>1</b><span>hilft kaum: nur am Rand oder lindert nur Folgen (z. B. Zuschuss ohne mehr Angebot)</span><b>2</b><span>hilft spürbar: setzt an einer Ursache an, deutliche Verbesserung zu erwarten</span><b>3</b><span>hilft stark: direkt an einer Hauptursache, Wirkung gut belegt</span></div>
+    <p class="etikett">Umsetzbarkeit: Könnte eine Bundesregierung sie in einer Wahlperiode rechtlich und finanziell umsetzen?</p>
     <div class="skala"><b>0</b><span>derzeit rechtlich oder finanziell nicht umsetzbar</span><b>1</b><span>nur mit großen Hürden (z. B. Verfassungsänderung, ungeklärte Finanzierung)</span><b>2</b><span>mit Aufwand oder in mehreren Jahren</span><b>3</b><span>rechtlich möglich, finanziert, in einer Wahlperiode realistisch</span></div>
     <p class="leise">Punkte je Maßnahme = Wirksamkeit × Umsetzbarkeit (0 bis 9).</p>
     <p class="etikett" style="margin-top:10px">Ursachen</p>
@@ -211,7 +220,7 @@ for (const thema of katalog.themen) {
 
   <section class="abschnitt" aria-labelledby="h-a">
     <h2 id="h-a">Durchgang A: Bewertung ohne Parteinamen</h2>
-    <p class="leise">Bewerte jede Maßnahme, bevor du Durchgang B öffnest. Die Reihenfolge ist gemischt. Danach auf „Vergleichen“ tippen.</p>
+    <p class="leise">Die Parteien sind ausgeblendet und die Reihenfolge ist gemischt. Lies die Maßnahme, überlege kurz selbst, und öffne dann bei Bedarf „Empfehlung ansehen“: Dort steht mein Vorschlag mit Begründung. Übernimm ihn, wenn die Begründung dich überzeugt, sonst wähle anders. „Vergleichen“ zeigt am Ende die Parteien und wo du abweichst.</p>
     <div class="liste">${blind.map(zeileA).join('')}</div>
     <div class="knoepfe"><button type="button" id="vergleichen">Vergleichen</button><span id="bilanz" class="bilanz leise"></span></div>
   </section>

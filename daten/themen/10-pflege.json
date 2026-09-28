@@ -2,6 +2,7 @@
   "id": 10,
   "name": "Pflege",
   "beschreibung": "Pflegeplatz oder Pflegedienst finden, hohe Kosten, überlastete Angehörige.",
+  "ziel": "Pflegebedürftige bekommen gute Pflege, die sie und ihre Angehörigen bezahlen und organisieren können.",
   "schlagwoerter": ["pflege", "pflegeheim", "pflegedienst", "pflegegrad", "pflegebeduerftig", "altenheim", "pflegekraft", "eigenanteil", "angehoerige", "pflegen"],
   "ursachen": [
     {

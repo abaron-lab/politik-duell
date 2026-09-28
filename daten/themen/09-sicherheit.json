@@ -2,6 +2,7 @@
   "id": 9,
   "name": "Sicherheit",
   "beschreibung": "Sich im Alltag unsicher fühlen oder Opfer von Kriminalität werden.",
+  "ziel": "Menschen sind im Alltag sicher und fühlen sich sicher; Straftaten werden zügig verfolgt.",
   "schlagwoerter": ["sicherheit", "unsicher", "kriminalitaet", "polizei", "gewalt", "ueberfall", "diebstahl", "einbruch", "angst", "messer", "belaestigung", "bahnhof", "nachts", "abends"],
   "ursachen": [
     {

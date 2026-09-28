@@ -188,12 +188,15 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
       f(ort, 'erwartet ein Objekt')
       continue
     }
-    unbekannteFelder(ort, t, ['id', 'name', 'beschreibung', 'schlagwoerter', 'ursachen', 'abdeckung'])
+    unbekannteFelder(ort, t, ['id', 'name', 'beschreibung', 'ziel', 'schlagwoerter', 'ursachen', 'abdeckung'])
+    // Ziel aus Sicht der Betroffenen: Daran wird die Wirksamkeit gemessen. Bei echten Daten Pflicht.
+    const ziel = t.ziel !== undefined || !katalog.fiktiv ? text(ort, t, 'ziel', 200) : ''
     const thema: Thema = {
       id: ganzzahl(ort, t, 'id', 1, 32767),
       name: text(ort, t, 'name', 60),
       beschreibung: text(ort, t, 'beschreibung', 300),
     }
+    if (ziel) thema.ziel = ziel
     const tw = schlagwoerter(ort, t)
     if (tw) thema.schlagwoerter = tw
     if (themaIds.has(thema.id)) f(ort, `Themen-ID ${thema.id} ist doppelt`)

@@ -36,6 +36,7 @@ const thema = (ueber: Record<string, unknown> = {}): Datei => ({
     id: 1,
     name: 'Arzttermine',
     beschreibung: 'Lange Wartezeiten.',
+    ziel: 'Termine in angemessener Zeit.',
     ursachen: [{ id: 11, beschreibung: 'Zu wenige Praxen', quelle_url: 'https://studie.de/aerzte' }],
     abdeckung: [
       { partei_id: 1, massnahmen: [massnahme()] },
@@ -83,6 +84,12 @@ describe('Datenkatalog: Prüfregeln', () => {
     const doppelt = { partei_id: 2, massnahmen: [massnahme({ id: 2 })], keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: true } }
     expect(fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme()] }, doppelt] }))).toMatch(/genau eines/)
     expect(fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [] }, { partei_id: 2 }] }))).toMatch(/mindestens eine Maßnahme/)
+  })
+
+  it('verlangt bei echten Daten ein Ziel je Thema', () => {
+    const t = thema(); delete (t.inhalt as Record<string, unknown>).ziel
+    expect(fehlerVon(t)).toMatch(/„ziel“ fehlt/)
+    expect(fehlerVon(t, parteien(true))).not.toMatch(/ziel/)
   })
 
   it('erlaubt einen Vermerk für nachträglich ergänzte Ursachen', () => {
