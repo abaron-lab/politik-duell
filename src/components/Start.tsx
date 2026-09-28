@@ -1,20 +1,23 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import { Kreuzfeld } from './Kreuz'
 import { Logo } from './Logo'
 import { Wortwolke } from './Wortwolke'
 
 export function Start({
   bereit,
+  einverstanden,
+  onEinverstanden,
   ladeFehler,
   onBeispieldaten,
   onStart,
 }: {
   bereit: boolean
+  einverstanden: boolean
+  onEinverstanden: (ja: boolean) => void
   ladeFehler: string | null
   onBeispieldaten: () => void
   onStart: () => void
 }) {
-  const [einverstanden, setEinverstanden] = useState(false)
   const id = useId()
   return (
     <main className="start">
@@ -46,7 +49,7 @@ export function Start({
                 id={id}
                 type="checkbox"
                 checked={einverstanden}
-                onChange={(e) => setEinverstanden(e.target.checked)}
+                onChange={(e) => onEinverstanden(e.target.checked)}
               />
               <span className="einwilligung-text">
                 Ich bin einverstanden, dass eine KI meine Eingaben wie in der{' '}

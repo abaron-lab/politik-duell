@@ -341,9 +341,46 @@ textarea:focus-visible {
   }
 }
 
+/* ---------- Kopfzeile im Spiel ---------- */
+.kopfzeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+}
+.kopfzeile-marke {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 0;
+  font-family: var(--schrift-titel);
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-stretch: 88%;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.kopfzeile-marke:focus-visible {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
+}
+.kopfzeile .knopf-klein {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.88rem;
+}
+.kopfzeile .knopf-zweit:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
 /* ---------- Setup ---------- */
 .seite {
-  padding-top: 16px;
+  padding-top: 8px;
 }
 .stimmzettel-paar {
   display: grid;
