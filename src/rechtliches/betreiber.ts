@@ -18,7 +18,7 @@ export const BETREIBER = {
     url: 'https://www.bfdi.bund.de/DE/Service/Anschriften/Laender/Laender-node.html',
   },
   /** Öffentlicher Quellcode (für Transparenz der Bewertungen) */
-  quellcode: 'https://github.com/abaron-lab/wer-liefert',
+  quellcode: 'https://github.com/abaron-lab/politik-duell',
 }
 
 /** Stand der Datenschutzerklärung – bei inhaltlichen Änderungen anpassen. */

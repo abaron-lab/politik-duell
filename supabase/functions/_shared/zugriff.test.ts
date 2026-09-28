@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { corsKoepfe, erlaubteUrspruenge, globalesLimit, RATE_LIMIT_GLOBAL, ursprungErlaubt } from './zugriff.ts'
 
 describe('erlaubte Herkunft', () => {
-  const liste = erlaubteUrspruenge(' https://politikduell.de/, https://wer-liefert-*.vercel.app ')
+  const liste = erlaubteUrspruenge(' https://politikduell.de/, https://politik-duell-*.vercel.app ')
 
   it('ohne Secret ist alles erlaubt', () => {
     expect(erlaubteUrspruenge(undefined)).toBeNull()
@@ -13,11 +13,11 @@ describe('erlaubte Herkunft', () => {
 
   it.each([
     ['https://politikduell.de', true],
-    ['https://wer-liefert-git-main-abaron.vercel.app', true],
+    ['https://politik-duell-git-main-abaron.vercel.app', true],
     ['http://politikduell.de', false],
     ['https://politikduell.de.boese.example', false],
     ['https://boese.example/https://politikduell.de', false],
-    ['https://wer-liefert-x.boese.vercel.app', false],
+    ['https://politik-duell-x.boese.vercel.app', false],
     [null, false],
   ])('%s → %s', (ursprung, ok) => {
     expect(ursprungErlaubt(ursprung, liste)).toBe(ok)

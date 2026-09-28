@@ -5,13 +5,15 @@ Liste der Website-Adressen, von denen aus die Edge Function `analyse` (KI-Einord
 ## Aktueller Wert
 
 ```
-https://wer-liefert.vercel.app, https://wer-liefert-*.vercel.app
+https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
 ```
 
 | Eintrag | Wofür |
 | --- | --- |
-| `https://wer-liefert.vercel.app` | Hauptadresse der App (Branch `main`) |
-| `https://wer-liefert-*.vercel.app` | Vorschau-Adressen, die Vercel für jeden Branch und Pull Request erzeugt |
+| `https://politik-duell.vercel.app` | Hauptadresse der App (Branch `main`) |
+| `https://politik-duell-*.vercel.app` | Vorschau-Adressen, die Vercel für jeden Branch und Pull Request erzeugt |
+
+Seit der Umbenennung des Vercel-Projekts (September 2026) lauten die Adressen `politik-duell…` statt `wer-liefert…`. Die alten `wer-liefert…vercel.app`-Einträge gehören nicht mehr in die Liste: Freigewordene `vercel.app`-Namen kann jemand anderes übernehmen.
 
 Eingetragen unter [Edge Functions → Secrets](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions/secrets).
 
@@ -37,7 +39,7 @@ Jeder Aufruf der Funktion kostet Geld bei Mistral. Die Funktion prüft deshalb, 
 **Mit eigener Domain** (nach Einrichtung in Vercel unter *Settings → Domains*) beide Schreibweisen ergänzen, z. B.:
 
 ```
-https://politikduell.de, https://www.politikduell.de, https://wer-liefert.vercel.app, https://wer-liefert-*.vercel.app
+https://politikduell.de, https://www.politikduell.de, https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
 ```
 
 **Lokale Entwicklung** (`npm run dev` gegen die echte Funktion) ist mit dem Wert gesperrt. Bei Bedarf vorübergehend `http://localhost:5173` ergänzen und danach wieder entfernen.
@@ -51,4 +53,4 @@ Bei „Aufruf von dieser Seite nicht erlaubt. (Fehlercode 403)“ passt die Adre
 - `www.` fehlt oder ist zu viel
 - `http` statt `https`
 - Schrägstrich am Ende
-- Vorschau-Adresse beginnt nicht mit `wer-liefert-` (dann den Projektnamen in Vercel prüfen)
+- Vorschau-Adresse beginnt nicht mit `politik-duell-` (dann den Projektnamen in Vercel prüfen)
