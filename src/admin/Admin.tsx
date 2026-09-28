@@ -3,12 +3,14 @@ import { type FormEvent, useCallback, useEffect, useState } from 'react'
 import { FILTER_TEXTE, pruefeText, type FilterGrund } from '../../supabase/functions/_shared/moderation'
 import { Logo } from '../components/Logo'
 import { adminDb, type AdminRunde, type ReviewEintrag } from './client'
+import { Pruefung } from './Pruefung'
 
 // Einfache Admin-Ansicht (#/admin): Probleme für die Wortwolke freigeben oder
-// ablehnen, Review-Warteschlange (Themen ohne Daten) abhaken.
+// ablehnen, Review-Warteschlange (Themen ohne Daten) abhaken, Prüfende einladen
+// und ihre Bewertungen auswerten.
 // Zugriff regelt die Datenbank: Nur Konten in der Tabelle `admins` sehen etwas.
 
-type Reiter = 'offen' | 'gestoppt' | 'frei' | 'abgelehnt' | 'review'
+type Reiter = 'offen' | 'gestoppt' | 'frei' | 'abgelehnt' | 'review' | 'pruefung'
 
 const REITER: { id: Reiter; name: string }[] = [
   { id: 'offen', name: 'Offen' },
@@ -16,9 +18,10 @@ const REITER: { id: Reiter; name: string }[] = [
   { id: 'frei', name: 'Freigegeben' },
   { id: 'abgelehnt', name: 'Abgelehnt' },
   { id: 'review', name: 'Neue Themen' },
+  { id: 'pruefung', name: 'Prüfung' },
 ]
 
-function reiterVon(r: AdminRunde): Exclude<Reiter, 'review'> {
+function reiterVon(r: AdminRunde): Exclude<Reiter, 'review' | 'pruefung'> {
   if (r.freigegeben) return 'frei'
   if (r.abgelehnt) return 'abgelehnt'
   return r.filter_grund ? 'gestoppt' : 'offen'
@@ -194,7 +197,8 @@ function Moderation() {
     await laden()
   }
 
-  const anzahl = (id: Reiter) => (id === 'review' ? review.length : runden.filter((r) => reiterVon(r) === id).length)
+  const anzahl = (id: Reiter) =>
+    id === 'pruefung' ? null : id === 'review' ? review.length : runden.filter((r) => reiterVon(r) === id).length
   const sichtbar = runden.filter((r) => reiterVon(r) === reiter)
   const jetzt = () => new Date().toISOString()
 
@@ -208,7 +212,7 @@ function Moderation() {
             aria-current={r.id === reiter ? 'page' : undefined}
             onClick={() => setReiter(r.id)}
           >
-            {r.name} <span className="admin-zahl">{anzahl(r.id)}</span>
+            {r.name} {anzahl(r.id) !== null && <span className="admin-zahl">{anzahl(r.id)}</span>}
           </button>
         ))}
       </nav>
@@ -218,7 +222,9 @@ function Moderation() {
         </p>
       )}
 
-      {reiter === 'review' ? (
+      {reiter === 'pruefung' ? (
+        <Pruefung />
+      ) : reiter === 'review' ? (
         <>
           <p className="admin-hinweis">
             Probleme ohne passendes Thema in der Datenbank. Neue Themen und Maßnahmen werden mit Quellen im Repo

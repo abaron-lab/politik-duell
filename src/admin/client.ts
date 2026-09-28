@@ -21,6 +21,30 @@ export interface AdminRunde {
   moderiert_am: string | null
 }
 
+/** Einladung zur Prüfung (Tabelle pruef_einladungen, ohne Token-Hash). */
+export interface PruefEinladung {
+  id: string
+  name: string
+  themen: number[]
+  erstellt: string
+  gesperrt: boolean
+  einwilligung_am: string | null
+  name_oeffentlich: boolean
+}
+
+export interface PruefBewertung {
+  einladung_id: string
+  massnahme_id: number
+  thema_id: number
+  wirksamkeit: number | null
+  umsetzbarkeit: number | null
+  notiz: string | null
+  empfehlung_gesehen: boolean
+  nach_empfehlung_geaendert: boolean
+  abgesendet: boolean
+  aktualisiert: string
+}
+
 export interface ReviewEintrag {
   id: number
   created_at: string
