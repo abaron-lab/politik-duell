@@ -193,3 +193,86 @@ describe('Moderation', () => {
     ).rejects.toThrow()
   })
 })
+
+describe('Prüfung durch Eingeladene', () => {
+  const HASH = 'a'.repeat(64)
+  let einladung: string
+
+  beforeAll(async () => {
+    const r = await alsAdmin(() =>
+      db.query<{ id: string }>(`insert into pruef_einladungen (token_hash, name, themen) values ($1, 'Erika Beispiel', '{2}') returning id`, [
+        HASH,
+      ]),
+    )
+    einladung = r.rows[0].id
+    // Wie die Edge Function (Service Role): Einwilligung und Bewertungen.
+    await db.query(`update pruef_einladungen set einwilligung_am = now() where id = $1`, [einladung])
+    await db.query(
+      `insert into pruef_bewertungen (einladung_id, massnahme_id, thema_id, wirksamkeit, umsetzbarkeit, abgesendet)
+       values ($1, 2001, 2, 2, 3, true), ($1, 2002, 2, 1, null, false)`,
+      [einladung],
+    )
+  })
+
+  it('anon sieht weder Einladungen noch Bewertungen und kann nichts schreiben', async () => {
+    await expect(alsRolle('anon', () => db.query('select * from pruef_einladungen'))).rejects.toThrow()
+    await expect(alsRolle('anon', () => db.query('select * from pruef_bewertungen'))).rejects.toThrow()
+    await expect(
+      alsRolle('anon', () => db.query(`insert into pruef_einladungen (token_hash, name, themen) values ($1, 'x', '{2}')`, ['b'.repeat(64)])),
+    ).rejects.toThrow()
+  })
+
+  it('angemeldete Nicht-Admins sehen nichts und legen nichts an', async () => {
+    const e = await alsNutzer(() => db.query('select * from pruef_einladungen'))
+    expect(e.rows).toHaveLength(0)
+    const b = await alsNutzer(() => db.query('select * from pruef_bewertungen'))
+    expect(b.rows).toHaveLength(0)
+    await expect(
+      alsNutzer(() => db.query(`insert into pruef_einladungen (token_hash, name, themen) values ($1, 'x', '{2}')`, ['c'.repeat(64)])),
+    ).rejects.toThrow()
+  })
+
+  it('Admins sehen alles', async () => {
+    const e = await alsAdmin(() => db.query<{ name: string }>('select name from pruef_einladungen'))
+    expect(e.rows).toEqual([{ name: 'Erika Beispiel' }])
+    const b = await alsAdmin(() => db.query('select * from pruef_bewertungen where einladung_id = $1', [einladung]))
+    expect(b.rows).toHaveLength(2)
+  })
+
+  it('Admins sperren, dürfen aber weder Einwilligung noch Bewertungen ändern', async () => {
+    const u = await alsAdmin(() => db.query('update pruef_einladungen set gesperrt = true where id = $1', [einladung]))
+    expect(u.affectedRows).toBe(1)
+    await alsAdmin(() => db.query('update pruef_einladungen set gesperrt = false where id = $1', [einladung]))
+    await expect(
+      alsAdmin(() => db.query('update pruef_einladungen set name_oeffentlich = true where id = $1', [einladung])),
+    ).rejects.toThrow()
+    await expect(alsAdmin(() => db.query('update pruef_bewertungen set wirksamkeit = 0'))).rejects.toThrow()
+    await expect(
+      alsAdmin(() => db.query(`insert into pruef_bewertungen (einladung_id, massnahme_id, thema_id) values ($1, 1, 2)`, [einladung])),
+    ).rejects.toThrow()
+  })
+
+  it('prüft Wertebereiche, Token-Format und Pflichtwerte beim Absenden', async () => {
+    await expect(db.query(`update pruef_bewertungen set wirksamkeit = 4 where einladung_id = $1`, [einladung])).rejects.toThrow()
+    await expect(db.query(`insert into pruef_einladungen (token_hash, name, themen) values ('kurz', 'x', '{2}')`)).rejects.toThrow()
+    await expect(db.query(`insert into pruef_einladungen (token_hash, name, themen) values ($1, 'x', '{}')`, ['d'.repeat(64)])).rejects.toThrow()
+    await expect(
+      db.query(`update pruef_bewertungen set abgesendet = true where einladung_id = $1 and massnahme_id = 2002`, [einladung]),
+    ).rejects.toThrow()
+  })
+
+  it('öffentlich nur Anzahl und Namen mit Einwilligung', async () => {
+    const frage = () =>
+      alsRolle('anon', () => db.query<{ thema_id: number; anzahl: number; namen: string[] }>('select * from pruefende_oeffentlich()'))
+    expect((await frage()).rows).toEqual([{ thema_id: 2, anzahl: 1, namen: [] }])
+    await db.query('update pruef_einladungen set name_oeffentlich = true where id = $1', [einladung])
+    expect((await frage()).rows).toEqual([{ thema_id: 2, anzahl: 1, namen: ['Erika Beispiel'] }])
+  })
+
+  it('Löschen einer Einladung löscht ihre Bewertungen', async () => {
+    const d = await alsAdmin(() => db.query('delete from pruef_einladungen where id = $1', [einladung]))
+    expect(d.affectedRows).toBe(1)
+    const b = await db.query<{ n: number }>('select count(*)::int as n from pruef_bewertungen where einladung_id = $1', [einladung])
+    expect(b.rows[0].n).toBe(0)
+  })
+})

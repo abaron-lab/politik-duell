@@ -28,4 +28,4 @@ supabase/.temp
 supabase/.branches
 
 # Prüflisten (npm run pruefliste) – werden lokal erzeugt
-pruefung/
+/pruefung/
