@@ -1,24 +1,11 @@
 import { BETREIBER } from './betreiber'
+import { UMSETZBARKEIT, WIRKSAMKEIT } from './massstab'
 
 // „So bewerten wir“ (#/methode): offene Methode und Fehlermeldung.
 // Die Skalen hier müssen zu den Bewertungen in der Datenbank passen – wer
 // Maßnahmen bewertet, richtet sich nach dieser Seite.
 
-const WIRKSAMKEIT = [
-  'hilft beim Ziel nicht: setzt an keiner der erfassten Ursachen an',
-  'hilft kaum: berührt eine Ursache nur am Rand oder lindert nur Folgen',
-  'hilft spürbar: setzt an einer Ursache an, eine deutliche Verbesserung ist zu erwarten',
-  'hilft stark: setzt direkt an einer Hauptursache an, die Wirkung ist gut belegt',
-]
-
-const UMSETZBARKEIT = [
-  'rechtlich oder finanziell derzeit nicht umsetzbar',
-  'nur mit großen Hürden umsetzbar (z. B. Verfassungsänderung, ungeklärte Finanzierung)',
-  'umsetzbar mit Aufwand oder in mehreren Jahren',
-  'rechtlich möglich, finanziert und innerhalb einer Wahlperiode realistisch',
-]
-
-function Skala({ stufen }: { stufen: string[] }) {
+export function Skala({ stufen }: { stufen: string[] }) {
   return (
     <dl className="skala">
       {stufen.map((text, wert) => (
