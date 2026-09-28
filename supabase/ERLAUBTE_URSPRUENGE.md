@@ -37,7 +37,7 @@ Jeder Aufruf der Funktion kostet Geld bei Mistral. Die Funktion prüft deshalb, 
 **Mit eigener Domain** (nach Einrichtung in Vercel unter *Settings → Domains*) beide Schreibweisen ergänzen, z. B.:
 
 ```
-https://wer-liefert.de, https://www.wer-liefert.de, https://wer-liefert.vercel.app, https://wer-liefert-*.vercel.app
+https://politikduell.de, https://www.politikduell.de, https://wer-liefert.vercel.app, https://wer-liefert-*.vercel.app
 ```
 
 **Lokale Entwicklung** (`npm run dev` gegen die echte Funktion) ist mit dem Wert gesperrt. Bei Bedarf vorübergehend `http://localhost:5173` ergänzen und danach wieder entfernen.

@@ -64,9 +64,9 @@ export function Methode() {
     <article>
       <h1>So bewerten wir</h1>
       <p>
-        „Wer liefert?“ fragt nicht, welche Partei sympathischer ist, sondern welche für ein konkretes Alltagsproblem die
-        wirksamste und umsetzbare Lösung anbietet. Alle Parteien werden nach denselben Kriterien bewertet. Das Ergebnis
-        steht vorher nicht fest: Liefert eine Partei nachweislich die beste Lösung, gewinnt sie – egal welche.
+        Das Politik-Duell fragt nicht, welche Partei sympathischer ist, sondern wer liefert: welche Partei für ein
+        konkretes Alltagsproblem die wirksamste und umsetzbare Lösung anbietet. Alle Parteien werden nach denselben
+        Kriterien bewertet. Das Ergebnis steht vorher nicht fest: Liefert eine Partei nachweislich die beste Lösung, gewinnt sie – egal welche.
       </p>
 
       <h2>1. Vom Problem zu den Ursachen</h2>

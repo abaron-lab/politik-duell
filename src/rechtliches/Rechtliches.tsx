@@ -49,7 +49,7 @@ export function Rechtliches({ seite, onZurueck }: { seite: RechtsSeite; onZuruec
         <button className="knopf knopf-leise" onClick={onZurueck}>
           ← Zurück
         </button>
-        <a href="#/" className="recht-marke" aria-label="Wer liefert? – Startseite">
+        <a href="#/" className="recht-marke" aria-label="Politik-Duell – Startseite">
           <Logo groesse={32} />
         </a>
       </header>
@@ -69,7 +69,7 @@ function Impressum() {
       <p>{BETREIBER.inhaltlichVerantwortlich}</p>
       <h2>Zum Projekt</h2>
       <p>
-        „Wer liefert?“ ist ein unabhängiges, nicht-kommerzielles Spiel. Es wird von keiner Partei beauftragt oder
+        „Politik-Duell“ ist ein unabhängiges, nicht-kommerzielles Spiel. Es wird von keiner Partei beauftragt oder
         finanziert. Alle Parteien werden nach denselben, offen einsehbaren Kriterien bewertet; die Bewertungen und
         ihre Belege stehen im <a href={BETREIBER.quellcode}>öffentlichen Quellcode</a>. Fehler oder fehlende Belege
         bitte dort melden oder per E-Mail.

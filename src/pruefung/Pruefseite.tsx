@@ -57,7 +57,7 @@ export function Pruefseite({ token }: { token: string }) {
       <header className="admin-kopf">
         <span className="admin-marke">
           <Logo groesse={36} />
-          <span>Wer liefert? · Prüfung</span>
+          <span>Politik-Duell · Prüfung</span>
         </span>
       </header>
       {!api.pruefungVerfuegbar ? (
@@ -133,7 +133,7 @@ function Einwilligung({ token, stand, onFertig }: { token: string; stand: api.Pr
             werden nur Anzahl, Median, Spannweite und Datum – nie deine Einzelwerte.
           </li>
           <li>
-            <strong>Wer es sieht:</strong> nur die Betreiberin von „Wer liefert?“. Andere Prüfende sehen deine
+            <strong>Wer es sieht:</strong> nur die Betreiberin des Politik-Duells. Andere Prüfende sehen deine
             Bewertungen nicht.
           </li>
           <li>

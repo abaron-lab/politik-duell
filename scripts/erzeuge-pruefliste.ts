@@ -197,7 +197,7 @@ for (const thema of katalog.themen) {
 <style>${STIL}</style>
 <main class="seite">
   <header class="kopf">
-    <p class="etikett">Wer liefert? · Vier-Augen-Prüfung · Stand ${new Date().toISOString().slice(0, 10)}</p>
+    <p class="etikett">Politik-Duell · Vier-Augen-Prüfung · Stand ${new Date().toISOString().slice(0, 10)}</p>
     <h1>Prüfliste ${esc(thema.name)}</h1>
     <p class="leise">${massnahmen.length} Maßnahmen aus ${new Set(massnahmen.map((m) => m.partei_id)).size} Wahlprogrammen${keine.length ? `, ${keine.length} × „keine Maßnahme“` : ''}.${
       fehlend.length ? ` Noch nicht erfasst: ${fehlend.map((p) => esc(p.name)).join(', ')}.` : ''

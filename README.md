@@ -1,4 +1,4 @@
-# Wer liefert?
+# Politik-Duell
 
 *„Versprechen kann jeder."* – Zwei-Spieler-Webspiel: Alltagsprobleme nennen, das Spiel zeigt, welche Partei dafür die wirksamste und umsetzbare Lösung bietet – mit Beleg-Link nach jeder Runde.
 
