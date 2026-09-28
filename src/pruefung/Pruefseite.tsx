@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { BewertungEingabe, Wert } from '../../supabase/functions/_shared/pruefung'
-import { Kreuzfeld } from '../components/Kreuz'
 import { Logo } from '../components/Logo'
 import type { Massnahme, Thema, Ursache } from '../data/types'
 import { UMSETZBARKEIT, WIRKSAMKEIT } from '../rechtliches/massstab'
@@ -151,21 +150,19 @@ function Einwilligung({ token, stand, onFertig }: { token: string; stand: api.Pr
         </p>
       </section>
 
-      <label className="einwilligung pruef-haken">
+      <label className="pruef-haken">
         <input type="checkbox" checked={ja} onChange={(e) => setJa(e.target.checked)} />
-        <span className="einwilligung-text">
+        <span>
           <strong>Pflicht:</strong> Ich willige ein, dass meine Bewertungen wie beschrieben gespeichert und ausgewertet
           werden.
         </span>
-        <Kreuzfeld />
       </label>
-      <label className="einwilligung pruef-haken">
+      <label className="pruef-haken">
         <input type="checkbox" checked={nameOeffentlich} onChange={(e) => setNameOeffentlich(e.target.checked)} />
-        <span className="einwilligung-text">
+        <span>
           <strong>Freiwillig:</strong> Mein Name darf öffentlich als Prüfer:in genannt werden (auf der Seite „So
           bewerten wir“). Ohne Häkchen steht dort nur die Zahl der Prüfenden.
         </span>
-        <Kreuzfeld />
       </label>
       {fehler && (
         <p className="admin-fehler" role="alert">
@@ -609,10 +606,9 @@ function Einstellungen({ token, stand, onNeuLaden }: { token: string; stand: api
   return (
     <section className="pruef-einstellungen" aria-labelledby="h-einst">
       <h2 id="h-einst">Deine Einwilligung</h2>
-      <label className="einwilligung pruef-haken">
+      <label className="pruef-haken">
         <input type="checkbox" checked={nameOeffentlich} onChange={(e) => void nennung(e.target.checked)} />
-        <span className="einwilligung-text">Mein Name darf öffentlich als Prüfer:in genannt werden.</span>
-        <Kreuzfeld />
+        <span>Mein Name darf öffentlich als Prüfer:in genannt werden.</span>
       </label>
       <button className="knopf knopf-klein knopf-gefahr" onClick={() => void widerrufen()}>
         Einwilligung widerrufen und alles löschen

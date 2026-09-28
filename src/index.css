@@ -1197,17 +1197,24 @@ textarea {
 .pruef-kasten p {
   margin: 0.5rem 0 0;
 }
-/* Einwilligungen auf der Prüfseite: einzelne Stimmzettelzeile mit Kreis. */
 .pruef-haken {
-  max-width: none;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
   margin: 1rem 0 0;
-  padding: 12px 14px 12px 16px;
-  background: var(--flaeche);
-  border: 1.5px solid var(--tinte);
-  border-radius: var(--papier-radius);
+  font-size: 0.92rem;
+  cursor: pointer;
 }
-.pruef-haken + .pruef-haken {
-  margin-top: 10px;
+.pruef-haken input {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--stimmblau);
+}
+.pruef-haken input:focus-visible {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
 }
 .pruef-ziel {
   padding: 10px 14px;
@@ -1542,4 +1549,45 @@ textarea {
   white-space: normal;
   font-size: 0.82rem;
   color: var(--text-leise);
+}
+
+/* ---------- Arbeitsbereiche (Admin, Prüfung) ---------- */
+/* Gleiche Farben wie das Spiel, aber sachlich: keine Titelschrift, keine
+   Stimmzettel-Elemente, flache Knöpfe und ruhige Flächen ohne Schatten. */
+.admin,
+.pruefung {
+  --radius: 8px;
+  --papier-radius: 8px;
+  --schatten: none;
+  --schrift-titel: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+.admin :is(h1, h2, h3),
+.pruefung :is(h1, h2, h3) {
+  letter-spacing: 0;
+}
+.admin .knopf,
+.pruefung .knopf {
+  border-radius: 8px;
+  box-shadow: none;
+}
+.admin .knopf:active:not(:disabled),
+.pruefung .knopf:active:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+}
+.admin :is(.knopf-zweit, .knopf-leise),
+.pruefung :is(.knopf-zweit, .knopf-leise) {
+  box-shadow: inset 0 0 0 1px var(--linie);
+}
+.admin :is(.knopf-zweit, .knopf-leise):hover:not(:disabled),
+.pruefung :is(.knopf-zweit, .knopf-leise):hover:not(:disabled) {
+  background: var(--flaeche-2);
+}
+.admin .admin-reiter button,
+.pruefung .admin-reiter button {
+  border-radius: 8px;
+}
+.admin :is(.admin-eintrag, .pruef-kasten, .pruef-karte),
+.pruefung :is(.admin-eintrag, .pruef-kasten, .pruef-karte) {
+  border-width: 1px;
 }
