@@ -58,7 +58,7 @@ Urheberrecht selbst ist in Deutschland nicht übertragbar (§ 29 UrhG) – über
 | Dienst | Heute | Umstellung | Erledigt |
 | --- | --- | --- | --- |
 | **GitHub** | Repo `abaron-lab/politik-duell` | Organisation `politik-duell` gehört dem Verein (mind. 2 Owner aus dem Vorstand); Repo dorthin übertragen. Danach Links in README, `betreiber.ts` (`quellcode`), Impressum anpassen. | [ ] |
-| **Vercel** | Projekt `politik-duell` im privaten Konto | Team für den Verein anlegen, Projekt übertragen (*Settings → Transfer*); Tarif klären (Hobby nur für persönliche, nicht-kommerzielle Nutzung). Domain-Verbindung und Umgebungsvariablen prüfen. | [ ] |
+| **Vercel** | Projekt `politik-duell` im privaten Konto | Team für den Verein anlegen, Projekt übertragen (*Settings → Transfer*); Tarif klären (Hobby nur für persönliche, nicht-kommerzielle Nutzung; ein Verein als Inhaber oder ein Spendenaufruf auf der Seite passt nicht mehr dazu). Domain-Verbindung und Umgebungsvariablen prüfen. | [ ] |
 | **Supabase** | Projekt `wer-liefert` (`xfprvshhexhzhfgkfxpi`) | Organisation des Vereins anlegen, Projekt übertragen (*Project Settings → General → Transfer project*); Mitglieder mit eigenen Konten statt geteiltem Passwort. Admins in Tabelle `admins` prüfen. | [ ] |
 | **Mistral** | privates Konto, Secret `MISTRAL_API_KEY` | Organisation/Workspace für den Verein mit Vereinskonto als Zahlungsmittel; neuen API-Schlüssel erzeugen, in Supabase-Secret eintragen, alten löschen. Ausgabenlimit wieder setzen, Training-Opt-out prüfen. | [ ] |
 | **INWX** (Domains) | `politik-duell.de`, `politikduell.de` | Inhaberwechsel (Owner-Change) auf „Politik-Duell e. V.“; Rechnungen an den Verein. | [ ] |

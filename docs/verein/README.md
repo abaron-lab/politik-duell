@@ -32,6 +32,7 @@ Gemeinnütziger Zweck: **Förderung der Volksbildung** (politische Bildung, § 5
 | Datei | Wofür |
 | --- | --- |
 | [satzung.md](satzung.md) | Satzungsentwurf mit den Grundprinzipien des Projekts |
+| [vorbereitung.md](vorbereitung.md) | Schritt für Schritt: Namen prüfen, GitHub-Organisation, Konten absichern |
 | [mitstreiter.md](mitstreiter.md) | Wen du brauchst, wo du sie findest, Text zum Ansprechen |
 | [gruendungsversammlung.md](gruendungsversammlung.md) | Einladung, Ablauf, Protokoll, Anwesenheitsliste |
 | [anmeldung.md](anmeldung.md) | Registergericht, Finanzamt, Bank, Transparenz |
@@ -42,13 +43,11 @@ Gemeinnütziger Zweck: **Förderung der Volksbildung** (politische Bildung, § 5
 
 ### Phase 1 – jetzt, allein (ohne Mitstreiter:innen möglich)
 
-- [ ] **Lizenz festlegen.** Das Repo ist öffentlich, hat aber keine Lizenz – rechtlich darf es niemand weiterverwenden. Eine freie Lizenz sichert das Projekt auch dann, wenn der Verein scheitert. Vorschlag: Code unter **AGPL-3.0** (wer eine veränderte Fassung online betreibt, muss sie offenlegen), Daten in `daten/` unter **CC BY 4.0**. Entscheidung liegt bei dir; bisher bist du die einzige Urheberin, danach wird das schwieriger.
-- [ ] **Namen prüfen:** Im [Gemeinsamen Registerportal](https://www.handelsregister.de) (Registerart „VR“) nach „Politik-Duell“ und „Politikduell“ suchen. Vereinsnamen müssen sich im selben Ort deutlich unterscheiden.
-- [ ] **GitHub-Organisation** `politik-duell` anlegen (kostenlos) und das Repo dorthin übertragen. Links leitet GitHub automatisch um. Später wird die Organisation einfach dem Verein übergeben.
-- [ ] **Konten auf die Projektadresse umstellen:** Vercel, Supabase, Mistral, INWX, GitHub-Organisation mit `politik-duell@posteo.de` statt privater Adresse. Zugangsdaten in einem Passwortmanager mit Notfallzugang.
+- [x] **Lizenz festgelegt** (28. 9. 2026): Code unter **AGPL-3.0-or-later** (`LICENSE`), Daten unter **CC BY 4.0** (`daten/LICENSE`). Das sichert das Projekt auch dann, wenn der Verein scheitert: Jede:r darf es weiterführen, veränderte Fassungen bleiben offen.
+- [ ] **Namen prüfen, GitHub-Organisation anlegen, Konten auf die Projektadresse umstellen** – Schritt für Schritt in [vorbereitung.md](vorbereitung.md).
 - [ ] **Belege sammeln** für alle bisherigen Kosten (Domain, Posteo, Mistral). Der Verein kann Gründungskosten laut Satzung übernehmen, laufende Vorab-Kosten nicht.
 - [ ] **Mitstreiter:innen suchen** → [mitstreiter.md](mitstreiter.md).
-- [ ] **Vercel-Tarif prüfen:** Der kostenlose Hobby-Tarif ist nach den Vercel-Bedingungen auf persönliche, nicht-kommerzielle Nutzung beschränkt. Für einen Verein vorher klären, ob das reicht, sonst Pro-Tarif oder Wechsel (z. B. Netlify, Cloudflare Pages).
+- [x] **Vercel-Tarif:** Der kostenlose Hobby-Tarif ist für persönliche, nicht-kommerzielle Projekte gedacht – das passt, solange du das Projekt privat und ohne Einnahmen betreibst. Neu prüfen, sobald (a) der Verein Inhaber wird (dann ist es kein persönliches Projekt mehr) oder (b) die Website um Spenden bittet oder Werbung zeigt – Vercel zählt Zahlungsaufforderungen an Besucher:innen zur kommerziellen Nutzung. Dann Pro-Tarif oder Wechsel (z. B. Netlify, Cloudflare Pages).
 
 ### Phase 2 – Gründung (sobald 7 Personen zugesagt haben)
 

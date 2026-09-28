@@ -2,6 +2,8 @@
 
 Hier liegen alle Daten, aus denen das Politik-Duell Punkte vergibt: Parteien, Themen, Ursachen und Maßnahmen. Die KI liest diese Daten nur, um ein Problem einem Thema und seinen Ursachen zuzuordnen. **Punkte und Links kommen ausschließlich von hier.**
 
+Lizenz: [CC BY 4.0](LICENSE) für Auswahl, Struktur, Ursachen, Bewertungen und Begründungen. Die wörtlichen Zitate aus Wahlprogrammen und die verlinkten Quellen sind davon nicht erfasst. Mit einem Pull Request stellst du deinen Beitrag unter dieselbe Lizenz.
+
 Änderungen laufen per Pull Request mit Quellenpflicht. Jeder Pull Request wird automatisch geprüft (`npm run daten:pruefen`).
 
 > **Echte Daten, im Aufbau.** Parteien und Programme siehe unten („Programme“). Maßnahmen sind bisher nur für Miete erfasst und noch nicht geprüft – im Spiel gilt deshalb vorerst alles als „noch nicht erfasst“.
