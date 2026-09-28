@@ -1051,8 +1051,8 @@ textarea {
   gap: 8px;
   padding: 14px;
   background: var(--flaeche);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--linie);
+  border-radius: var(--papier-radius);
   box-shadow: var(--schatten);
 }
 .admin-eintrag p {
@@ -1187,8 +1187,8 @@ textarea {
   margin-top: 1rem;
   padding: 14px;
   background: var(--flaeche);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--linie);
+  border-radius: var(--papier-radius);
   box-shadow: var(--schatten);
 }
 .pruef-kasten h2 {
@@ -1197,9 +1197,17 @@ textarea {
 .pruef-kasten p {
   margin: 0.5rem 0 0;
 }
+/* Einwilligungen auf der Prüfseite: einzelne Stimmzettelzeile mit Kreis. */
 .pruef-haken {
   max-width: none;
   margin: 1rem 0 0;
+  padding: 12px 14px 12px 16px;
+  background: var(--flaeche);
+  border: 1.5px solid var(--tinte);
+  border-radius: var(--papier-radius);
+}
+.pruef-haken + .pruef-haken {
+  margin-top: 10px;
 }
 .pruef-ziel {
   padding: 10px 14px;
@@ -1229,8 +1237,8 @@ textarea {
   gap: 10px;
   padding: 14px;
   background: var(--flaeche);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--linie);
+  border-radius: var(--papier-radius);
   box-shadow: var(--schatten);
 }
 .pruef-karte p {
