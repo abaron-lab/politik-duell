@@ -935,3 +935,253 @@ textarea {
   margin-top: 1.25rem;
   font-size: 0.85rem;
 }
+
+/* ---------- Prüfung durch Eingeladene (#/pruefen/…) ---------- */
+.pruef-inhalt h1 {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+}
+.pruef-inhalt h2 {
+  margin-top: 1.5rem;
+  font-size: 1.15rem;
+}
+.pruef-inhalt h3 {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+.pruef-inhalt ul {
+  padding-left: 1.25rem;
+}
+.pruef-themen {
+  display: grid;
+  gap: 4px;
+}
+.pruef-kasten {
+  margin-top: 1rem;
+  padding: 14px;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+}
+.pruef-kasten h2 {
+  margin-top: 0;
+}
+.pruef-kasten p {
+  margin: 0.5rem 0 0;
+}
+.pruef-haken {
+  max-width: none;
+  margin: 1rem 0 0;
+}
+.pruef-ziel {
+  padding: 10px 14px;
+  background: var(--flaeche);
+  border-left: 4px solid var(--akzent);
+  border-radius: 8px;
+}
+.pruef-ziel p {
+  margin: 0;
+}
+.pruef-ziel .label {
+  margin-bottom: 4px;
+}
+.pruef-massstab summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.pruef-liste {
+  display: grid;
+  gap: 12px;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pruef-karte {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+}
+.pruef-karte p {
+  margin: 0;
+}
+.pruef-kennung {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-leise);
+  font-variant-numeric: tabular-nums;
+}
+.pruef-text {
+  font-weight: 600;
+}
+.pruef-wahlen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.pruef-wahl {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.pruef-wahl legend {
+  margin-bottom: 4px;
+  font-size: 0.82rem;
+  color: var(--text-leise);
+}
+.pruef-stufen {
+  display: flex;
+  gap: 6px;
+}
+.pruef-stufen label {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  background: var(--flaeche-2);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.pruef-stufen label.gewaehlt {
+  color: #1a0d05;
+  background: var(--akzent);
+  border-color: var(--akzent);
+}
+.pruef-stufen label:has(input:focus-visible) {
+  outline: 3px solid var(--akzent-2);
+  outline-offset: 2px;
+}
+.pruef-stufen input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.pruef-notiz {
+  display: grid;
+  gap: 4px;
+}
+.pruef-notiz textarea {
+  min-height: 0;
+}
+.pruef-empfehlung {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--flaeche-2);
+  border-radius: 10px;
+  font-size: 0.92rem;
+}
+.pruef-empfehlung-knopf {
+  justify-self: start;
+}
+.pruef-abschluss .knopf-gross {
+  margin-top: 1rem;
+}
+.pruef-einstellungen {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--linie);
+}
+.pruef-einstellungen h2 {
+  margin: 0;
+}
+.pruef-einstellungen .pruef-haken {
+  margin: 0;
+}
+
+/* Admin → Prüfung */
+.pruef-anlegen,
+.pruef-link {
+  margin-bottom: 12px;
+}
+.pruef-themenwahl {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.pruef-themenwahl label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.admin .pruef-themenwahl input {
+  width: auto;
+  accent-color: var(--akzent);
+}
+.pruef-status {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.admin select {
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--flaeche-2);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+}
+.pruef-auswertung {
+  display: grid;
+  gap: 10px;
+  margin-top: 2rem;
+}
+.pruef-auswertung h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.pruef-auswertung .admin-aktionen {
+  align-items: end;
+}
+/* Breite Tabelle: auf dem Handy seitlich scrollen, die Seite selbst nicht. */
+.pruef-tabelle-rahmen {
+  overflow-x: auto;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+.pruef-tabelle {
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.pruef-tabelle th,
+.pruef-tabelle td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--linie);
+}
+.pruef-tabelle thead th {
+  font-size: 0.75rem;
+  color: var(--text-leise);
+  white-space: nowrap;
+}
+.pruef-tabelle tbody th {
+  font-weight: 400;
+  min-width: 14rem;
+}
+.pruef-tabelle td {
+  font-variant-numeric: tabular-nums;
+}
+.pruef-klaeren {
+  background: rgb(255 176 32 / 0.08);
+}
+.pruef-einzel,
+.pruef-notiz-zeile {
+  display: block;
+  white-space: nowrap;
+}
+.pruef-notiz-zeile {
+  margin-top: 4px;
+  white-space: normal;
+  font-size: 0.82rem;
+  color: var(--text-leise);
+}

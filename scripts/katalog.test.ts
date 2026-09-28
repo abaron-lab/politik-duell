@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { pruefeDatenordner } from './katalog-laden'
+import { pruefMassnahmenTs } from './pruef-massnahmen'
 import { seedSql } from './seed-sql'
 import { pruefeKatalog, spielbareAbdeckung, spielbareMassnahmen, type Datei } from '../src/data/katalog'
 
@@ -27,6 +28,7 @@ const massnahme = (ueber: Record<string, unknown> = {}) => ({
   beleg_programm_url: 'https://eins.de/programm.pdf#page=4',
   stand: '2026-03-01',
   geprueft: true,
+  bewertung: { anzahl: 2, median_w: 3, median_u: 2, spannweite: 1, datum: '2026-03-05', entwurf: [2, 2] },
   ...ueber,
 })
 
@@ -135,6 +137,20 @@ describe('Datenkatalog: Prüfregeln', () => {
     expect(mit({ wirkung: 3 })).toMatch(/unbekanntes Feld „wirkung“/)
   })
 
+  it('bei echten Daten „geprueft“ erst ab zwei Bewertungen; Mediane passen zu den Werten', () => {
+    const mit = (m: Record<string, unknown>, p = parteien()) =>
+      fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme(m)] }, { partei_id: 2, keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: true } }] }), p)
+    const bw = { anzahl: 2, median_w: 3, median_u: 2, spannweite: 1, datum: '2026-03-05', entwurf: [2, 2] }
+    expect(mit({ bewertung: undefined })).toMatch(/erst ab zwei unabhängigen Bewertungen/)
+    expect(mit({ bewertung: { ...bw, anzahl: 1 } })).toMatch(/erst ab zwei unabhängigen Bewertungen/)
+    expect(mit({ bewertung: undefined, geprueft: false })).toBe('')
+    expect(mit({ bewertung: undefined }, parteien(true))).toBe('')
+    expect(mit({ wirksamkeit: 2 })).toMatch(/weichen von den Medianen der Prüfung ab/)
+    expect(mit({ bewertung: { ...bw, median_w: 2.5 } })).toMatch(/„median_w“ muss eine ganze Zahl/)
+    expect(mit({ bewertung: { ...bw, entwurf: [2] } })).toMatch(/„entwurf“/)
+    expect(mit({ bewertung: { ...bw, namen: ['Erika'] } })).toMatch(/unbekanntes Feld „namen“/)
+  })
+
   it('verlangt Quellen für Ursachen und verbietet Platzhalter-Links bei echten Daten', () => {
     expect(fehlerVon(thema({ ursachen: [{ id: 11, beschreibung: 'Zu wenige Praxen' }] }))).toMatch(/„quelle_url“ fehlt/)
     const platzhalter = thema({ ursachen: [{ id: 11, beschreibung: 'x', quelle_url: 'https://example.org/studie' }] })
@@ -200,5 +216,10 @@ describe('Datenkatalog im Repo (daten/)', () => {
   it('supabase/seed.sql ist aktuell (sonst: npm run seed)', () => {
     const datei = readFileSync(new URL('../supabase/seed.sql', import.meta.url), 'utf8')
     expect(datei).toBe(seedSql(katalog))
+  })
+
+  it('Maßnahmenliste der Edge Function `pruefung` ist aktuell (sonst: npm run seed)', () => {
+    const datei = readFileSync(new URL('../supabase/functions/_shared/pruef-massnahmen.ts', import.meta.url), 'utf8')
+    expect(datei).toBe(pruefMassnahmenTs(katalog))
   })
 })

@@ -1,24 +1,13 @@
+import { useEffect, useState } from 'react'
+import { supabase } from '../data/quelle'
 import { BETREIBER } from './betreiber'
+import { UMSETZBARKEIT, WIRKSAMKEIT } from './massstab'
 
 // „So bewerten wir“ (#/methode): offene Methode und Fehlermeldung.
 // Die Skalen hier müssen zu den Bewertungen in der Datenbank passen – wer
 // Maßnahmen bewertet, richtet sich nach dieser Seite.
 
-const WIRKSAMKEIT = [
-  'hilft beim Ziel nicht: setzt an keiner der erfassten Ursachen an',
-  'hilft kaum: berührt eine Ursache nur am Rand oder lindert nur Folgen',
-  'hilft spürbar: setzt an einer Ursache an, eine deutliche Verbesserung ist zu erwarten',
-  'hilft stark: setzt direkt an einer Hauptursache an, die Wirkung ist gut belegt',
-]
-
-const UMSETZBARKEIT = [
-  'rechtlich oder finanziell derzeit nicht umsetzbar',
-  'nur mit großen Hürden umsetzbar (z. B. Verfassungsänderung, ungeklärte Finanzierung)',
-  'umsetzbar mit Aufwand oder in mehreren Jahren',
-  'rechtlich möglich, finanziert und innerhalb einer Wahlperiode realistisch',
-]
-
-function Skala({ stufen }: { stufen: string[] }) {
+export function Skala({ stufen }: { stufen: string[] }) {
   return (
     <dl className="skala">
       {stufen.map((text, wert) => (
@@ -28,6 +17,45 @@ function Skala({ stufen }: { stufen: string[] }) {
         </div>
       ))}
     </dl>
+  )
+}
+
+interface PruefendeJeThema {
+  thema_id: number
+  thema: string
+  anzahl: number
+  namen: string[]
+}
+
+/** „bewertet von A, B und einer weiteren Person“ – Namen nur mit Einwilligung der Person. */
+function bewertetVon({ anzahl, namen }: PruefendeJeThema): string {
+  const rest = anzahl - namen.length
+  if (namen.length === 0) return anzahl === 1 ? 'einer unabhängigen Person' : `${anzahl} unabhängigen Prüfenden`
+  const teile = [...namen, ...(rest > 0 ? [rest === 1 ? 'einer weiteren Person' : `${rest} weiteren Personen`] : [])]
+  return teile.length === 1 ? teile[0] : `${teile.slice(0, -1).join(', ')} und ${teile[teile.length - 1]}`
+}
+
+/** Wer welche Themen bewertet hat (aus Supabase; ohne Verbindung oder ohne Einträge unsichtbar). */
+function Pruefende() {
+  const [liste, setListe] = useState<PruefendeJeThema[]>([])
+  useEffect(() => {
+    let aktiv = true
+    void supabase
+      ?.rpc('pruefende_oeffentlich')
+      .then(({ data }) => aktiv && Array.isArray(data) && setListe(data as PruefendeJeThema[]))
+    return () => {
+      aktiv = false
+    }
+  }, [])
+  if (!liste.length) return null
+  return (
+    <ul>
+      {liste.map((e) => (
+        <li key={e.thema_id}>
+          {e.thema}: bewertet von {bewertetVon(e)}
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -53,13 +81,21 @@ export function Methode() {
         Für jede Partei erfassen wir die Maßnahmen aus ihrem Wahlprogramm zur Bundestagswahl 2025, die an diesen
         Ursachen ansetzen – mit wörtlichem Zitat, Seitenangabe, Stand des Programms und, wo vorhanden, einer Studie zur
         Wirkung. Jede Bewertung hat eine kurze Begründung, die in der Auflösung angezeigt wird. Ins Spiel kommt ein
-        Thema für eine Partei erst, wenn eine zweite Person alle Einträge dazu geprüft hat: Zitat und Seite im
-        Programm, Zuordnung zu den Ursachen und die Bewertung – diese zuerst, ohne zu wissen, von welcher Partei die
-        Maßnahme stammt.
+        Thema für eine Partei erst, wenn alle Einträge dazu geprüft sind.
       </p>
       <p>
-        Derzeit übernimmt der Betreiber die Prüfung. Wer als unabhängige Prüferin oder unabhängiger Prüfer mitmachen
-        möchte, ist herzlich eingeladen (Kontakt im Impressum).
+        <strong>Wer bewertet?</strong> Mindestens zwei, besser drei unabhängige Prüfende mit Fachwissen, die wir
+        persönlich einladen. Jede Person bewertet die Maßnahmen eines Themas für sich: ohne Parteinamen, in gemischter
+        Reihenfolge und ohne die Bewertungen der anderen zu sehen. Unseren Entwurf mit Begründung sehen sie erst,
+        nachdem sie selbst bewertet haben. Je Maßnahme zählt der Median der Einzelwerte, getrennt für Wirksamkeit und
+        Umsetzbarkeit; die Punkte ergeben sich erst daraus. Liegen die Einschätzungen weit auseinander, klären wir den
+        Maßstab, bevor wir die Werte übernehmen. Zitat, Seite und Zuordnung zu den Ursachen prüfen wir zusätzlich
+        selbst.
+      </p>
+      <Pruefende />
+      <p>
+        Wer als unabhängige Prüferin oder unabhängiger Prüfer mitmachen möchte, ist herzlich eingeladen (Kontakt im
+        Impressum).
       </p>
 
       <h2>3. Zwei Kriterien, je 0 bis 3 Punkte</h2>

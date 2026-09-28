@@ -9,3 +9,8 @@ sql_paths = ["./seed.sql"]
 # Die App ruft die Funktion ohne Login auf; geschützt wird sie durch
 # Eingabeprüfung und Rate-Limit pro Sitzung.
 verify_jwt = false
+
+[functions.pruefung]
+# Eingeladene Prüfende haben kein Konto; Zugang nur mit persönlichem Token
+# (geprüft über den SHA-256-Hash in pruef_einladungen).
+verify_jwt = false

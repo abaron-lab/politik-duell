@@ -4,6 +4,9 @@ import { Rechtliches, type RechtsSeite } from './rechtliches/Rechtliches.tsx'
 
 // Admin-Ansicht unter #/admin – eigenes Bundle, wird nur dort geladen.
 const Admin = lazy(() => import('./admin/Admin.tsx').then((m) => ({ default: m.Admin })))
+// Prüfseite für Eingeladene unter #/pruefen/<token> – ebenfalls eigenes Bundle
+// (enthält den ganzen Datenkatalog mit Entwürfen).
+const Pruefseite = lazy(() => import('./pruefung/Pruefseite.tsx').then((m) => ({ default: m.Pruefseite })))
 
 // Wurde eine Rechtsseite aus der App heraus geöffnet? Dann führt „Zurück“ per
 // history.back() ins laufende Spiel, sonst zur Startseite.
@@ -36,6 +39,13 @@ export function Wurzel() {
     return (
       <Suspense fallback={null}>
         <Admin />
+      </Suspense>
+    )
+  // Der Token steht im Hash: Er geht so nie an den Webserver (keine Server-Logs).
+  if (hash.startsWith('#/pruefen/'))
+    return (
+      <Suspense fallback={null}>
+        <Pruefseite token={hash.slice('#/pruefen/'.length)} />
       </Suspense>
     )
   const seite = rechtsSeite(hash)

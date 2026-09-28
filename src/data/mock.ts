@@ -1,4 +1,4 @@
-import { ladeKatalog, spielbareAbdeckung, spielbareMassnahmen, type Datei } from './katalog.ts'
+import { alsDateien, ladeKatalog, spielbareAbdeckung, spielbareMassnahmen } from './katalog.ts'
 
 // ---------------------------------------------------------------------------
 // Eingebaute Beispieldaten der App („Mit Beispieldaten spielen“, Tests) –
@@ -8,11 +8,6 @@ import { ladeKatalog, spielbareAbdeckung, spielbareMassnahmen, type Datei } from
 // Spielablauf und Punktelogik und bleiben als feste Testgrundlage unverändert.
 // Die echten Daten liegen in `daten/` und kommen über Supabase ins Spiel.
 // ---------------------------------------------------------------------------
-
-const alsDateien = (module: Record<string, unknown>): Datei[] =>
-  Object.entries(module)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([pfad, inhalt]) => ({ pfad: pfad.replace(/^(\.\.\/)+/, ''), inhalt }))
 
 const [parteienDatei] = alsDateien(import.meta.glob('../../daten/beispiel/parteien.json', { eager: true, import: 'default' }))
 const themenDateien = alsDateien(import.meta.glob('../../daten/beispiel/themen/*.json', { eager: true, import: 'default' }))

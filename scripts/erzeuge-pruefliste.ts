@@ -5,6 +5,7 @@
 //         npm run pruefliste -- 2 --artefakt  – ohne HTML-Gerüst (zum Veröffentlichen als Artifact)
 // Ausgabe: pruefung/<nr>-<thema>.html (nicht im Repo)
 import { mkdirSync, writeFileSync } from 'node:fs'
+import { blindeReihenfolge } from '../src/pruefung/auswertung.ts'
 import { pruefeDatenordner } from './katalog-laden.ts'
 
 const { katalog, fehler } = pruefeDatenordner()
@@ -21,8 +22,6 @@ const nurThema = nummer ? Number(nummer) : null
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const dateiname = (s: string) =>
   s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-// Feste, aber parteiunabhängige Reihenfolge für Durchgang A.
-const mische = (n: number) => ((n * 2654435761) >>> 0) % 1000003
 
 const ordner = new URL('../pruefung/', import.meta.url)
 mkdirSync(ordner, { recursive: true })
@@ -135,7 +134,8 @@ for (const thema of katalog.themen) {
   const ursachen = katalog.ursachen.filter((u) => u.thema_id === thema.id)
   const ursacheText = (id: number) => ursachen.find((u) => u.id === id)?.beschreibung ?? String(id)
   const partei = (id: number) => katalog.parteien.find((p) => p.id === id)!
-  const blind = [...massnahmen].sort((a, b) => mische(a.id) - mische(b.id))
+  // Feste, aber parteiunabhängige Reihenfolge für Durchgang A (wie auf der Prüfseite der App).
+  const blind = blindeReihenfolge(massnahmen)
   const kennung = new Map(blind.map((m, i) => [m.id, `M${i + 1}`]))
   const fehlend = katalog.parteien.filter((p) => !katalog.abdeckung.some((a) => a.thema_id === thema.id && a.partei_id === p.id))
 

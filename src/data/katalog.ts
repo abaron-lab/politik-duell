@@ -290,7 +290,7 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
         }
         unbekannteFelder(mOrt, mRoh, [
           'id', 'beschreibung', 'ursachen_ids', 'wirksamkeit', 'umsetzbarkeit', 'rollen_modifikator',
-          'begruendung', 'zitat', 'beleg_programm_url', 'beleg_studie_url', 'stand', 'geprueft',
+          'begruendung', 'zitat', 'beleg_programm_url', 'beleg_studie_url', 'stand', 'geprueft', 'bewertung',
         ])
         const m: Massnahme = {
           id: ganzzahl(mOrt, mRoh, 'id', 1, 2147483647),
@@ -362,6 +362,31 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
           }
         }
 
+        // Ergebnis der Prüfung durch Eingeladene (npm run pruefung:uebernehmen): Anzahl und Mediane,
+        // nie Namen. Bei echten Daten gilt eine Maßnahme erst ab zwei Bewertungen als geprüft.
+        const bw = mRoh.bewertung
+        let anzahl = 0
+        if (bw !== undefined) {
+          const bOrt = `${mOrt} › bewertung`
+          if (!istObjekt(bw)) f(bOrt, 'erwartet ein Objekt mit anzahl, median_w, median_u, spannweite, datum, entwurf')
+          else {
+            unbekannteFelder(bOrt, bw, ['anzahl', 'median_w', 'median_u', 'spannweite', 'datum', 'entwurf'])
+            anzahl = ganzzahl(bOrt, bw, 'anzahl', 1, 99)
+            const mw = ganzzahl(bOrt, bw, 'median_w', 0, 3)
+            const mu = ganzzahl(bOrt, bw, 'median_u', 0, 3)
+            ganzzahl(bOrt, bw, 'spannweite', 0, 3)
+            datum(bOrt, bw, 'datum')
+            const e = bw.entwurf
+            if (!Array.isArray(e) || e.length !== 2 || e.some((x) => !Number.isInteger(x) || x < 0 || x > 3))
+              f(bOrt, '„entwurf“ muss [Wirksamkeit, Umsetzbarkeit] des Entwurfs sein, je 0 bis 3')
+            if (mw !== m.wirksamkeit || mu !== m.umsetzbarkeit)
+              f(bOrt, '„wirksamkeit“/„umsetzbarkeit“ weichen von den Medianen der Prüfung ab – neu prüfen lassen oder „bewertung“ anpassen')
+          }
+        }
+        if (!katalog.fiktiv && m.geprueft && anzahl < 2) {
+          f(mOrt, '„geprueft“ erst ab zwei unabhängigen Bewertungen („bewertung.anzahl“ ≥ 2, siehe daten/README.md → „Prüfung“)')
+        }
+
         if (!m.geprueft) {
           alleGeprueft = false
           if (!katalog.fiktiv) {
@@ -397,6 +422,12 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
   katalog.massnahmen.sort(nachId)
   return { katalog, fehler, warnungen }
 }
+
+/** Ergebnis von Vites `import.meta.glob(…, { eager: true, import: 'default' })` als sortierte Dateiliste. */
+export const alsDateien = (module: Record<string, unknown>): Datei[] =>
+  Object.entries(module)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([pfad, inhalt]) => ({ pfad: pfad.replace(/^(\.\.\/)+/, ''), inhalt }))
 
 /** Prüft und wirft bei Fehlern – für Stellen, an denen die Daten schon geprüft sein müssen. */
 export function ladeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Katalog {

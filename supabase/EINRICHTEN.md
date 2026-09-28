@@ -127,6 +127,7 @@ npx supabase login
 npx supabase link --project-ref xfprvshhexhzhfgkfxpi   # fragt nach dem Datenbank-Passwort
 npx supabase db push --include-seed
 npx supabase functions deploy analyse --no-verify-jwt
+npx supabase functions deploy pruefung --no-verify-jwt
 npm install && npm run dev
 ```
 
@@ -155,6 +156,32 @@ Einmalig, **in dieser Reihenfolge** (sonst zeigt die App „Die Spieldaten konnt
    (speichert Runden mit einer noch nicht erfassten Partei als `unvollstaendig`, ohne Punkte).
 4. Erst danach den Branch nach `main` übernehmen, damit Vercel die neue App veröffentlicht.
 
+### 7. Bewertung durch eingeladene Prüfende
+
+Einmalig, **in dieser Reihenfolge**. Ablauf und Regeln: [`daten/README.md`](../daten/README.md) → „Prüfung“.
+
+1. **Datenbank ergänzen:** [`supabase/migrations/20260929000000_pruefung.sql`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/migrations/20260929000000_pruefung.sql)
+   → **Copy raw file** → im [SQL Editor](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/sql/new)
+   einfügen → **Run**. Legt die Tabellen `pruef_einladungen` und `pruef_bewertungen` an (nur Admins
+   und die Edge Function haben Zugriff) und die Funktion `pruefende_oeffentlich` für die Methodenseite.
+2. **Edge Function anlegen:** [`supabase/dashboard/3-pruefung.ts`](https://github.com/abaron-lab/wer-liefert/blob/main/supabase/dashboard/3-pruefung.ts)
+   → **Copy raw file** → [Edge Functions](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/functions)
+   → **Deploy a new function** → **Via Editor** → Beispielcode löschen, einfügen, Name **`pruefung`** → **Deploy function**.
+   Danach unter *Details → Function configuration* **„Verify JWT with legacy secret“ ausschalten** → **Save changes**
+   (wie bei `analyse`; Prüfende haben kein Konto, Zugang nur über den persönlichen Link).
+   Das Secret `ERLAUBTE_URSPRUENGE` gilt auch hier.
+3. **Branch nach `main` übernehmen**, damit Vercel die Prüfseite und den Admin-Bereich veröffentlicht.
+4. **Einladungen anlegen:** `#/admin` → Reiter **„Prüfung“** → Name eintragen, Thema (z. B. Miete) anhaken →
+   **Einladung anlegen**. Den angezeigten Link sofort kopieren und der Person persönlich schicken – er wird
+   nicht gespeichert und lässt sich später nicht noch einmal anzeigen. Geht ein Link verloren: Einladung
+   löschen und neu anlegen.
+5. **Auswerten und übernehmen:** Sind genug Bewertungen abgesendet, unter „Auswertung“ **Export (ohne Namen)**
+   herunterladen und auf einem Rechner mit dem Repo `npm run pruefung:uebernehmen -- <datei>` ausführen
+   (oder die Datei in einer Claude-Code-Sitzung übergeben).
+
+Nach Änderungen an den Maßnahmen eines Themas (neue IDs) `npm run dashboard` ausführen und `3-pruefung.ts`
+neu einspielen – die Funktion kennt die Maßnahmen-IDs je Thema aus dem Datenkatalog.
+
 ## Nach Änderungen am Code
 
 `npm run dashboard` erzeugt `supabase/seed.sql` und beide Dateien in `supabase/dashboard/` neu.
@@ -162,7 +189,8 @@ Danach im Dashboard:
 
 - **Beispieldaten geändert:** nur den Inhalt von `supabase/seed.sql` im SQL Editor ausführen
   (mehrfach ausführbar, gespielte Runden bleiben erhalten).
-- **Edge Function geändert:** in der Funktion `analyse` den Code durch `2-analyse.ts` ersetzen → Deploy.
+- **Edge Function geändert:** in der Funktion `analyse` den Code durch `2-analyse.ts` ersetzen → Deploy
+  (bzw. `pruefung` durch `3-pruefung.ts`).
 - **Neue Migration:** nur die neue Datei aus `supabase/migrations/` im SQL Editor ausführen.
 
 ## Datenschutz
@@ -177,3 +205,6 @@ Danach im Dashboard:
   gespeicherten Feldern die Erklärung mit anpassen.
 - Vor dem Spielstart gibt es eine ausdrückliche Einwilligung (Art. 9 DSGVO), weil Eingaben
   politische Meinungen erkennen lassen können. Sie wird nicht gespeichert.
+- Prüfende: Name und Einzelbewertungen stehen nur in Supabase (`pruef_einladungen`, `pruef_bewertungen`),
+  nie im Repo. Ihre Einwilligung wird gespeichert (`einwilligung_am`). Auf Wunsch die Einladung in der
+  Admin-Ansicht löschen – das löscht alle Bewertungen der Person mit.
