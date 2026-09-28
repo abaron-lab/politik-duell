@@ -10,8 +10,10 @@ var findeAbdeckung = (abdeckung, parteiId, themaId) => abdeckung.find((a) => a.p
 function massnahmenPunkte(m, rolle) {
   const mod = rolle ? m.rollen_modifikator?.[rolle] : void 0;
   const rollenBonus = mod?.wert ?? 0;
+  const wirksamkeit = Math.min(3, Math.max(0, m.wirksamkeit + rollenBonus));
   return {
-    punkte: Math.max(0, m.wirksamkeit + m.umsetzbarkeit + rollenBonus),
+    punkte: wirksamkeit * m.umsetzbarkeit,
+    wirksamkeit,
     rollenBonus,
     rollenBegruendung: mod?.begruendung
   };
@@ -50,6 +52,7 @@ function bewertePartei(partei, themaId, ursachenIds, rolle, massnahmen, abdeckun
         ],
         punkteJeUrsache: beste.p.punkte,
         rollenBonus: beste.p.rollenBonus,
+        wirksamkeit: beste.p.wirksamkeit,
         rollenBegruendung: beste.p.rollenBegruendung
       });
     }

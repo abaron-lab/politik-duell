@@ -69,12 +69,17 @@ export function Methode() {
       <Skala stufen={UMSETZBARKEIT} />
       <p>
         <strong>Rolle:</strong> Wählst du eine Rolle (z. B. Mieter:in), kann eine Maßnahme für dich mehr oder weniger
-        bringen. Solche Auf- oder Abwertungen sind je Maßnahme einzeln begründet und werden angezeigt.
+        bringen. Dann verschiebt sich ihre Wirksamkeit für dich um bis zu zwei Stufen (innerhalb von 0 bis 3). Solche
+        Auf- oder Abwertungen sind je Maßnahme einzeln begründet und werden angezeigt.
       </p>
 
       <h2>4. Punkte in der Runde</h2>
       <ul>
-        <li>Pro Ursache zählt die beste Maßnahme einer Partei: Wirksamkeit + Umsetzbarkeit (± Rolle).</li>
+        <li>
+          Pro Ursache zählt die beste Maßnahme einer Partei: Wirksamkeit × Umsetzbarkeit, also 0 bis 9 Punkte. So
+          bringt eine Maßnahme ohne Wirkung keine Punkte, auch wenn sie leicht umzusetzen wäre – und eine wirksame, die
+          sich nicht umsetzen lässt, ebenso wenig.
+        </li>
         <li>Die Rundenpunkte sind die Summe über alle zugeordneten Ursachen.</li>
         <li>Die höhere Summe bekommt den Spielpunkt, bei Gleichstand beide.</li>
         <li>
