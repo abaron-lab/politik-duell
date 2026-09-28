@@ -10,7 +10,8 @@ import { KATALOG } from './katalog'
 
 // Prüfseite für eingeladene Prüfende (#/pruefen/<token>), Ablauf siehe
 // docs/plan-pruefung.md: Einwilligung → Ziel und Maßstab → Maßnahmen ohne
-// Parteinamen bewerten → Empfehlung erst danach → Absenden.
+// Parteinamen bewerten (eine nach der anderen) → Empfehlung erst danach →
+// Fertig melden. Gespeichert wird laufend; über den Link geht es jederzeit weiter.
 
 type Werte = Record<number, api.GeladeneBewertung>
 
@@ -250,6 +251,33 @@ function Bewerten({ token, stand, onNeuLaden }: { token: string; stand: api.Prue
   const fertig = massnahmen.filter((m) => bewertet(werte[m.id])).length
   const abgesendet = massnahmen.length > 0 && massnahmen.every((m) => werte[m.id]?.abgesendet)
 
+  // Eine Maßnahme nach der anderen; Schritt = Anzahl Maßnahmen ist der Abschluss.
+  // Start bei der ersten noch offenen Maßnahme – so geht es nach einer Pause dort weiter.
+  const ersterOffener = (id: number) => {
+    const liste = massnahmenVon(id)
+    const i = liste.findIndex((m) => !bewertet(werte[m.id]))
+    return i < 0 ? liste.length : i
+  }
+  const [schritt, setSchritt] = useState(() => ersterOffener(themaId))
+  const [richtung, setRichtung] = useState<'vor' | 'zurueck'>('vor')
+  const schrittRef = useRef<HTMLDivElement>(null)
+
+  function gehe(ziel: number) {
+    setRichtung(ziel < schritt ? 'zurueck' : 'vor')
+    setSchritt(Math.max(0, Math.min(massnahmen.length, ziel)))
+    // Neue Karte oben ansetzen, auch wenn vorher weit gescrollt wurde.
+    requestAnimationFrame(() => {
+      const el = schrittRef.current
+      if (el && el.getBoundingClientRect().top < 0) el.scrollIntoView({ block: 'start' })
+    })
+  }
+
+  function themaWechseln(id: number) {
+    setThemaId(id)
+    setRichtung('vor')
+    setSchritt(ersterOffener(id))
+  }
+
   async function senden() {
     setSendet(true)
     setAbsendenFehler(null)
@@ -260,11 +288,14 @@ function Bewerten({ token, stand, onNeuLaden }: { token: string; stand: api.Prue
       for (const m of massnahmen) neu[m.id] = { ...neu[m.id], abgesendet: true }
       setzeWerte(neu)
     } catch (e) {
-      setAbsendenFehler(e instanceof Error ? e.message : 'Absenden fehlgeschlagen.')
+      setAbsendenFehler(e instanceof Error ? e.message : 'Fertigmelden fehlgeschlagen.')
     } finally {
       setSendet(false)
     }
   }
+
+  const aktuelle = massnahmen[schritt]
+  const naechsterOffener = massnahmen.findIndex((m) => !bewertet(werte[m.id]))
 
   return (
     <main className="pruef-inhalt">
@@ -275,7 +306,7 @@ function Bewerten({ token, stand, onNeuLaden }: { token: string; stand: api.Prue
               key={id}
               className={id === themaId ? 'aktiv' : ''}
               aria-current={id === themaId ? 'page' : undefined}
-              onClick={() => setThemaId(id)}
+              onClick={() => themaWechseln(id)}
             >
               {themaVon(id)?.name ?? `Thema ${id}`}
             </button>
@@ -290,56 +321,116 @@ function Bewerten({ token, stand, onNeuLaden }: { token: string; stand: api.Prue
         <p className="admin-leer">Zu diesem Thema sind noch keine Maßnahmen erfasst.</p>
       ) : (
         <>
-          <h2 className="pruef-zwischen">Maßnahmen bewerten</h2>
-          <p className="hinweis">
-            Ohne Parteinamen, in gemischter Reihenfolge. Wähle für jede Maßnahme Wirksamkeit und Umsetzbarkeit. Danach
-            kannst du die Empfehlung (unseren Entwurf mit Begründung) ansehen und deine Werte noch ändern.
+          <p className="pruef-pause">
+            <strong>Du musst nicht alles auf einmal schaffen.</strong> Jede Angabe wird sofort gespeichert. Mach Pause,
+            wann du willst: Über deinen Link geht es später an derselben Stelle weiter – auch auf einem anderen Gerät.
           </p>
-          <ol className="pruef-liste">
-            {massnahmen.map((m, i) => (
-              <MassnahmeKarte
-                key={m.id}
-                kennung={`M${i + 1}`}
-                massnahme={m}
-                ursachen={ursachen}
-                wert={werte[m.id] ?? leer(m.id)}
-                onAendern={(teil, sofort) => aendern(m.id, teil, sofort)}
-              />
-            ))}
-          </ol>
 
-          <section className="pruef-kasten pruef-abschluss" aria-live="polite">
-            <p>
-              <strong>
-                {fertig} von {massnahmen.length}
-              </strong>{' '}
-              Maßnahmen bewertet · <SpeicherAnzeige status={status} onNochmal={() => void sichern()} />
-            </p>
-            {abgesendet ? (
-              <p>
-                <strong>Abgesendet – vielen Dank!</strong> Du kannst deine Bewertungen weiter ändern, bis sie in den
-                Datenkatalog übernommen werden. Änderungen werden automatisch gespeichert.
-              </p>
+          <div className="pruef-fortschritt">
+            <div className="pruef-fortschritt-zeile">
+              <span>
+                <strong>
+                  {fertig} von {massnahmen.length}
+                </strong>{' '}
+                bewertet
+              </span>
+              <SpeicherAnzeige status={status} onNochmal={() => void sichern()} />
+            </div>
+            <div
+              className="pruef-balken"
+              role="progressbar"
+              aria-label="Fortschritt"
+              aria-valuemin={0}
+              aria-valuemax={massnahmen.length}
+              aria-valuenow={fertig}
+            >
+              <div style={{ width: `${(fertig / massnahmen.length) * 100}%` }} />
+            </div>
+          </div>
+
+          <div ref={schrittRef} className="pruef-schritt">
+            {aktuelle ? (
+              <MassnahmeKarte
+                key={aktuelle.id}
+                className={richtung === 'vor' ? 'rein-rechts' : 'rein-links'}
+                kennung={`Maßnahme ${schritt + 1} von ${massnahmen.length}`}
+                massnahme={aktuelle}
+                ursachen={ursachen}
+                wert={werte[aktuelle.id] ?? leer(aktuelle.id)}
+                onAendern={(teil, sofort) => aendern(aktuelle.id, teil, sofort)}
+              />
             ) : (
-              <>
-                <button
-                  className="knopf knopf-gross"
-                  disabled={fertig < massnahmen.length || sendet}
-                  onClick={() => void senden()}
-                >
-                  {sendet ? 'Sende …' : 'Bewertungen absenden'}
-                </button>
-                {fertig < massnahmen.length && (
-                  <p className="hinweis">Absenden geht, sobald alle Maßnahmen bewertet sind.</p>
+              <section key="abschluss" className={`pruef-kasten pruef-abschluss ${richtung === 'vor' ? 'rein-rechts' : 'rein-links'}`}>
+                {abgesendet ? (
+                  <>
+                    <h2>Vielen Dank!</h2>
+                    <p>
+                      Du hast deine Bewertungen fertig gemeldet. Ändern kannst du sie trotzdem weiter, bis wir sie in den
+                      Datenkatalog übernehmen – Änderungen werden automatisch gespeichert.
+                    </p>
+                  </>
+                ) : fertig < massnahmen.length ? (
+                  <>
+                    <h2>Noch {massnahmen.length - fertig} offen</h2>
+                    <p>
+                      Alles, was du bisher bewertet hast, ist schon gespeichert. Du kannst die Seite jetzt schließen und
+                      später über deinen Link weitermachen.
+                    </p>
+                    <button className="knopf knopf-gross" onClick={() => gehe(naechsterOffener)}>
+                      Zur nächsten offenen Maßnahme
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <h2>Alle {massnahmen.length} Maßnahmen bewertet</h2>
+                    <p>
+                      Deine Werte sind schon gespeichert. Mit „Fertig melden“ sagst du uns nur, dass wir sie auswerten
+                      können. Ändern kannst du danach trotzdem noch.
+                    </p>
+                    <button className="knopf knopf-gross" disabled={sendet} onClick={() => void senden()}>
+                      {sendet ? 'Melde …' : 'Fertig melden'}
+                    </button>
+                  </>
                 )}
-              </>
+                {absendenFehler && (
+                  <p className="admin-fehler" role="alert">
+                    {absendenFehler}
+                  </p>
+                )}
+              </section>
             )}
-            {absendenFehler && (
-              <p className="admin-fehler" role="alert">
-                {absendenFehler}
-              </p>
-            )}
-          </section>
+          </div>
+
+          <div className="knopf-reihe pruef-blaettern">
+            <button className="knopf knopf-zweit" disabled={schritt === 0} onClick={() => gehe(schritt - 1)}>
+              ← Zurück
+            </button>
+            <button className="knopf" disabled={schritt >= massnahmen.length} onClick={() => gehe(schritt + 1)}>
+              {schritt === massnahmen.length - 1 ? 'Zum Abschluss →' : 'Weiter →'}
+            </button>
+          </div>
+          {aktuelle && !bewertet(werte[aktuelle.id]) && (
+            <p className="hinweis pruef-mitte">Unsicher? Du kannst eine Maßnahme überspringen und später zurückkommen.</p>
+          )}
+
+          <details className="pruef-kasten pruef-uebersicht">
+            <summary>Alle Maßnahmen im Überblick</summary>
+            <ol className="pruef-sprung">
+              {massnahmen.map((m, i) => (
+                <li key={m.id}>
+                  <button
+                    className={`${bewertet(werte[m.id]) ? 'fertig' : ''} ${i === schritt ? 'aktuell' : ''}`}
+                    aria-current={i === schritt ? 'step' : undefined}
+                    aria-label={`Maßnahme ${i + 1}${bewertet(werte[m.id]) ? ', bewertet' : ', offen'}`}
+                    onClick={() => gehe(i)}
+                  >
+                    {i + 1}
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <p className="admin-klein">Ausgefüllt = bewertet. Antippen springt zur Maßnahme.</p>
+          </details>
         </>
       )}
 
@@ -425,12 +516,14 @@ function WertWahl({
 }
 
 function MassnahmeKarte({
+  className,
   kennung,
   massnahme: m,
   ursachen,
   wert,
   onAendern,
 }: {
+  className: string
   kennung: string
   massnahme: Massnahme
   ursachen: Ursache[]
@@ -441,7 +534,7 @@ function MassnahmeKarte({
   const ursacheText = (id: number) => ursachen.find((u) => u.id === id)?.beschreibung ?? String(id)
 
   return (
-    <li className="pruef-karte">
+    <article className={`pruef-karte ${className}`}>
       <p className="pruef-kennung">{kennung}</p>
       <p className="pruef-text">{m.beschreibung}</p>
       <p className="admin-klein">Setzt an bei: {m.ursachen_ids.map(ursacheText).join(' · ')}</p>
@@ -481,7 +574,7 @@ function MassnahmeKarte({
           {fertig ? 'Empfehlung ansehen' : 'Empfehlung ansehen (erst nach deiner Bewertung)'}
         </button>
       )}
-    </li>
+    </article>
   )
 }
 

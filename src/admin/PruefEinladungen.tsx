@@ -10,6 +10,8 @@ import { adminDb, type PruefBewertung, type PruefEinladung } from './client'
 
 const datum = (iso: string) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
 
+const linkFuer = (token: string) => `${location.origin}${location.pathname}#/pruefen/${token}`
+
 /** Themen, zu denen es Maßnahmen gibt (nur diese lassen sich bewerten). */
 const BEWERTBAR = KATALOG.themen.filter((t) => massnahmenIds(t.id).length > 0)
 
@@ -27,7 +29,7 @@ export function PruefEinladungen({
   const db = adminDb!
   const [name, setName] = useState('')
   const [themen, setThemen] = useState<number[]>([])
-  const [link, setLink] = useState<{ name: string; url: string } | null>(null)
+  const [link, setLink] = useState<{ name: string; url: string; ersetzt: boolean } | null>(null)
   const [kopiert, setKopiert] = useState(false)
   const [laeuft, setLaeuft] = useState(false)
 
@@ -41,7 +43,7 @@ export function PruefEinladungen({
       .insert({ token_hash: await tokenHash(token), name: name.trim(), themen })
     setLaeuft(false)
     if (error) return onFehler(error.message)
-    setLink({ name: name.trim(), url: `${location.origin}${location.pathname}#/pruefen/${token}` })
+    setLink({ name: name.trim(), url: linkFuer(token), ersetzt: false })
     setKopiert(false)
     setName('')
     setThemen([])
@@ -56,6 +58,27 @@ export function PruefEinladungen({
     } catch {
       onFehler('Kopieren nicht möglich – bitte den Link markieren und selbst kopieren.')
     }
+  }
+
+  // Link verloren? Neuer Token, alter Link wird ungültig; Einwilligung und Bewertungen bleiben.
+  async function neuerLink(e: PruefEinladung) {
+    if (!confirm(`Neuen Link für „${e.name}“ erzeugen? Der bisherige Link funktioniert dann nicht mehr. Bewertungen und Einwilligung bleiben erhalten.`))
+      return
+    onFehler(null)
+    const token = neuerToken()
+    const { data, error } = await db
+      .from('pruef_einladungen')
+      .update({ token_hash: await tokenHash(token) })
+      .eq('id', e.id)
+      .select('id')
+    if (error || data?.length !== 1)
+      return onFehler(
+        `Neuer Link nicht möglich${error ? `: ${error.message}` : ''} – ist die Migration 20260930000000_pruefung_neuer_link.sql ausgeführt?`,
+      )
+    setLink({ name: e.name, url: linkFuer(token), ersetzt: true })
+    setKopiert(false)
+    scrollTo({ top: 0, behavior: 'smooth' })
+    await onGeaendert()
   }
 
   async function sperren(e: PruefEinladung) {
@@ -103,6 +126,7 @@ export function PruefEinladungen({
       {link && (
         <div className="admin-eintrag pruef-link" role="status">
           <p className="admin-text">Link für {link.name}</p>
+          {link.ersetzt && <p className="admin-klein">Der bisherige Link funktioniert nicht mehr.</p>}
           <p className="admin-warnung">
             Nur jetzt sichtbar – der Link wird nicht gespeichert. Jetzt kopieren und der Person persönlich schicken.
           </p>
@@ -148,6 +172,9 @@ export function PruefEinladungen({
               </ul>
               <div className="admin-aktionen">
                 <span className="admin-klein" />
+                <button className="knopf knopf-klein knopf-leise" onClick={() => void neuerLink(e)}>
+                  Neuer Link
+                </button>
                 <button className="knopf knopf-klein knopf-leise" onClick={() => void sperren(e)}>
                   {e.gesperrt ? 'Entsperren' : 'Sperren'}
                 </button>

@@ -280,3 +280,22 @@ describe('Prüfung durch Eingeladene', () => {
     expect(b.rows[0].n).toBe(0)
   })
 })
+
+describe('Prüfung: neuer Link', () => {
+  it('Admins ersetzen den Token-Hash, Bewertungen bleiben; Nicht-Admins nicht', async () => {
+    const r = await alsAdmin(() =>
+      db.query<{ id: string }>(`insert into pruef_einladungen (token_hash, name, themen) values ($1, 'Link Test', '{2}') returning id`, [
+        'e'.repeat(64),
+      ]),
+    )
+    const id = r.rows[0].id
+    await db.query(`insert into pruef_bewertungen (einladung_id, massnahme_id, thema_id, wirksamkeit) values ($1, 2001, 2, 1)`, [id])
+    const n = await alsNutzer(() => db.query('update pruef_einladungen set token_hash = $1 where id = $2', ['f'.repeat(64), id]))
+    expect(n.affectedRows).toBe(0)
+    const u = await alsAdmin(() => db.query('update pruef_einladungen set token_hash = $1 where id = $2', ['f'.repeat(64), id]))
+    expect(u.affectedRows).toBe(1)
+    const b = await db.query<{ n: number }>('select count(*)::int as n from pruef_bewertungen where einladung_id = $1', [id])
+    expect(b.rows[0].n).toBe(1)
+    await expect(alsAdmin(() => db.query(`update pruef_einladungen set token_hash = 'kurz' where id = $1`, [id]))).rejects.toThrow()
+  })
+})

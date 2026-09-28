@@ -364,6 +364,15 @@ $$;
 revoke all on function public.pruefende_oeffentlich() from public;
 grant execute on function public.pruefende_oeffentlich() to anon, authenticated;
 
+-- ===== migrations/20260930000000_pruefung_neuer_link.sql =====
+-- „Wer liefert?“ – Prüfung: neuen Link für eine bestehende Einladung erzeugen
+--
+-- Geht ein Einladungslink verloren, erzeugt die Admin-Ansicht einen neuen
+-- Token und ersetzt den gespeicherten Hash. Der alte Link funktioniert dann
+-- nicht mehr; Einwilligung und Bewertungen bleiben erhalten.
+
+grant update (token_hash) on public.pruef_einladungen to authenticated;
+
 -- ===== seed.sql =====
 -- AUTOMATISCH ERZEUGT aus daten/ (npm run seed) – nicht von Hand bearbeiten.
 -- Nur vollständig geprüfte Einträge je Thema und Partei; alles andere gilt als „noch nicht erfasst“.
