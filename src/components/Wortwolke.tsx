@@ -104,7 +104,7 @@ export function Wortwolke() {
                 style={{
                   fontSize: w.size,
                   fontFamily: SCHRIFT,
-                  opacity: 0.06 + 0.06 * (w.anzahl / max),
+                  opacity: 0.05 + 0.05 * (w.anzahl / max),
                   animationDelay: `${-i * 2.3}s`,
                   animationDuration: `${20 + (i % 5) * 4}s`,
                 }}
