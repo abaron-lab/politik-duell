@@ -85,6 +85,12 @@ describe('Datenkatalog: Prüfregeln', () => {
     expect(fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [] }, { partei_id: 2 }] }))).toMatch(/mindestens eine Maßnahme/)
   })
 
+  it('erlaubt einen Vermerk für nachträglich ergänzte Ursachen', () => {
+    const u = { id: 11, beschreibung: 'Zu wenige Praxen', quelle_url: 'https://studie.de/aerzte' }
+    expect(fehlerVon(thema({ ursachen: [{ ...u, nachtraeglich: '2026-09-28: ergänzt, weil …' }] }))).toBe('')
+    expect(fehlerVon(thema({ ursachen: [{ ...u, nachtraeglich: '' }] }))).toMatch(/„nachtraeglich“ fehlt oder ist leer/)
+  })
+
   it('verlangt bei echten Daten ein wörtliches Zitat, bei fiktiven nicht', () => {
     const ohneZitat = { ...massnahme() } as Record<string, unknown>
     delete ohneZitat.zitat

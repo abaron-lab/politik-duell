@@ -211,7 +211,9 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
         f(uOrt, 'erwartet ein Objekt')
         continue
       }
-      unbekannteFelder(uOrt, roh, ['id', 'beschreibung', 'quelle_url', 'schlagwoerter'])
+      unbekannteFelder(uOrt, roh, ['id', 'beschreibung', 'quelle_url', 'schlagwoerter', 'nachtraeglich'])
+      // Nach dem Blick in die Programme ergänzt? Dann offen vermerkt, mit Datum und Grund.
+      if (roh.nachtraeglich !== undefined) text(uOrt, roh, 'nachtraeglich', 300)
       const u: Ursache = {
         id: ganzzahl(uOrt, roh, 'id', 1, 32767),
         thema_id: thema.id,

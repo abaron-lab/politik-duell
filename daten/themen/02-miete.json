@@ -14,13 +14,20 @@
       "id": 202,
       "beschreibung": "Mieten bei Neuvermietung liegen rund 43 % über Bestandsmieten, in großen Städten besonders hoch",
       "quelle_url": "https://www.bbsr.bund.de/BBSR/DE/startseite/topmeldungen/entwicklung-wohnungsmieten-2025.html",
-      "schlagwoerter": ["mieterhoehung", "erhoeh", "teurer", "zu hoch", "teuer", "leisten", "indexmiete", "neuvermietung"]
+      "schlagwoerter": ["teurer", "zu hoch", "teuer", "leisten", "neuvermietung", "neue wohnung"]
     },
     {
       "id": 203,
       "beschreibung": "Stark gestiegene Baukosten: Wohngebäude wurden 2010 bis 2025 um 89 % teurer, mehr als doppelt so stark wie die Inflation",
       "quelle_url": "https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Baupreise-Immobilienpreisindex/_inhalt.html",
       "schlagwoerter": ["baukosten", "baupreise", "bauen", "bauantrag", "vorschrift", "material"]
+    },
+    {
+      "id": 204,
+      "beschreibung": "Mieten in laufenden Verträgen steigen weiter (Nettokaltmieten 2025 im Schnitt +2,1 %)",
+      "quelle_url": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/01/PD26_019_611.html",
+      "schlagwoerter": ["mieterhoehung", "erhoeh", "indexmiete", "vergleichsmiete", "mietspiegel", "modernisierung", "bestandsmiete", "jedes jahr mehr"],
+      "nachtraeglich": "2026-09-28: nach Sichtung der Programme ergänzt, weil mehrere Programme Mieterhöhungen im laufenden Mietverhältnis begrenzen wollen und keine der Ursachen das abdeckte."
     }
   ],
   "abdeckung": [
@@ -129,8 +136,8 @@
         {
           "id": 2012,
           "beschreibung": "Mieterhöhungen im Bestand in angespannten Märkten auf 6 % in drei Jahren begrenzen, Indexmieten deckeln",
-          "ursachen_ids": [202],
-          "wirksamkeit": 1,
+          "ursachen_ids": [204],
+          "wirksamkeit": 2,
           "umsetzbarkeit": 3,
           "rollen_modifikator": {
             "mieter": {
@@ -142,7 +149,7 @@
               "begruendung": "Begrenzt Mieterhöhungen im Bestand."
             }
           },
-          "begruendung": "Schützt bestehende Mietverhältnisse vor starken Erhöhungen; die erfasste Ursache betrifft vor allem Neuvermietungen.",
+          "begruendung": "Begrenzt Erhöhungen in laufenden Mietverträgen spürbar, vor allem in angespannten Märkten; schafft keine neuen Wohnungen.",
           "zitat": "Deswegen wollen wir, dass in Gebieten mit angespanntem Wohnungsmarkt nur eine maximale Mietsteigerung von sechs Prozent in drei Jahren bis zur ortsüblichen Vergleichsmiete gestattet ist.",
           "beleg_programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf#page=21",
           "stand": "2026-09-27",
@@ -214,8 +221,8 @@
         {
           "id": 2022,
           "beschreibung": "Mietenstopp in angespannten Wohnungsmärkten ermöglichen und Kappungsgrenzen senken",
-          "ursachen_ids": [202],
-          "wirksamkeit": 1,
+          "ursachen_ids": [204],
+          "wirksamkeit": 2,
           "umsetzbarkeit": 2,
           "rollen_modifikator": {
             "mieter": {
@@ -227,7 +234,7 @@
               "begruendung": "Schließt Mieterhöhungen im Bestand zeitweise aus."
             }
           },
-          "begruendung": "Schützt bestehende Mietverhältnisse; die erfasste Ursache betrifft vor allem Neuvermietungen. Ein Mietenstopp wirft verfassungsrechtliche Fragen auf.",
+          "begruendung": "Stoppt Erhöhungen in laufenden Mietverträgen in angespannten Märkten; schafft keine neuen Wohnungen. Ein Mietenstopp wirft verfassungsrechtliche Fragen auf.",
           "zitat": "Wir werden in angespannten Wohnungsmärkten einen Mietenstopp ermöglichen.",
           "beleg_programm_url": "https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf#page=69",
           "stand": "2026-09-27",
