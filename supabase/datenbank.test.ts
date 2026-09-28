@@ -263,10 +263,14 @@ describe('Prüfung durch Eingeladene', () => {
 
   it('öffentlich nur Anzahl und Namen mit Einwilligung', async () => {
     const frage = () =>
-      alsRolle('anon', () => db.query<{ thema_id: number; anzahl: number; namen: string[] }>('select * from pruefende_oeffentlich()'))
+      alsRolle('anon', () => db.query<{ thema_id: number; anzahl: number; namen: string[] }>('select thema_id, anzahl, namen from pruefende_oeffentlich()'))
     expect((await frage()).rows).toEqual([{ thema_id: 2, anzahl: 1, namen: [] }])
     await db.query('update pruef_einladungen set name_oeffentlich = true where id = $1', [einladung])
     expect((await frage()).rows).toEqual([{ thema_id: 2, anzahl: 1, namen: ['Erika Beispiel'] }])
+    // Gesperrte Einladungen zählen nicht.
+    await db.query('update pruef_einladungen set gesperrt = true where id = $1', [einladung])
+    expect((await frage()).rows).toEqual([])
+    await db.query('update pruef_einladungen set gesperrt = false where id = $1', [einladung])
   })
 
   it('Löschen einer Einladung löscht ihre Bewertungen', async () => {

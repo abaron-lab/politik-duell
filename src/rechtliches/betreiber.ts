@@ -22,7 +22,7 @@ export const BETREIBER = {
 }
 
 /** Stand der Datenschutzerklärung – bei inhaltlichen Änderungen anpassen. */
-export const DATENSCHUTZ_STAND = '27. September 2026'
+export const DATENSCHUTZ_STAND = '28. September 2026'
 
 export const betreiberVollstaendig = () =>
   !JSON.stringify(BETREIBER).includes('[')

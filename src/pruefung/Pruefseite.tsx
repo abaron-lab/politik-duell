@@ -129,7 +129,7 @@ function Einwilligung({ token, stand, onFertig }: { token: string; stand: api.Pr
           </li>
           <li>
             <strong>Wozu:</strong> Aus den Bewertungen aller Prüfenden bilden wir je Maßnahme den Median. Veröffentlicht
-            werden nur Anzahl, Median und Datum – nie deine Einzelwerte.
+            werden nur Anzahl, Median, Spannweite und Datum – nie deine Einzelwerte.
           </li>
           <li>
             <strong>Wer es sieht:</strong> nur die Betreiberin von „Wer liefert?“. Andere Prüfende sehen deine

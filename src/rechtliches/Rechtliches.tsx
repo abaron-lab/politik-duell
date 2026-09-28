@@ -187,12 +187,46 @@ function Datenschutz() {
         unser Moderationsteam, nicht die Spieler:innen.
       </p>
 
-      <h2>9. Deine Rechte</h2>
+      <h2 id="pruefung">9. Prüfung von Bewertungen</h2>
+      <p>
+        Die Bewertungen der Maßnahmen lassen wir von Personen prüfen, die wir persönlich einladen. Sie erhalten einen
+        persönlichen Link, ein Konto gibt es nicht. Dieser Abschnitt betrifft nur die Prüfenden, nicht die
+        Spieler:innen.
+      </p>
+      <p>
+        <strong>Gespeichert werden</strong> (bei Supabase, Frankfurt am Main): der Name, den wir beim Einladen
+        eintragen, die zugeteilten Themen, ein Hashwert des Links (nicht der Link selbst), der Zeitpunkt der
+        Einwilligung und ob der Name öffentlich genannt werden darf; je Maßnahme die beiden Werte, Notizen, ob die
+        Empfehlung angesehen und danach etwas geändert wurde, ob abgesendet ist und Zeitpunkte. IP-Adressen speichern
+        wir nicht.
+      </p>
+      <p>
+        <strong>Zweck:</strong> Aus den Bewertungen aller Prüfenden bilden wir je Maßnahme den Median. Im öffentlichen
+        Quellcode stehen danach nur Anzahl, Median, Spannweite und Datum – keine Namen und keine Einzelwerte. Den Namen
+        nennen wir auf der Seite „So bewerten wir“ nur, wenn die Person dem ausdrücklich zugestimmt hat; sonst nur die
+        Zahl der Prüfenden.
+      </p>
+      <p>
+        <strong>Rechtsgrundlage:</strong> Bewertungen von Parteimaßnahmen können politische Meinungen erkennen lassen.
+        Wir verarbeiten sie deshalb nur mit ausdrücklicher Einwilligung (Art. 6 Abs. 1 lit. a und Art. 9 Abs. 2 lit. a
+        DSGVO), um die wir vor der ersten Bewertung bitten. Einsehen kann die Daten nur der Betreiber in der
+        Admin-Ansicht; andere Prüfende sehen sie nicht.
+      </p>
+      <p>
+        <strong>Speicherdauer und Löschung:</strong> Wir löschen Einladung und Bewertungen, sobald sie für die
+        Nachvollziehbarkeit der Punkte nicht mehr gebraucht werden, spätestens mit dem Ende des Projekts. Die
+        Einwilligung lässt sich jederzeit auf der Prüfseite widerrufen („Einwilligung widerrufen und alles löschen“)
+        oder per E-Mail. Dann löschen wir alle Bewertungen der Person sofort, auf Wunsch auch die Einladung mit dem
+        Namen. Bereits übernommene Mediane enthalten keine personenbezogenen Daten und bleiben bestehen.
+      </p>
+
+      <h2>10. Deine Rechte</h2>
       <p>
         Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit
         und Widerspruch (Art. 15–21 DSGVO) sowie auf Widerruf einer Einwilligung (Art. 7 Abs. 3 DSGVO). Da wir keine
         Daten speichern, die sich dir zuordnen lassen, können wir Anfragen zu gespeicherten Kurzfassungen meist nicht
-        beantworten (Art. 11 DSGVO). Schreib uns trotzdem gern: <a href={`mailto:${BETREIBER.email}`}>{BETREIBER.email}</a>.
+        beantworten (Art. 11 DSGVO). Für Prüfende gilt das nicht: Ihre Daten sind ihnen zugeordnet, Auskunft,
+        Berichtigung und Löschung erledigen wir wie in Abschnitt 9 beschrieben. Schreib uns trotzdem gern: <a href={`mailto:${BETREIBER.email}`}>{BETREIBER.email}</a>.
       </p>
       <p>
         Du kannst dich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren, zum Beispiel bei der für uns

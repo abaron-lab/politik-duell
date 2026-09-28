@@ -85,19 +85,21 @@ revoke insert, update, delete on public.pruef_bewertungen from authenticated;
 -- ---------------------------------------------------------------------------
 
 create or replace function public.pruefende_oeffentlich()
-returns table (thema_id smallint, anzahl integer, namen text[])
+returns table (thema_id smallint, thema text, anzahl integer, namen text[])
 language sql
 stable
 security definer
 set search_path = public
 as $$
   select b.thema_id,
+         coalesce(t.name, 'Thema ' || b.thema_id),
          count(distinct e.id)::integer,
          coalesce(array_agg(distinct e.name order by e.name) filter (where e.name_oeffentlich), '{}')
   from pruef_bewertungen b
   join pruef_einladungen e on e.id = b.einladung_id
+  left join themen t on t.id = b.thema_id
   where b.abgesendet and not e.gesperrt and e.einwilligung_am is not null
-  group by b.thema_id
+  group by b.thema_id, t.name
   order by b.thema_id;
 $$;
 

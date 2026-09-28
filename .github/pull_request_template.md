@@ -8,5 +8,6 @@
 - [ ] Jede neue Maßnahme hat einen Beleg mit Seitenanker (`#page=N`) im Programm der richtigen Partei
 - [ ] Für jede Partei ist das Thema abgedeckt: Maßnahmen oder `keine_massnahme` mit Begründung
 - [ ] Bewertung nach dem Maßstab in [`daten/README.md`](../daten/README.md), mit neutraler Begründung
-- [ ] `geprueft: true` nur gesetzt, wenn eine zweite Person Zitat, Seite und Bewertung kontrolliert hat
+- [ ] `geprueft: true` nur mit mindestens zwei Bewertungen durch eingeladene Prüfende (`bewertung.anzahl` ≥ 2) und kontrollierten Belegen (Zitat, Seite)
+- [ ] Bei halben Medianen oder Spannweite ≥ 2: Entscheidung bzw. Klärung hier begründet
 - [ ] `npm run daten:pruefen` und `npm run seed` ausgeführt

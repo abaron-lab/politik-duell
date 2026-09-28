@@ -17,8 +17,8 @@ Die Reihenfolge ist wichtig für die Neutralität.
    Eigener Pull Request, damit die Ursachen feststehen, bevor Maßnahmen dazukommen. Die Themendatei enthält dann noch keine `abdeckung` – das Thema gilt für alle Parteien als „noch nicht erfasst“.
 2. **Maßnahmen aus den Programmen erfassen.**
    Für **jede** Partei entweder Maßnahmen mit **wörtlichem Zitat** (`zitat`) und Seitenanker eintragen oder ausdrücklich `keine_massnahme` mit kurzer Begründung („Programm Stand … durchsucht, Kapitel … enthält nichts zu …“). Neue Einträge haben `"geprueft": false`. Nur Maßnahmen aufnehmen, die an einer der erfassten Ursachen ansetzen. Ursachen werden dafür grundsätzlich nicht nachträglich ergänzt; Ausnahmen (bisher: Miete, Ursache 204) sind mit `nachtraeglich` gekennzeichnet.
-3. **Bewerten** nach dem Maßstab unten, möglichst **ohne Parteinamen** (Maßnahmentext allein beurteilen).
-4. **Prüfen:** Eine zweite Person prüft mit der Prüfliste (siehe „Prüfung“) und setzt `"geprueft": true`. Bei abweichender Einschätzung Begründung im Pull Request festhalten.
+3. **Entwurf bewerten** nach dem Maßstab unten, möglichst **ohne Parteinamen** (Maßnahmentext allein beurteilen). Die Entwurfswerte sind die „Empfehlung“, die Prüfende erst nach ihrer eigenen Bewertung sehen.
+4. **Prüfen:** Eingeladene Prüfende bewerten in der App, die Betreiberin prüft die Belege und setzt `"geprueft": true` (siehe „Prüfung“).
 
 Ins Spiel kommt ein Thema für eine Partei erst, wenn der **ganze Eintrag** geprüft ist: alle Maßnahmen der Partei zum Thema bzw. `keine_massnahme`. Bis dahin gilt es als **„noch nicht erfasst“** – die App zeigt das so an und wertet Runden mit dieser Partei zu diesem Thema nicht (fehlende Daten sollen keiner Partei einen Punkt kosten). Ungeprüfte Einträge bleiben als Entwurf im Repo und landen nicht in der Datenbank. Bei fiktiven Daten zählt alles.
 
@@ -31,16 +31,29 @@ Ins Spiel kommt ein Thema für eine Partei erst, wenn der **ganze Eintrag** gepr
 
 ## Prüfung
 
-Ein Pull Request pro Thema. `npm run pruefliste -- <Themen-ID>` erzeugt `pruefung/<nr>-<thema>.html` (nicht im Repo) – im Browser öffnen, Eingaben bleiben dort gespeichert.
+Ein Pull Request pro Thema. Die Prüfung hat zwei Teile: Die **Bewertung** übernehmen eingeladene Prüfende in der App, die **Belege** prüft die Betreiberin selbst.
 
-1. **Durchgang A – Bewertung ohne Parteinamen.** Die Maßnahmen stehen gemischt und ohne Partei; Wirksamkeit und Umsetzbarkeit selbst vergeben, dann „Vergleichen“.
-   - gleich → steht fest
-   - 1 Punkt Abstand → die prüfende Person entscheidet, ein Satz Begründung im Pull Request
-   - 2 Punkte oder mehr → Maßstab unklar: erst den Maßstab hier präzisieren, dann weiter
-2. **Durchgang B – Belege.** Je Maßnahme: Link öffnet die richtige Seite · Zitat steht dort wörtlich · Kurzbeschreibung gibt es richtig wieder · passt zu den Ursachen · Begründung neutral. Bei `keine_massnahme`: Stichprobe mit der PDF-Suche.
-3. **Ergebnis** mit „Zusammenfassung kopieren“ als Kommentar in den Pull Request; Einwände als Zeilenkommentar. Sind alle Einträge einer Partei in Ordnung, `geprueft: true` setzen (oder setzen lassen) – erst dann zählt das Thema für diese Partei.
+### Bewertung durch eingeladene Prüfende
 
-Wer geprüft hat, steht in der Git-Historie. Solange es keine unabhängige zweite Person gibt, prüft der Betreiber; das steht auch auf der Methodenseite.
+1. **Einladen:** In der Admin-Ansicht (`#/admin` → „Prüfung“) je Person eine Einladung mit Name und Themen anlegen. Der Link wird nur einmal angezeigt – kopieren und persönlich schicken.
+2. **Bewerten:** Die Person willigt ein und bewertet in der App (`#/pruefen/…`) jede Maßnahme des Themas: ohne Parteinamen, in gemischter Reihenfolge, ohne die Bewertungen der anderen zu sehen. Die Empfehlung (Entwurfswerte und Begründung) wird erst nach der eigenen Bewertung sichtbar; Änderungen danach werden vermerkt. Am Ende „Absenden“.
+3. **Auswerten:** Admin → „Prüfung“ → „Auswertung“ zeigt je Maßnahme alle Einzelwerte, Median Wirksamkeit, Median Umsetzbarkeit, Punkte (= Median W × Median U) und Spannweite. Es zählen nur abgesendete Bewertungen nicht gesperrter Einladungen.
+4. **Übernehmen:** „Export (ohne Namen)“ herunterladen, dann `npm run pruefung:uebernehmen -- <export.json>`. Das Skript schreibt die Mediane als `wirksamkeit`/`umsetzbarkeit` und hält in `bewertung` Anzahl, Mediane, Spannweite, Datum und die ursprünglichen Entwurfswerte fest. Die Exportdatei selbst gehört nicht ins Repo.
+
+Regeln:
+
+- **Mindestens 2, besser 3** unabhängige Bewertungen je Thema. Bei echten Daten darf eine Maßnahme erst mit `bewertung.anzahl` ≥ 2 `geprueft: true` sein (prüft `npm run daten:pruefen`).
+- **Median je Kriterium**, Punkte erst daraus. Bei gerader Anzahl mit zwei verschiedenen mittleren Werten (z. B. 2,5) entscheidet die Betreiberin zwischen diesen beiden, trägt den Wert in der Exportdatei ein und begründet es im Pull Request – das Skript nimmt vorher nichts an.
+- **Spannweite ≥ 2:** vor der Übernahme klären – Maßstab hier präzisieren oder bei den Prüfenden nachfragen. Danach übernehmen mit `--geklaert`.
+- **Namen nie ins Repo.** Im Datenkatalog stehen nur Anzahl, Median, Spannweite und Datum; die Zuordnung Person ↔ Bewertung bleibt in Supabase. Die Methodenseite nennt Namen nur von Personen, die der öffentlichen Nennung zugestimmt haben, sonst „von n unabhängigen Prüfenden“.
+- **Löschen:** Auf Wunsch die Einladung in der Admin-Ansicht löschen (löscht alle Bewertungen der Person) – oder die Person widerruft selbst auf der Prüfseite.
+
+### Belegprüfung durch die Betreiberin
+
+`npm run pruefliste -- <Themen-ID>` erzeugt `pruefung/<nr>-<thema>.html` (nicht im Repo) – im Browser öffnen, Eingaben bleiben dort gespeichert. Durchgang A (eigene Bewertung ohne Parteinamen) ist durch die Bewertung in der App ersetzt; maßgeblich ist:
+
+1. **Durchgang B – Belege.** Je Maßnahme: Link öffnet die richtige Seite · Zitat steht dort wörtlich · Kurzbeschreibung gibt es richtig wieder · passt zu den Ursachen · Begründung neutral. Bei `keine_massnahme`: Stichprobe mit der PDF-Suche.
+2. **Ergebnis** mit „Zusammenfassung kopieren“ als Kommentar in den Pull Request; Einwände als Zeilenkommentar. Sind Bewertung übernommen und alle Belege einer Partei in Ordnung, `geprueft: true` setzen – erst dann zählt das Thema für diese Partei.
 
 ## Programme
 
@@ -189,6 +202,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
 - `schlagwoerter` braucht nur die Offline-Analyse ohne KI; kleingeschrieben, Umlaute als ae/oe/ue.
 - `beleg_programm_url` muss auf `programm_url` der Partei zeigen, mit Seitenanker `#page=N`.
 - `beleg_studie_url` ist optional.
+- `bewertung` schreibt nur `npm run pruefung:uebernehmen` (siehe „Prüfung“), z. B. `{ "anzahl": 3, "median_w": 2, "median_u": 2, "spannweite": 1, "datum": "2026-10-05", "entwurf": [2, 3] }`. `wirksamkeit` und `umsetzbarkeit` müssen den Medianen entsprechen; `entwurf` hält die ursprünglichen Werte fest.
 - `stand` darf nicht vor dem `programm_stand` der Partei liegen.
 
 ## Was die automatische Prüfung kontrolliert
@@ -200,6 +214,7 @@ Ein bis zwei neutrale Sätze: was dafür, was dagegen spricht. Keine Wertung der
 - **Abdeckung:** jede Partei höchstens einmal pro Thema – mit Maßnahmen oder `keine_massnahme`; fehlende Parteien werden als „noch nicht erfasst“ gemeldet (Warnung)
 - Einträge sind nicht älter als das aktuelle Programm
 - bei echten Daten: keine Platzhalter-Links (example.org); Warnung für ungeprüfte Einträge (die im Spiel „noch nicht erfasst“ sind)
+- bei echten Daten: `geprueft: true` nur mit mindestens zwei Bewertungen (`bewertung.anzahl`), Werte gleich den Medianen
 - `supabase/seed.sql` passt zum Katalog
 
 ```bash
@@ -207,4 +222,5 @@ npm run daten:pruefen              # Dateien prüfen
 npm run daten:pruefen -- --links   # zusätzlich alle Links abrufen
 npm run seed                       # supabase/seed.sql neu erzeugen
 npm run dashboard                  # zusätzlich Dateien fürs Supabase-Dashboard
+npm run pruefung:uebernehmen -- export.json   # Ergebnis der Prüfung übernehmen
 ```
