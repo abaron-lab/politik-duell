@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { corsKoepfe, erlaubteUrspruenge, globalesLimit, RATE_LIMIT_GLOBAL, ursprungErlaubt } from './zugriff.ts'
 
 describe('erlaubte Herkunft', () => {
-  const liste = erlaubteUrspruenge(' https://politikduell.de/, https://politik-duell-*.vercel.app ')
+  const liste = erlaubteUrspruenge(' https://politik-duell.de/, https://politik-duell-*.vercel.app ')
 
   it('ohne Secret ist alles erlaubt', () => {
     expect(erlaubteUrspruenge(undefined)).toBeNull()
@@ -12,11 +12,11 @@ describe('erlaubte Herkunft', () => {
   })
 
   it.each([
-    ['https://politikduell.de', true],
+    ['https://politik-duell.de', true],
     ['https://politik-duell-git-main-abaron.vercel.app', true],
-    ['http://politikduell.de', false],
-    ['https://politikduell.de.boese.example', false],
-    ['https://boese.example/https://politikduell.de', false],
+    ['http://politik-duell.de', false],
+    ['https://politik-duell.de.boese.example', false],
+    ['https://boese.example/https://politik-duell.de', false],
     ['https://politik-duell-x.boese.vercel.app', false],
     [null, false],
   ])('%s → %s', (ursprung, ok) => {
@@ -24,7 +24,7 @@ describe('erlaubte Herkunft', () => {
   })
 
   it('CORS nennt nur erlaubte Herkunft', () => {
-    expect(corsKoepfe('https://politikduell.de', liste)['Access-Control-Allow-Origin']).toBe('https://politikduell.de')
+    expect(corsKoepfe('https://politik-duell.de', liste)['Access-Control-Allow-Origin']).toBe('https://politik-duell.de')
     expect(corsKoepfe('https://boese.example', liste)['Access-Control-Allow-Origin']).toBe('null')
   })
 })

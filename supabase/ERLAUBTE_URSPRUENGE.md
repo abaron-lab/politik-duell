@@ -36,11 +36,13 @@ Jeder Aufruf der Funktion kostet Geld bei Mistral. Die Funktion prüft deshalb, 
 2. Greift die Änderung nach ein, zwei Minuten nicht: Funktion `analyse` einmal neu deployen.
 3. Diese Datei (Abschnitt „Aktueller Wert“) anpassen.
 
-**Mit eigener Domain** (nach Einrichtung in Vercel unter *Settings → Domains*) beide Schreibweisen ergänzen, z. B.:
+**Mit eigener Domain** (nach Einrichtung in Vercel unter *Settings → Domains*) beide Schreibweisen der Hauptadresse `politik-duell.de` ergänzen:
 
 ```
-https://politikduell.de, https://www.politikduell.de, https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
+https://politik-duell.de, https://www.politik-duell.de, https://politik-duell.vercel.app, https://politik-duell-*.vercel.app
 ```
+
+`politikduell.de` (ohne Bindestrich) muss nicht auf die Liste: Die Domain leitet nur auf `politik-duell.de` weiter, die App selbst läuft dort nie.
 
 **Lokale Entwicklung** (`npm run dev` gegen die echte Funktion) ist mit dem Wert gesperrt. Bei Bedarf vorübergehend `http://localhost:5173` ergänzen und danach wieder entfernen.
 
