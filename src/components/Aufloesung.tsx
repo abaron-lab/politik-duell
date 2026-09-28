@@ -5,6 +5,7 @@ import type { Massnahme } from '../data/types'
 import type { ParteiErgebnis } from '../logic/bewertung'
 import { ohneTreffer } from '../logic/ohneTreffer'
 import type { RundenErgebnis, Spieler } from '../spiel'
+import { Kreuzfeld } from './Kreuz'
 import { parteiStil } from './stil'
 
 function seitenText(url: string) {
@@ -59,7 +60,12 @@ function ParteiKarte({
   return (
     <article
       className={`partei-karte enthuellen${gewinnt ? ' gewinnt' : ''}`}
-      style={{ ...parteiStil(ergebnis.partei.farbe), animationDelay: `${verzoegerung}ms` }}
+      style={{
+        ...parteiStil(ergebnis.partei.farbe),
+        animationDelay: `${verzoegerung}ms`,
+        // Das Kreuz der Gewinnerin wird gezogen, nachdem die Karte erschienen ist.
+        ['--kreuz-verzoegerung' as string]: `${verzoegerung + 700}ms`,
+      }}
     >
       <header>
         <span className="karte-spieler">{spielerName}</span>
@@ -73,6 +79,7 @@ function ParteiKarte({
             –
           </span>
         )}
+        <Kreuzfeld />
       </header>
       {leer ? (
         <div className="keine-massnahme">
@@ -127,7 +134,7 @@ export function Aufloesung({
 
   return (
     <main className="seite aufloesung">
-      <p className="label">Das Problem</p>
+      <h2 className="sr-only">Das Problem</h2>
       <blockquote className="problem-zitat">{runde.zusammenfassung}</blockquote>
       <p className="meta">
         {runde.thema ? `Thema: ${runde.thema.name}` : 'Thema nicht in der Datenbank'}
@@ -136,7 +143,7 @@ export function Aufloesung({
 
       {!enthuellt ? (
         <div className="trommelwirbel" aria-live="polite">
-          <span>Wer liefert?</span>
+          <span>Wird ausgezählt …</span>
         </div>
       ) : runde.status === 'ungeprueft' || !runde.ergebnisse ? (
         <section className="ungeprueft enthuellen">
@@ -179,7 +186,7 @@ export function Aufloesung({
                   : 'Keine der beiden Parteien hat dazu eine Maßnahme im Programm – kein Punkt.'}
           </p>
           <section className="beste enthuellen" style={{ animationDelay: '1200ms' }}>
-            <p className="label">Beste Lösung aller Parteien</p>
+            <h3 className="beste-titel">Beste Lösung aller Parteien</h3>
             {runde.beste.length === 0 ? (
               <p>
                 {runde.nichtErfasst.length === 0

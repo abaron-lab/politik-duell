@@ -107,8 +107,8 @@ export function Runde({
   return (
     <main className="seite runde">
       <div className="am-zug" style={parteiStil(aktiv.partei.farbe)}>
-        <span className="am-zug-label">Am Zug</span>
-        <strong>{aktiv.name}</strong>
+        <span className="am-zug-label">{aktiv.partei.kurzname}</span>
+        <strong>{aktiv.name} ist dran</strong>
         {rolle && <span className="rolle-chip">{rolle}</span>}
       </div>
       <h2>Welches Alltagsproblem nervt dich?</h2>

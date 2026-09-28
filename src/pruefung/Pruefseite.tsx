@@ -150,14 +150,14 @@ function Einwilligung({ token, stand, onFertig }: { token: string; stand: api.Pr
         </p>
       </section>
 
-      <label className="einwilligung pruef-haken">
+      <label className="pruef-haken">
         <input type="checkbox" checked={ja} onChange={(e) => setJa(e.target.checked)} />
         <span>
           <strong>Pflicht:</strong> Ich willige ein, dass meine Bewertungen wie beschrieben gespeichert und ausgewertet
           werden.
         </span>
       </label>
-      <label className="einwilligung pruef-haken">
+      <label className="pruef-haken">
         <input type="checkbox" checked={nameOeffentlich} onChange={(e) => setNameOeffentlich(e.target.checked)} />
         <span>
           <strong>Freiwillig:</strong> Mein Name darf öffentlich als Prüfer:in genannt werden (auf der Seite „So
@@ -606,7 +606,7 @@ function Einstellungen({ token, stand, onNeuLaden }: { token: string; stand: api
   return (
     <section className="pruef-einstellungen" aria-labelledby="h-einst">
       <h2 id="h-einst">Deine Einwilligung</h2>
-      <label className="einwilligung pruef-haken">
+      <label className="pruef-haken">
         <input type="checkbox" checked={nameOeffentlich} onChange={(e) => void nennung(e.target.checked)} />
         <span>Mein Name darf öffentlich als Prüfer:in genannt werden.</span>
       </label>

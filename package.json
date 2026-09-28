@@ -16,7 +16,8 @@
     "pruefung:uebernehmen": "node --experimental-strip-types scripts/uebernehme-pruefung.ts"
   },
   "dependencies": {
-    "@fontsource-variable/nunito": "^5.3.0",
+    "@fontsource-variable/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@supabase/supabase-js": "^2.117.2",
     "d3-cloud": "^1.2.9",
     "react": "^19.2.8",

@@ -1,4 +1,5 @@
 import { useId, useState } from 'react'
+import { Kreuzfeld } from './Kreuz'
 import { Logo } from './Logo'
 import { Wortwolke } from './Wortwolke'
 
@@ -18,10 +19,14 @@ export function Start({
   return (
     <main className="start">
       <Wortwolke />
-      <div className="start-inhalt">
-        <Logo groesse={96} />
-        <h1 className="titel">Wer liefert?</h1>
-        <p className="slogan">Versprechen kann jeder.</p>
+      <div className="start-inhalt stimmzettel">
+        <div className="start-kopf">
+          <div>
+            <h1 className="titel">Wer liefert?</h1>
+            <p className="slogan">Versprechen kann jeder.</p>
+          </div>
+          <Logo groesse={72} />
+        </div>
         <p className="erklaerung">
           Zwei Spieler:innen, zwei Parteien, fünf Runden. Nennt echte Alltagsprobleme – das Spiel zeigt, welche
           Partei dafür die wirksamste und umsetzbare Lösung bietet. Mit Beleg nach jeder Runde.
@@ -43,11 +48,12 @@ export function Start({
                 checked={einverstanden}
                 onChange={(e) => setEinverstanden(e.target.checked)}
               />
-              <span>
+              <span className="einwilligung-text">
                 Ich bin einverstanden, dass eine KI meine Eingaben wie in der{' '}
                 <a href="#/datenschutz">Datenschutzerklärung</a> beschrieben einordnet. Mir ist klar, dass sie
                 politische Meinungen erkennen lassen können.
               </span>
+              <Kreuzfeld />
             </label>
             <button className="knopf knopf-gross" onClick={onStart} disabled={!bereit || !einverstanden}>
               {bereit ? 'Spiel starten' : 'Lade Spieldaten …'}

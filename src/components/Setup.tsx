@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDaten } from '../data/kontext'
 import { ROLLEN } from '../data/rollen'
 import type { Partei, Rolle } from '../data/types'
+import { Kreuzfeld } from './Kreuz'
 import { parteiStil } from './stil'
 import type { Spieler } from '../spiel'
 
@@ -23,10 +24,10 @@ function SpielerWahl({
 }) {
   const { parteien } = useDaten()
   return (
-    <fieldset className="spieler-wahl">
+    <fieldset className="spieler-wahl stimmzettel">
       <legend>{titel}</legend>
-      <p className="label">Partei</p>
-      <div className="partei-raster">
+      <p className="stimmzettel-anleitung">Ein Kreuz für eine Partei</p>
+      <div className="partei-liste">
         {parteien.map((p) => {
           const belegt = gesperrt?.id === p.id
           const gewaehlt = auswahl.partei?.id === p.id
@@ -34,20 +35,23 @@ function SpielerWahl({
             <button
               key={p.id}
               type="button"
-              className={`partei-knopf${gewaehlt ? ' gewaehlt' : ''}`}
+              className={`partei-zeile${gewaehlt ? ' gewaehlt' : ''}`}
               style={parteiStil(p.farbe)}
               disabled={belegt}
               aria-pressed={gewaehlt}
               onClick={() => onChange({ ...auswahl, partei: p })}
             >
-              {p.kurzname}
-              {belegt && <small> (vergeben)</small>}
+              <span className="partei-zeile-name">
+                {p.name}
+                {belegt && <small> vergeben</small>}
+              </span>
+              <Kreuzfeld />
             </button>
           )
         })}
       </div>
-      <label className="label" htmlFor={`${titel}-rolle`}>
-        Rolle (optional)
+      <label className="rolle-wahl-label" htmlFor={`${titel}-rolle`}>
+        Deine Rolle im Alltag (optional)
       </label>
       <select
         id={`${titel}-rolle`}
@@ -74,8 +78,10 @@ export function Setup({ onFertig }: { onFertig: (s: [Spieler, Spieler]) => void 
     <main className="seite">
       <h2>Wer tritt an?</h2>
       <p className="hinweis">Jede Seite wählt eine andere Partei. Die Rolle beeinflusst manche Bewertungen.</p>
-      <SpielerWahl titel="Spieler:in A" auswahl={a} gesperrt={b.partei} onChange={setA} />
-      <SpielerWahl titel="Spieler:in B" auswahl={b} gesperrt={a.partei} onChange={setB} />
+      <div className="stimmzettel-paar">
+        <SpielerWahl titel="Spieler:in A" auswahl={a} gesperrt={b.partei} onChange={setA} />
+        <SpielerWahl titel="Spieler:in B" auswahl={b} gesperrt={a.partei} onChange={setB} />
+      </div>
       <button
         className="knopf knopf-gross"
         disabled={!bereit}

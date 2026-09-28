@@ -14,18 +14,22 @@ export function Punktestand({
   return (
     <header className="punktestand">
       <div className="team" style={parteiStil(spieler[0].partei.farbe)}>
-        <span className="team-name">A · {spieler[0].partei.kurzname}</span>
+        <span className="team-name">
+          <span className="team-buchstabe" aria-label="Spieler:in A">A</span>
+          {spieler[0].partei.kurzname}
+        </span>
         <span className="team-punkte">{pa}</span>
       </div>
       <div className="runden-anzeige">
-        Runde
-        <strong>
-          {aktuelleRunde}/{RUNDEN_GESAMT}
-        </strong>
+        <strong>Runde {aktuelleRunde}</strong>
+        von {RUNDEN_GESAMT}
       </div>
       <div className="team team-rechts" style={parteiStil(spieler[1].partei.farbe)}>
         <span className="team-punkte">{pb}</span>
-        <span className="team-name">B · {spieler[1].partei.kurzname}</span>
+        <span className="team-name">
+          {spieler[1].partei.kurzname}
+          <span className="team-buchstabe" aria-label="Spieler:in B">B</span>
+        </span>
       </div>
     </header>
   )
