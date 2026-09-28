@@ -1,3 +1,4 @@
+import { EingabeFehler } from './fehler.ts'
 import { bereinigeStichwort } from './moderation.ts'
 import {
   ROLLEN_IDS,
@@ -89,7 +90,8 @@ export function nutzerNachrichten(verlauf: Nachricht[], rolle: Rolle | null) {
   ]
 }
 
-export class EingabeFehler extends Error {}
+// Hier weiter exportiert, damit bestehende Importe aus ki.ts gültig bleiben.
+export { EingabeFehler }
 
 const SITZUNG_MUSTER = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 

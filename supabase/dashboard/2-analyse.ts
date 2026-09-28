@@ -97,6 +97,10 @@ function werteRunde(a, b) {
   };
 }
 
+// _shared/fehler.ts
+var EingabeFehler = class extends Error {
+};
+
 // _shared/moderation.ts
 var BELEIDIGUNGEN = [
   "arschloch",
@@ -278,8 +282,6 @@ function nutzerNachrichten(verlauf, rolle) {
     }))
   ];
 }
-var EingabeFehler = class extends Error {
-};
 var SITZUNG_MUSTER = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 function pruefeAnfrage(roh) {
   const a = roh;
