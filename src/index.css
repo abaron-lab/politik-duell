@@ -1010,12 +1010,12 @@ textarea {
   outline: 3px solid var(--fokus);
   outline-offset: 1px;
 }
+/* Reiter brechen um, statt seitlich zu scrollen – so bleibt jeder sichtbar. */
 .admin-reiter {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  overflow-x: auto;
-  margin: 0 -16px 12px;
-  padding: 0 16px 4px;
+  margin: 0 0 12px;
 }
 .admin-reiter button {
   flex: none;
