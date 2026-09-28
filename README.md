@@ -2,7 +2,7 @@
 
 *„Versprechen kann jeder."* – Zwei-Spieler-Webspiel: Alltagsprobleme nennen, das Spiel zeigt, welche Partei dafür die wirksamste und umsetzbare Lösung bietet – mit Beleg-Link nach jeder Runde.
 
-Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md). Methode zum Weitergeben an Partner und Prüfende: [docs/methode.md](docs/methode.md).
+Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md). Methode zum Weitergeben an Partner und Prüfende: [docs/methode.md](docs/methode.md). Vereinsgründung (Satzung, Fahrplan, Übergabe der App): [docs/verein/](docs/verein/README.md).
 
 ## Stand: Meilenstein 1 – klickbarer Prototyp
 
@@ -117,3 +117,9 @@ npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 - Höhere Summe → 1 Spielpunkt, Gleichstand → je 1 Punkt.
 - Annahme: Haben **beide** Parteien 0 Punkte (keine Maßnahme), gibt es keinen Punkt.
 - Die Rolle der Person, die das Problem nennt, gilt für die Bewertung beider Parteien.
+
+## Lizenz
+
+- **Quellcode:** [GNU Affero General Public License 3.0 oder später](LICENSE) (AGPL-3.0-or-later). Wer eine veränderte Fassung öffentlich betreibt, muss deren Quellcode ebenfalls offenlegen.
+- **Datenkatalog** (`daten/`): [Creative Commons Namensnennung 4.0](daten/LICENSE) (CC BY 4.0). Namensnennung: „Politik-Duell (politik-duell.de)“ mit Link auf die Lizenz.
+- **Nicht** von den Lizenzen erfasst: wörtliche Zitate aus Wahlprogrammen und die verlinkten Programme und Studien (Rechte bei den jeweiligen Urheber:innen, Zitate nach § 51 UrhG) sowie Bibliotheken von Dritten (eigene Lizenzen, siehe `package.json`).
