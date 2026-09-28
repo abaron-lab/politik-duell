@@ -66,7 +66,7 @@ Einmalig, wenn Schritt 1–3 schon erledigt sind:
 5. **Empfohlen:** [Authentication → Sign In / Providers](https://supabase.com/dashboard/project/xfprvshhexhzhfgkfxpi/auth/providers)
    → **„Allow new users to sign up“ ausschalten** → Save. Fremde Konten hätten ohnehin keine Rechte,
    so entstehen aber gar keine.
-6. **Moderieren:** In der App die Adresse um `#/admin` ergänzen (z. B. `https://politik-duell.vercel.app/#/admin`)
+6. **Moderieren:** In der App die Adresse um `#/admin` ergänzen (`https://politik-duell.de/#/admin`)
    und anmelden.
 
 So läuft die Moderation:
