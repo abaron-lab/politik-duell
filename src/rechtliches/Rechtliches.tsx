@@ -103,6 +103,10 @@ function Datenschutz() {
 
       <h2>1. Verantwortlich</h2>
       <Anschrift />
+      <p>
+        Schreibst du uns per E-Mail, verwenden wir deine Adresse und Nachricht nur, um dir zu antworten (Art. 6 Abs. 1
+        lit. f DSGVO), und löschen beides, wenn die Sache erledigt ist. Das Postfach liegt bei Posteo e. K. in Berlin.
+      </p>
 
       <h2>2. Aufruf der Website</h2>
       <p>

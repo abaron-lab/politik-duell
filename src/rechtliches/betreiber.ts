@@ -7,7 +7,7 @@ export const BETREIBER = {
   name: '[Vor- und Nachname]',
   strasse: '[Straße und Hausnummer]',
   ort: '[PLZ Ort]',
-  email: '[E-Mail-Adresse]',
+  email: 'politik-duell@posteo.de',
   /** Optional, leer lassen wenn nicht gewünscht */
   telefon: '',
   /** Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV (meist dieselbe Person) */
