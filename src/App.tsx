@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Aufloesung } from './components/Aufloesung'
 import { Ende } from './components/Ende'
 import { Fusszeile } from './components/Fusszeile'
+import { Kopfzeile } from './components/Kopfzeile'
 import { MockHinweis } from './components/MockHinweis'
 import { Punktestand } from './components/Punktestand'
 import { Runde } from './components/Runde'
@@ -19,6 +20,8 @@ export default function App() {
   const [runden, setRunden] = useState<RundenErgebnis[]>([])
   const [daten, setDaten] = useState<Daten | null>(null)
   const [ladeFehler, setLadeFehler] = useState<string | null>(null)
+  // Nur für diese Sitzung im Speicher, damit der Weg zurück zur Startseite nicht erneut fragt.
+  const [einverstanden, setEinverstanden] = useState(false)
 
   useEffect(() => {
     ladeDaten()
@@ -29,19 +32,29 @@ export default function App() {
   const aktuelleNr = runden.length + 1
   const sprecher: 0 | 1 = runden.length % 2 === 0 ? 0 : 1
 
-  function neuesSpiel() {
+  function neuesSpiel(ziel: Phase = 'setup') {
     setSpieler(null)
     setRunden([])
-    setPhase('setup')
+    setPhase(ziel)
+    scrollTo({ top: 0 })
   }
 
   return (
     <DatenKontext.Provider value={daten ?? MOCK_DATEN}>
       <div className="app">
         {sindBeispieldaten(daten ?? MOCK_DATEN) && <MockHinweis />}
+        {phase !== 'start' && (
+          <Kopfzeile
+            spielLaeuft={phase === 'runde' || phase === 'aufloesung'}
+            onStartseite={() => neuesSpiel('start')}
+            onNeuesSpiel={() => neuesSpiel('setup')}
+          />
+        )}
         {phase === 'start' && (
           <Start
             bereit={daten !== null}
+            einverstanden={einverstanden}
+            onEinverstanden={setEinverstanden}
             ladeFehler={ladeFehler}
             onBeispieldaten={() => {
               setLadeFehler(null)
@@ -85,7 +98,7 @@ export default function App() {
             onWeiter={() => setPhase(runden.length >= RUNDEN_GESAMT ? 'ende' : 'runde')}
           />
         )}
-        {phase === 'ende' && spieler && <Ende spieler={spieler} runden={runden} onNeu={neuesSpiel} />}
+        {phase === 'ende' && spieler && <Ende spieler={spieler} runden={runden} onNeu={() => neuesSpiel()} />}
         <Fusszeile />
       </div>
     </DatenKontext.Provider>
