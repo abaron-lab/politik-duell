@@ -102,9 +102,18 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 ## Branding
 
 - Name: **„Politik-Duell"**, Slogan: **„Versprechen kann jeder."**
-- „Wer liefert?" ist nicht mehr der Name (zu nah an der Marke „wer liefert was“/wlw), darf aber als Frage im Spiel vorkommen. Repository (`abaron-lab/politik-duell`) und Vercel-Projekt (`politik-duell.vercel.app`) heißen `politik-duell`; nur das Supabase-Projekt heißt technisch weiterhin `wer-liefert`. Domain: **politik-duell.de** (Hauptadresse), politikduell.de leitet dorthin weiter.
+- „Wer liefert?" ist nicht mehr der Name (zu nah an der Marke „wer liefert was“/wlw), darf aber als Frage im Spiel vorkommen. Repository (`politik-duell/politik-duell`, umgezogen von `abaron-lab/politik-duell`) und Vercel-Projekt (`politik-duell.vercel.app`) heißen `politik-duell`; nur das Supabase-Projekt heißt technisch weiterhin `wer-liefert`. Domain: **politik-duell.de** (Hauptadresse), politikduell.de leitet dorthin weiter.
 - Eigenes, originales Logo und Design mit Quizshow-Anmutung (Spannung, Auflösung, Punktestand), aber **nicht** Logo, Farbschema oder Studiodesign von „Wer wird Millionär" nachbilden (markenrechtlich geschützt).
 - Tonalität: neutral, freundlich, leicht spielerisch; keine Seitenhiebe auf einzelne Parteien in Texten, Grafiken oder Animationen.
+
+## Status: geschlossene Beta
+
+Entschieden am 28. 9. 2026: Bis Methode und Daten belastbar sind, läuft das Politik-Duell als **geschlossene Beta**. Gezeigt wird es Prüfenden, möglichen Partnerorganisationen und Testgruppen – mit echten Parteinamen (keine Tarnnamen: Beleg-Links und öffentliches Repo würden sie ohnehin verraten). Nicht öffentlich bewerben, nicht in sozialen Medien teilen, keine Pressearbeit.
+
+Vorschlag für den öffentlichen Start (noch zu bestätigen):
+- mindestens 3 Themen für alle Parteien geprüft, mit gegensätzlich besetzten Prüfenden (`docs/plan-pruefung.md` → „Auswahl der Prüfenden“),
+- Parteien haben ihre Einträge erhalten und hatten Gelegenheit zur Stellungnahme,
+- ein Träger (Verein) oder mindestens eine Partnerorganisation steht dahinter.
 
 ## Meilensteine
 
@@ -117,7 +126,7 @@ Vor Anzeige in der Wortwolke: automatischer Filter (Beleidigungen, Namen von Pri
 ## Offene Punkte
 
 - ~~Welche Parteien sind dabei?~~ Entschieden: CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW. Grundlage sind die Wahlprogramme zur Bundestagswahl 2025, wo vorhanden ergänzt um neuere Grundsatzprogramme.
-- Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung; Bewertung durch eingeladene Prüfende in der App mit Median je Kriterium, Belegprüfung durch die Betreiberin, siehe `daten/README.md` → „Prüfung“ und `docs/plan-pruefung.md`) – offen ist, welche Personen das übernehmen.
+- Wer pflegt und prüft die Bewertungen? Format und Ablauf stehen (`daten/` als JSON, Pull Requests mit Quellenpflicht, automatische Prüfung; Bewertung durch eingeladene, gegensätzlich besetzte Prüfende in der App mit Median je Kriterium, Belegprüfung durch die Betreiberin, siehe `daten/README.md` → „Prüfung“ und `docs/plan-pruefung.md`) – offen ist, welche Personen das übernehmen.
 - ~~Domain sichern~~ Erledigt (September 2026): politik-duell.de ist die Hauptadresse (bei INWX, in Vercel verbunden, HTTPS, in `ERLAUBTE_URSPRUENGE` und als Supabase *Site URL* eingetragen), politikduell.de leitet dorthin weiter. Kontakt: politik-duell@posteo.de.
 - Trägerschaft: Geplant ist ein gemeinnütziger Verein „Politik-Duell e. V.“ (politische Bildung, Methodenbeirat, Neutralität in der Satzung). Unterlagen und Fahrplan in `docs/verein/`. Lizenz festgelegt: Code AGPL-3.0-or-later (`LICENSE`), Daten CC BY 4.0 (`daten/LICENSE`). Offen: sieben Gründungsmitglieder finden; bis dahin betreibt die Gründerin das Projekt als Einzelperson.
 - Markenlage vor einer Markenanmeldung oder Veröffentlichung in App Stores prüfen (DPMAregister, TMview). „Politik-Duell“ ist beschreibend und daher kaum als Marke schützbar.
