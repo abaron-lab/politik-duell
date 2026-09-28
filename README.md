@@ -2,7 +2,7 @@
 
 *„Versprechen kann jeder."* – Zwei-Spieler-Webspiel: Alltagsprobleme nennen, das Spiel zeigt, welche Partei dafür die wirksamste und umsetzbare Lösung bietet – mit Beleg-Link nach jeder Runde.
 
-Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
+Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md). Methode zum Weitergeben an Partner und Prüfende: [docs/methode.md](docs/methode.md).
 
 ## Stand: Meilenstein 1 – klickbarer Prototyp
 
@@ -61,7 +61,7 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 
 ## Datenkatalog
 
-- **Echte Parteien:** CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW mit ihren Wahlprogrammen zur Bundestagswahl 2025 (`daten/parteien.json`). Maßnahmen sind bisher für Miete erfasst (5 von 7 Parteien), noch ungeprüft – im Spiel gilt deshalb vorerst alles als „noch nicht erfasst“
+- **Echte Parteien:** CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW mit ihren Wahlprogrammen zur Bundestagswahl 2025 (`daten/parteien.json`). Maßnahmen sind bisher für Miete erfasst (alle 7 Parteien), noch ungeprüft – im Spiel gilt deshalb vorerst alles als „noch nicht erfasst“
 - Jede Maßnahme mit wörtlichem Zitat und Seitenanker; `npm run pruefliste` erzeugt je Thema eine Prüfliste (Bewertung ohne Parteinamen, dann Belege)
 - „Mit Beispieldaten spielen“ und die Tests nutzen die fiktiven Daten in `daten/beispiel/`; der Hinweis auf Platzhalterdaten erscheint nur dann
 
