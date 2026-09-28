@@ -1,46 +1,61 @@
 {
-  "fiktiv": true,
-  "hinweis": "FIKTIVE Platzhalterdaten: Parteien, Maßnahmen, Punkte und Links sind erfunden. Vor echten Parteien auf false setzen.",
+  "fiktiv": false,
   "parteien": [
     {
-      "id": 1,
-      "name": "Partei Alpha",
-      "kurzname": "Alpha",
-      "farbe": "#2bb3a3",
-      "programm_url": "https://example.org/mock/alpha/wahlprogramm.pdf",
-      "programm_stand": "2026-01-01"
+      "id": 11,
+      "name": "CDU/CSU",
+      "kurzname": "Union",
+      "farbe": "#8a96a3",
+      "programm_url": "https://www.cdu.de/app/uploads/2025/01/km_btw_2025_wahlprogramm_langfassung_ansicht.pdf",
+      "programm_stand": "2024-12-17"
     },
     {
-      "id": 2,
-      "name": "Partei Beta",
-      "kurzname": "Beta",
-      "farbe": "#8f6bff",
-      "programm_url": "https://example.org/mock/beta/wahlprogramm.pdf",
-      "programm_stand": "2026-01-01"
+      "id": 12,
+      "name": "SPD",
+      "kurzname": "SPD",
+      "farbe": "#f0605d",
+      "programm_url": "https://www.spd.de/fileadmin/Dokumente/Beschluesse/Programm/2025_SPD_Regierungsprogramm.pdf",
+      "programm_stand": "2025-01-11"
     },
     {
-      "id": 3,
-      "name": "Partei Gamma",
-      "kurzname": "Gamma",
-      "farbe": "#f2a33a",
-      "programm_url": "https://example.org/mock/gamma/wahlprogramm.pdf",
-      "programm_stand": "2026-01-01"
+      "id": 13,
+      "name": "Bündnis 90/Die Grünen",
+      "kurzname": "Grüne",
+      "farbe": "#6fbf4a",
+      "programm_url": "https://cms.gruene.de/uploads/assets/20250318_Regierungsprogramm_DIGITAL_DINA5.pdf",
+      "programm_stand": "2025-01-26"
     },
     {
-      "id": 4,
-      "name": "Partei Delta",
-      "kurzname": "Delta",
-      "farbe": "#4f8fe8",
-      "programm_url": "https://example.org/mock/delta/wahlprogramm.pdf",
-      "programm_stand": "2026-01-01"
+      "id": 14,
+      "name": "FDP",
+      "kurzname": "FDP",
+      "farbe": "#ffe74d",
+      "programm_url": "https://www.fdp.de/sites/default/files/2024-12/fdp-wahlprogramm_2025.pdf",
+      "programm_stand": "2025-02-09"
     },
     {
-      "id": 5,
-      "name": "Partei Epsilon",
-      "kurzname": "Epsilon",
-      "farbe": "#e86a8f",
-      "programm_url": "https://example.org/mock/epsilon/wahlprogramm.pdf",
-      "programm_stand": "2026-01-01"
+      "id": 15,
+      "name": "AfD",
+      "kurzname": "AfD",
+      "farbe": "#4fb8e8",
+      "programm_url": "https://www.afd.de/wp-content/uploads/2025/02/AfD_Bundestagswahlprogramm2025_web.pdf",
+      "programm_stand": "2025-01-12"
+    },
+    {
+      "id": 16,
+      "name": "Die Linke",
+      "kurzname": "Linke",
+      "farbe": "#e0659b",
+      "programm_url": "https://www.die-linke.de/fileadmin/user_upload/Wahlprogramm_Langfassung_Linke-BTW25_01.pdf",
+      "programm_stand": "2025-01-18"
+    },
+    {
+      "id": 17,
+      "name": "BSW",
+      "kurzname": "BSW",
+      "farbe": "#b784c9",
+      "programm_url": "https://bsw-vg.de/wp-content/themes/bsw/assets/downloads/BSW%20Wahlprogramm%202025.pdf",
+      "programm_stand": "2025-01-12"
     }
   ]
 }

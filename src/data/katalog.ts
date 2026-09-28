@@ -164,7 +164,8 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
     if (p.farbe && !FARBE.test(p.farbe)) f(ort, '„farbe“ muss ein Hex-Wert wie #1a2b3c sein')
     if (p.programm_url.includes('#')) f(ort, '„programm_url“ ist die Adresse des ganzen Programms – ohne #-Anker')
     if (parteiIds.has(p.id)) f(ort, `Partei-ID ${p.id} ist doppelt`)
-    for (const n of [p.name, p.kurzname]) {
+    // Name und Kurzname dürfen gleich sein (z. B. „SPD“), aber nicht mit einer anderen Partei kollidieren.
+    for (const n of new Set([p.name, p.kurzname])) {
       if (n && parteiNamen.has(n.toLowerCase())) f(ort, `Name „${n}“ ist doppelt`)
       parteiNamen.add(n.toLowerCase())
     }
@@ -187,12 +188,15 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
       f(ort, 'erwartet ein Objekt')
       continue
     }
-    unbekannteFelder(ort, t, ['id', 'name', 'beschreibung', 'schlagwoerter', 'ursachen', 'abdeckung'])
+    unbekannteFelder(ort, t, ['id', 'name', 'beschreibung', 'ziel', 'schlagwoerter', 'ursachen', 'abdeckung'])
+    // Ziel aus Sicht der Betroffenen: Daran wird die Wirksamkeit gemessen. Bei echten Daten Pflicht.
+    const ziel = t.ziel !== undefined || !katalog.fiktiv ? text(ort, t, 'ziel', 200) : ''
     const thema: Thema = {
       id: ganzzahl(ort, t, 'id', 1, 32767),
       name: text(ort, t, 'name', 60),
       beschreibung: text(ort, t, 'beschreibung', 300),
     }
+    if (ziel) thema.ziel = ziel
     const tw = schlagwoerter(ort, t)
     if (tw) thema.schlagwoerter = tw
     if (themaIds.has(thema.id)) f(ort, `Themen-ID ${thema.id} ist doppelt`)
@@ -210,7 +214,9 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
         f(uOrt, 'erwartet ein Objekt')
         continue
       }
-      unbekannteFelder(uOrt, roh, ['id', 'beschreibung', 'quelle_url', 'schlagwoerter'])
+      unbekannteFelder(uOrt, roh, ['id', 'beschreibung', 'quelle_url', 'schlagwoerter', 'nachtraeglich'])
+      // Nach dem Blick in die Programme ergänzt? Dann offen vermerkt, mit Datum und Grund.
+      if (roh.nachtraeglich !== undefined) text(uOrt, roh, 'nachtraeglich', 300)
       const u: Ursache = {
         id: ganzzahl(uOrt, roh, 'id', 1, 32767),
         thema_id: thema.id,
@@ -284,7 +290,7 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
         }
         unbekannteFelder(mOrt, mRoh, [
           'id', 'beschreibung', 'ursachen_ids', 'wirksamkeit', 'umsetzbarkeit', 'rollen_modifikator',
-          'begruendung', 'beleg_programm_url', 'beleg_studie_url', 'stand', 'geprueft',
+          'begruendung', 'zitat', 'beleg_programm_url', 'beleg_studie_url', 'stand', 'geprueft',
         ])
         const m: Massnahme = {
           id: ganzzahl(mOrt, mRoh, 'id', 1, 2147483647),
@@ -301,6 +307,12 @@ export function pruefeKatalog(parteienDatei: Datei, themenDateien: Datei[]): Pru
         }
         const studie = url(mOrt, mRoh, 'beleg_studie_url', false)
         if (studie) m.beleg_studie_url = studie
+        // Wörtliches Zitat aus dem Programm: macht die Prüfung nachvollziehbar
+        // (Suche im PDF). Bei echten Daten Pflicht.
+        if (mRoh.zitat !== undefined || !katalog.fiktiv) {
+          const zitat = text(mOrt, mRoh, 'zitat', 800)
+          if (zitat) m.zitat = zitat
+        }
 
         if (massnahmeIds.has(m.id)) f(mOrt, `Maßnahmen-ID ${m.id} ist doppelt`)
         massnahmeIds.add(m.id)

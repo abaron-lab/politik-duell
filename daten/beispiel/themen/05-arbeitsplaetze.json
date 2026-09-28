@@ -2,7 +2,6 @@
   "id": 5,
   "name": "Arbeitsplätze",
   "beschreibung": "Unsichere Jobs, Stellenabbau und schwache Wirtschaft.",
-  "ziel": "Menschen finden und behalten sichere, fair bezahlte Arbeit in ihrer Region.",
   "schlagwoerter": ["arbeit", "job", "arbeitsplatz", "arbeitslos", "kuendigung", "stellenabbau", "firma", "betrieb", "wirtschaft", "lohn", "gehalt", "kurzarbeit", "werksschliessung"],
   "ursachen": [
     {

@@ -23,6 +23,7 @@ const massnahme = (ueber: Record<string, unknown> = {}) => ({
   wirksamkeit: 3,
   umsetzbarkeit: 2,
   begruendung: 'Setzt an der Ursache an.',
+  zitat: 'Wir schaffen mehr Praxen.',
   beleg_programm_url: 'https://eins.de/programm.pdf#page=4',
   stand: '2026-03-01',
   geprueft: true,
@@ -35,6 +36,7 @@ const thema = (ueber: Record<string, unknown> = {}): Datei => ({
     id: 1,
     name: 'Arzttermine',
     beschreibung: 'Lange Wartezeiten.',
+    ziel: 'Termine in angemessener Zeit.',
     ursachen: [{ id: 11, beschreibung: 'Zu wenige Praxen', quelle_url: 'https://studie.de/aerzte' }],
     abdeckung: [
       { partei_id: 1, massnahmen: [massnahme()] },
@@ -82,6 +84,36 @@ describe('Datenkatalog: Prüfregeln', () => {
     const doppelt = { partei_id: 2, massnahmen: [massnahme({ id: 2 })], keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: true } }
     expect(fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [massnahme()] }, doppelt] }))).toMatch(/genau eines/)
     expect(fehlerVon(thema({ abdeckung: [{ partei_id: 1, massnahmen: [] }, { partei_id: 2 }] }))).toMatch(/mindestens eine Maßnahme/)
+  })
+
+  it('verlangt bei echten Daten ein Ziel je Thema', () => {
+    const t = thema(); delete (t.inhalt as Record<string, unknown>).ziel
+    expect(fehlerVon(t)).toMatch(/„ziel“ fehlt/)
+    expect(fehlerVon(t, parteien(true))).not.toMatch(/ziel/)
+  })
+
+  it('erlaubt einen Vermerk für nachträglich ergänzte Ursachen', () => {
+    const u = { id: 11, beschreibung: 'Zu wenige Praxen', quelle_url: 'https://studie.de/aerzte' }
+    expect(fehlerVon(thema({ ursachen: [{ ...u, nachtraeglich: '2026-09-28: ergänzt, weil …' }] }))).toBe('')
+    expect(fehlerVon(thema({ ursachen: [{ ...u, nachtraeglich: '' }] }))).toMatch(/„nachtraeglich“ fehlt oder ist leer/)
+  })
+
+  it('verlangt bei echten Daten ein wörtliches Zitat, bei fiktiven nicht', () => {
+    const ohneZitat = { ...massnahme() } as Record<string, unknown>
+    delete ohneZitat.zitat
+    const t = thema({ abdeckung: [{ partei_id: 1, massnahmen: [ohneZitat] }, { partei_id: 2, keine_massnahme: { begruendung: 'x', stand: '2026-03-01', geprueft: true } }] })
+    expect(fehlerVon(t)).toMatch(/„zitat“ fehlt/)
+    expect(fehlerVon(t, parteien(true))).not.toMatch(/zitat/)
+    expect(pruefeKatalog(parteien(), [thema()]).katalog.massnahmen[0].zitat).toBe('Wir schaffen mehr Praxen.')
+  })
+
+  it('erlaubt gleichen Namen und Kurznamen, aber keine Doppelung zwischen Parteien', () => {
+    const p = parteien()
+    const liste = (p.inhalt as { parteien: Record<string, unknown>[] }).parteien
+    liste[0] = { ...liste[0], name: 'SPD', kurzname: 'SPD' }
+    expect(pruefeKatalog(p, [thema()]).fehler.join('\n')).not.toMatch(/doppelt/)
+    liste[1] = { ...liste[1], kurzname: 'SPD' }
+    expect(pruefeKatalog(p, [thema()]).fehler.join('\n')).toMatch(/„SPD“ ist doppelt/)
   })
 
   it('verlangt einen Beleg mit Seitenanker im Programm genau dieser Partei', () => {

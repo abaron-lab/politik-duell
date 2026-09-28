@@ -5,10 +5,10 @@ import { BETREIBER } from './betreiber'
 // Maßnahmen bewertet, richtet sich nach dieser Seite.
 
 const WIRKSAMKEIT = [
-  'setzt an keiner der erfassten Ursachen an',
-  'berührt eine Ursache nur am Rand oder mit geringer Wirkung',
-  'setzt an einer Ursache an und lässt eine spürbare Wirkung erwarten',
-  'setzt direkt an einer Hauptursache an; die Wirkung ist gut belegt',
+  'hilft beim Ziel nicht: setzt an keiner der erfassten Ursachen an',
+  'hilft kaum: berührt eine Ursache nur am Rand oder lindert nur Folgen',
+  'hilft spürbar: setzt an einer Ursache an, eine deutliche Verbesserung ist zu erwarten',
+  'hilft stark: setzt direkt an einer Hauptursache an, die Wirkung ist gut belegt',
 ]
 
 const UMSETZBARKEIT = [
@@ -50,25 +50,41 @@ export function Methode() {
 
       <h2>2. Maßnahmen aus den Wahlprogrammen</h2>
       <p>
-        Für jede Partei erfassen wir die Maßnahmen aus ihrem Wahlprogramm, die an diesen Ursachen ansetzen – mit
-        Seitenangabe, Stand des Programms und, wo vorhanden, einer Studie zur Wirkung. Jede Bewertung hat eine kurze
-        Begründung, die in der Auflösung angezeigt wird. Ins Spiel kommt ein Thema für eine Partei erst, wenn eine zweite
-        Person alle Einträge dazu geprüft hat.
+        Für jede Partei erfassen wir die Maßnahmen aus ihrem Wahlprogramm zur Bundestagswahl 2025, die an diesen
+        Ursachen ansetzen – mit wörtlichem Zitat, Seitenangabe, Stand des Programms und, wo vorhanden, einer Studie zur
+        Wirkung. Jede Bewertung hat eine kurze Begründung, die in der Auflösung angezeigt wird. Ins Spiel kommt ein
+        Thema für eine Partei erst, wenn eine zweite Person alle Einträge dazu geprüft hat: Zitat und Seite im
+        Programm, Zuordnung zu den Ursachen und die Bewertung – diese zuerst, ohne zu wissen, von welcher Partei die
+        Maßnahme stammt.
+      </p>
+      <p>
+        Derzeit übernimmt der Betreiber die Prüfung. Wer als unabhängige Prüferin oder unabhängiger Prüfer mitmachen
+        möchte, ist herzlich eingeladen (Kontakt im Impressum).
       </p>
 
       <h2>3. Zwei Kriterien, je 0 bis 3 Punkte</h2>
-      <h3>Wirksamkeit: Setzt die Maßnahme an den tatsächlichen Ursachen an?</h3>
+      <h3>Wirksamkeit: Wie stark hilft die Maßnahme den Betroffenen?</h3>
+      <p>
+        Jedes Thema hat ein Ziel aus Sicht der Menschen, die das Problem haben – bei Miete etwa: eine passende Wohnung
+        finden und die Miete dauerhaft bezahlen können. Wir bewerten, wie stark eine Maßnahme über die Ursache, an der
+        sie ansetzt, zu diesem Ziel beiträgt.
+      </p>
       <Skala stufen={WIRKSAMKEIT} />
       <h3>Umsetzbarkeit: Ist sie rechtlich, finanziell und zeitlich realistisch?</h3>
       <Skala stufen={UMSETZBARKEIT} />
       <p>
         <strong>Rolle:</strong> Wählst du eine Rolle (z. B. Mieter:in), kann eine Maßnahme für dich mehr oder weniger
-        bringen. Solche Auf- oder Abwertungen sind je Maßnahme einzeln begründet und werden angezeigt.
+        bringen. Dann verschiebt sich ihre Wirksamkeit für dich um bis zu zwei Stufen (innerhalb von 0 bis 3). Solche
+        Auf- oder Abwertungen sind je Maßnahme einzeln begründet und werden angezeigt.
       </p>
 
       <h2>4. Punkte in der Runde</h2>
       <ul>
-        <li>Pro Ursache zählt die beste Maßnahme einer Partei: Wirksamkeit + Umsetzbarkeit (± Rolle).</li>
+        <li>
+          Pro Ursache zählt die beste Maßnahme einer Partei: Wirksamkeit × Umsetzbarkeit, also 0 bis 9 Punkte. So
+          bringt eine Maßnahme ohne Wirkung keine Punkte, auch wenn sie leicht umzusetzen wäre – und eine wirksame, die
+          sich nicht umsetzen lässt, ebenso wenig.
+        </li>
         <li>Die Rundenpunkte sind die Summe über alle zugeordneten Ursachen.</li>
         <li>Die höhere Summe bekommt den Spielpunkt, bei Gleichstand beide.</li>
         <li>

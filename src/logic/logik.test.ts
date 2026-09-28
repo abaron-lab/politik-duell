@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ABDECKUNG, MASSNAHMEN, PARTEIEN, THEMEN, URSACHEN } from '../data/mock'
 import type { Nachricht } from '../data/types'
 import { analysiere } from './analyse'
-import { besteParteien, bewertePartei, rundenpunkte, werteRunde } from './bewertung'
+import { besteParteien, bewertePartei, massnahmenPunkte, rundenpunkte, werteRunde } from './bewertung'
 
 const spieler = (...texte: string[]): Nachricht[] => texte.map((text) => ({ von: 'spieler', text }))
 const partei = (id: number) => PARTEIEN.find((p) => p.id === id)!
@@ -96,9 +96,19 @@ describe('Bewertung', () => {
   })
 
   it('berücksichtigt den Rollen-Modifikator', () => {
-    const ohne = bewertePartei(partei(1), 2, [202], null, MASSNAHMEN, ABDECKUNG).punkte
-    expect(bewertePartei(partei(1), 2, [202], 'mieter', MASSNAHMEN, ABDECKUNG).punkte).toBe(ohne + 1)
-    expect(bewertePartei(partei(1), 2, [202], 'eigentuemer', MASSNAHMEN, ABDECKUNG).punkte).toBe(ohne - 1)
+    // Beispielmaßnahme: Wirksamkeit 2, Umsetzbarkeit 3; Mieter +1, Eigentümer −1 auf die Wirksamkeit.
+    expect(bewertePartei(partei(1), 2, [202], null, MASSNAHMEN, ABDECKUNG).punkte).toBe(2 * 3)
+    expect(bewertePartei(partei(1), 2, [202], 'mieter', MASSNAHMEN, ABDECKUNG).punkte).toBe(3 * 3)
+    expect(bewertePartei(partei(1), 2, [202], 'eigentuemer', MASSNAHMEN, ABDECKUNG).punkte).toBe(1 * 3)
+  })
+
+  it('multipliziert Wirksamkeit und Umsetzbarkeit, Rolle nur innerhalb 0–3', () => {
+    const m = { ...MASSNAHMEN[0], wirksamkeit: 1 as const, umsetzbarkeit: 3 as const, rollen_modifikator: { mieter: { wert: 2, begruendung: 'x' }, eigentuemer: { wert: -2, begruendung: 'x' } } }
+    expect(massnahmenPunkte(m, null).punkte).toBe(3)
+    expect(massnahmenPunkte({ ...m, wirksamkeit: 0 }, null).punkte).toBe(0)
+    expect(massnahmenPunkte({ ...m, umsetzbarkeit: 0 }, null).punkte).toBe(0)
+    expect(massnahmenPunkte({ ...m, wirksamkeit: 2 }, 'mieter')).toMatchObject({ punkte: 9, wirksamkeit: 3 })
+    expect(massnahmenPunkte(m, 'eigentuemer')).toMatchObject({ punkte: 0, wirksamkeit: 0 })
   })
 
   it('vergibt Rundenpunkte nach Regel', () => {
@@ -111,5 +121,15 @@ describe('Bewertung', () => {
   it('findet die insgesamt beste Partei', () => {
     const beste = besteParteien(PARTEIEN, 1, [101], null, MASSNAHMEN, ABDECKUNG)
     expect(beste.map((b) => b.partei.id)).toEqual([1])
+  })
+})
+
+describe('sindBeispieldaten', () => {
+  it('erkennt eingebaute und fiktive Supabase-Daten, nicht aber echte', async () => {
+    const { sindBeispieldaten, MOCK_DATEN } = await import('../data/quelle')
+    expect(sindBeispieldaten(MOCK_DATEN)).toBe(true)
+    expect(sindBeispieldaten({ ...MOCK_DATEN, quelle: 'supabase' })).toBe(true)
+    const echt = { ...MOCK_DATEN, quelle: 'supabase' as const, parteien: [{ ...MOCK_DATEN.parteien[0], programm_url: 'https://www.spd.de/programm.pdf' }] }
+    expect(sindBeispieldaten(echt)).toBe(false)
   })
 })

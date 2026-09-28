@@ -90,8 +90,9 @@ function ParteiKarte({
           <div key={t.massnahme.id} className="massnahme">
             <p className="massnahme-titel">{t.massnahme.beschreibung}</p>
             <p className="massnahme-werte">
-              Wirksamkeit {t.massnahme.wirksamkeit}/3 · Umsetzbarkeit {t.massnahme.umsetzbarkeit}/3
-              {t.rollenBonus !== 0 && ` · Rolle ${t.rollenBonus > 0 ? '+' : ''}${t.rollenBonus}`}
+              Wirksamkeit {t.massnahme.wirksamkeit}/3
+              {t.rollenBonus !== 0 && ` (für deine Rolle ${t.wirksamkeit}/3)`} × Umsetzbarkeit {t.massnahme.umsetzbarkeit}/3
+              {' '}= {t.punkteJeUrsache} Punkte
               {t.ursachen_ids.length > 1 && ` · × ${t.ursachen_ids.length} Ursachen`}
             </p>
             <p className="massnahme-ursachen">Setzt an bei: {t.ursachen_ids.map(ursacheText).join(', ')}</p>

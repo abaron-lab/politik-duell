@@ -59,7 +59,12 @@ Konzept, Grundprinzipien und Meilensteine: siehe [CLAUDE.md](CLAUDE.md).
 
 **Einrichten:** siehe [supabase/EINRICHTEN.md](supabase/EINRICHTEN.md).
 
-## Datenkatalog (Vorbereitung für echte Parteien)
+## Datenkatalog
+
+- **Echte Parteien:** CDU/CSU, SPD, Grüne, FDP, AfD, Linke, BSW mit ihren Wahlprogrammen zur Bundestagswahl 2025 (`daten/parteien.json`). Maßnahmen sind bisher für Miete erfasst (5 von 7 Parteien), noch ungeprüft – im Spiel gilt deshalb vorerst alles als „noch nicht erfasst“
+- Jede Maßnahme mit wörtlichem Zitat und Seitenanker; `npm run pruefliste` erzeugt je Thema eine Prüfliste (Bewertung ohne Parteinamen, dann Belege)
+- „Mit Beispieldaten spielen“ und die Tests nutzen die fiktiven Daten in `daten/beispiel/`; der Hinweis auf Platzhalterdaten erscheint nur dann
+
 
 - Alle Parteien, Themen, Ursachen und Maßnahmen liegen als JSON in [`daten/`](daten/README.md) – Änderungen per Pull Request mit Quellenpflicht
 - Automatische Prüfung (`npm run daten:pruefen`, auch in GitHub Actions): Pflichtfelder, Wertebereiche, Beleg mit Seitenanker im Programm der richtigen Partei, Quelle für jede Ursache, keine Platzhalter-Links bei echten Daten
@@ -80,6 +85,7 @@ npm run lint
 npm run build
 npm run daten:pruefen  # Datenkatalog prüfen (mit -- --links auch alle Links abrufen)
 npm run seed       # supabase/seed.sql aus daten/ erzeugen
+npm run pruefliste # Prüflisten je Thema nach pruefung/ (mit -- <Themen-ID> nur eines)
 npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 ```
 
@@ -107,7 +113,7 @@ npm run dashboard  # Dateien zum Einfügen im Supabase-Dashboard neu erzeugen
 
 ## Bewertungsregeln im Prototyp
 
-- Pro zugeordneter Ursache zählt die beste Maßnahme der Partei: `wirksamkeit + umsetzbarkeit + Rollen-Modifikator` (min. 0). Rundenpunkte = Summe.
+- Pro zugeordneter Ursache zählt die beste Maßnahme der Partei: `wirksamkeit × umsetzbarkeit` (0–9); der Rollen-Modifikator verschiebt die Wirksamkeit (0–3). Rundenpunkte = Summe.
 - Höhere Summe → 1 Spielpunkt, Gleichstand → je 1 Punkt.
 - Annahme: Haben **beide** Parteien 0 Punkte (keine Maßnahme), gibt es keinen Punkt.
 - Die Rolle der Person, die das Problem nennt, gilt für die Bewertung beider Parteien.

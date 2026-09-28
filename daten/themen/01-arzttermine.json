@@ -2,6 +2,7 @@
   "id": 1,
   "name": "Arzttermine",
   "beschreibung": "Lange Wartezeiten und schwer erreichbare Praxen.",
+  "ziel": "Patientinnen und Patienten bekommen in angemessener Zeit und erreichbarer Nähe einen Arzttermin.",
   "schlagwoerter": ["arzt", "aerzt", "praxis", "praxen", "hausarzt", "facharzt", "kinderarzt", "wartezimmer", "behandlung", "krank", "orthopaed", "termin beim"],
   "ursachen": [
     {
@@ -21,93 +22,6 @@
       "beschreibung": "Unterschiedliche Vergütung: Facharztpraxen vergeben Termine bevorzugt an Privatversicherte",
       "quelle_url": "https://idw-online.de/de/news750098",
       "schlagwoerter": ["kassenpatient", "gesetzlich versichert", "privatpatient", "privat versichert", "privatversichert", "budget", "quartal", "abrechnung"]
-    }
-  ],
-  "abdeckung": [
-    {
-      "partei_id": 1,
-      "massnahmen": [
-        {
-          "id": 1,
-          "beschreibung": "Stipendien und Startförderung für Praxen in unterversorgten Regionen",
-          "ursachen_ids": [101],
-          "wirksamkeit": 3,
-          "umsetzbarkeit": 2,
-          "begruendung": "Setzt direkt an fehlenden Praxen an; Wirkung erst nach einigen Jahren.",
-          "beleg_programm_url": "https://example.org/mock/alpha/wahlprogramm.pdf#page=34",
-          "beleg_studie_url": "https://example.org/mock/studie/landarzt-stipendien",
-          "stand": "2026-01-01",
-          "geprueft": false
-        }
-      ]
-    },
-    {
-      "partei_id": 2,
-      "massnahmen": [
-        {
-          "id": 2,
-          "beschreibung": "Digitale Terminplattform mit Pflicht zur Freigabe freier Termine",
-          "ursachen_ids": [102],
-          "wirksamkeit": 2,
-          "umsetzbarkeit": 2,
-          "begruendung": "Verteilt vorhandene Termine besser, schafft aber keine neuen.",
-          "beleg_programm_url": "https://example.org/mock/beta/wahlprogramm.pdf#page=18",
-          "stand": "2026-01-01",
-          "geprueft": false
-        },
-        {
-          "id": 3,
-          "beschreibung": "Budgetgrenzen für hausärztliche Leistungen aufheben",
-          "ursachen_ids": [103],
-          "wirksamkeit": 2,
-          "umsetzbarkeit": 1,
-          "begruendung": "Mehr Behandlungen möglich; Finanzierung durch Kassen ungeklärt.",
-          "beleg_programm_url": "https://example.org/mock/beta/wahlprogramm.pdf#page=19",
-          "stand": "2026-01-01",
-          "geprueft": false
-        }
-      ]
-    },
-    {
-      "partei_id": 3,
-      "massnahmen": [
-        {
-          "id": 4,
-          "beschreibung": "Mehr Medizinstudienplätze",
-          "ursachen_ids": [101],
-          "wirksamkeit": 2,
-          "umsetzbarkeit": 1,
-          "begruendung": "Richtige Richtung, wirkt aber erst nach über zehn Jahren Ausbildung.",
-          "beleg_programm_url": "https://example.org/mock/gamma/wahlprogramm.pdf#page=52",
-          "stand": "2026-01-01",
-          "geprueft": false
-        }
-      ]
-    },
-    {
-      "partei_id": 4,
-      "massnahmen": [
-        {
-          "id": 5,
-          "beschreibung": "Hausarztpraxis als erste Anlaufstelle mit gezielter Überweisung",
-          "ursachen_ids": [102, 103],
-          "wirksamkeit": 2,
-          "umsetzbarkeit": 2,
-          "begruendung": "Entlastet Facharzttermine; erfordert Umstellung im System.",
-          "beleg_programm_url": "https://example.org/mock/delta/wahlprogramm.pdf#page=27",
-          "beleg_studie_url": "https://example.org/mock/studie/primaerarzt",
-          "stand": "2026-01-01",
-          "geprueft": false
-        }
-      ]
-    },
-    {
-      "partei_id": 5,
-      "keine_massnahme": {
-        "begruendung": "Kapitel „Gesundheit“ und Stichwortsuche durchsucht, nichts dazu gefunden (fiktives Beispiel).",
-        "stand": "2026-01-01",
-        "geprueft": false
-      }
     }
   ]
 }

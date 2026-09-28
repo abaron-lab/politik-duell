@@ -8,7 +8,7 @@ import { Runde } from './components/Runde'
 import { Setup } from './components/Setup'
 import { Start } from './components/Start'
 import { DatenKontext } from './data/kontext'
-import { ladeDaten, MOCK_DATEN, type Daten } from './data/quelle'
+import { ladeDaten, MOCK_DATEN, sindBeispieldaten, type Daten } from './data/quelle'
 import { RUNDEN_GESAMT, type RundenErgebnis, type Spieler } from './spiel'
 
 type Phase = 'start' | 'setup' | 'runde' | 'aufloesung' | 'ende'
@@ -38,7 +38,7 @@ export default function App() {
   return (
     <DatenKontext.Provider value={daten ?? MOCK_DATEN}>
       <div className="app">
-        <MockHinweis />
+        {sindBeispieldaten(daten ?? MOCK_DATEN) && <MockHinweis />}
         {phase === 'start' && (
           <Start
             bereit={daten !== null}

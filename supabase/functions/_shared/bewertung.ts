@@ -7,9 +7,11 @@ export interface Treffer {
   massnahme: Massnahme
   /** Ursachen, für die diese Maßnahme gezählt wurde. */
   ursachen_ids: number[]
-  /** Punkte pro Ursache: Wirksamkeit + Umsetzbarkeit + Rollen-Modifikator (min. 0). */
+  /** Punkte pro Ursache: Wirksamkeit (± Rolle, 0–3) × Umsetzbarkeit, also 0 bis 9. */
   punkteJeUrsache: number
   rollenBonus: number
+  /** Wirksamkeit nach Rollen-Modifikator (0–3). */
+  wirksamkeit: number
   rollenBegruendung?: string
 }
 
@@ -27,8 +29,13 @@ export const findeAbdeckung = (abdeckung: AbdeckungEintrag[], parteiId: number, 
 export function massnahmenPunkte(m: Massnahme, rolle: Rolle | null) {
   const mod = rolle ? m.rollen_modifikator?.[rolle] : undefined
   const rollenBonus = mod?.wert ?? 0
+  // Produkt statt Summe: Eine unwirksame Maßnahme bringt keine Punkte, egal wie leicht
+  // sie umsetzbar ist, und eine nicht umsetzbare ebenso wenig. Die Rolle verschiebt nur
+  // die Wirksamkeit (für diese Person wirkt die Maßnahme stärker oder schwächer).
+  const wirksamkeit = Math.min(3, Math.max(0, m.wirksamkeit + rollenBonus))
   return {
-    punkte: Math.max(0, m.wirksamkeit + m.umsetzbarkeit + rollenBonus),
+    punkte: wirksamkeit * m.umsetzbarkeit,
+    wirksamkeit,
     rollenBonus,
     rollenBegruendung: mod?.begruendung,
   }
@@ -73,6 +80,7 @@ export function bewertePartei(
         ursachen_ids: [ursacheId],
         punkteJeUrsache: beste.p.punkte,
         rollenBonus: beste.p.rollenBonus,
+        wirksamkeit: beste.p.wirksamkeit,
         rollenBegruendung: beste.p.rollenBegruendung,
       })
     }

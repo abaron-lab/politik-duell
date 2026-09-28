@@ -23,6 +23,10 @@ insert into public.parteien (id, name, kurzname, farbe, programm_url, programm_s
 on conflict (id) do update set name = excluded.name, kurzname = excluded.kurzname, farbe = excluded.farbe,
   programm_url = excluded.programm_url, programm_stand = excluded.programm_stand;
 
+-- Parteien, die nicht mehr im Katalog stehen (z. B. fiktive nach dem Umstieg), entfernen.
+-- Gespielte Runden bleiben erhalten, ihr Parteiverweis wird leer.
+delete from public.parteien where id not in (${k.parteien.map((p) => p.id).join(', ')});
+
 insert into public.themen (id, name, beschreibung) values
   ${zeilen(k.themen.map((t) => `(${t.id}, ${q(t.name)}, ${q(t.beschreibung)})`))}
 on conflict (id) do update set name = excluded.name, beschreibung = excluded.beschreibung;

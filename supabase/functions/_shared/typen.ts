@@ -28,6 +28,8 @@ export interface Thema {
   id: number
   name: string
   beschreibung: string
+  /** Ziel aus Sicht der Betroffenen – Maßstab für die Wirksamkeit (nur im Repo, nicht in der Datenbank). */
+  ziel?: string
   /** Nur Mock: Schlagwörter, mit denen die Mock-Analyse Themen erkennt. */
   schlagwoerter?: string[]
 }
@@ -56,6 +58,8 @@ export interface Massnahme {
   umsetzbarkeit: 0 | 1 | 2 | 3
   rollen_modifikator?: Partial<Record<Rolle, RollenModifikator>>
   begruendung: string
+  /** Wörtliches Zitat aus dem Programm (nur im Repo, zur Prüfung; nicht in der Datenbank). */
+  zitat?: string
   beleg_programm_url: string
   beleg_studie_url?: string
   stand: string
